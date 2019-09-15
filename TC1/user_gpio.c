@@ -31,35 +31,70 @@ bool relay_out( void )
     return false;
 }
 
+char* get_socket_status()
+{
+    sprintf(socket_status, "%d,%d,%d,%d,%d,%d\0",
+        user_config->plug[0].on,
+        user_config->plug[1].on,
+        user_config->plug[2].on,
+        user_config->plug[3].on,
+        user_config->plug[4].on,
+        user_config->plug[5].on);
+    return socket_status;
+}
+
+void set_socket_status(char* socket_status)
+{
+    int ons[6] = { 0 };
+    sscanf(socket_status, "%d,%d,%d,%d,%d,%d,",
+        &ons[0], &ons[1], &ons[2], &ons[3], &ons[4], &ons[5]);
+    int i = 0;
+    for (i = 0; i < PLUG_NUM; i++)
+    {
+        user_relay_set(i, ons[i]);
+    }
+}
+
 /*user_relay_set
  * 设置继电器开关
- * x:编号 0-5
- * y:开关 0:关 1:开
+ *  i:编号 0-5
+ * on:开关 0:关 1:开
  */
-void user_relay_set(unsigned char x,unsigned char y )
+void user_relay_set(unsigned char i, unsigned char on)
 {
-    if (x >= PLUG_NUM ) return;
+    if (i >= PLUG_NUM) return;
 
-    if((y == 1) ? Relay_ON : Relay_OFF) MicoGpioOutputHigh( relay[x] );else MicoGpioOutputLow( relay[x] );
-
-    user_config->plug[x].on = y;
-
-    if ( relay_out( ) )
-        user_led_set( 1 );
+    if (on == Relay_ON)
+    {
+        MicoGpioOutputHigh(relay[i]);
+    }
     else
-        user_led_set( 0 );
+    {
+        MicoGpioOutputLow(relay[i]);
+    }
+
+    user_config->plug[i].on = on;
+
+    if (relay_out())
+    {
+        user_led_set(1);
+    }
+    else
+    {
+        user_led_set(0);
+    }
 }
 
 /*
  * 设置所有继电器开关
- * y:0:全部关   1:根据记录状态开关所有
+ * y: 0:全部关 1:全部开
  *
  */
 void user_relay_set_all( char y )
 {
-    char i;
-    for ( i = 0; i < PLUG_NUM; i++ )
-        user_relay_set( i, y );
+    int i;
+    for (i = 0; i < PLUG_NUM; i++)
+        user_relay_set(i, y);
 }
 
 static void key_long_press( void )

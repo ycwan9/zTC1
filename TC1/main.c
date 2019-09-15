@@ -20,6 +20,7 @@ uint32_t power=0;
 
 system_config_t * sys_config;
 user_config_t * user_config;
+char socket_status[32] = { 0 };
 
 mico_gpio_t Relay[Relay_NUM] = { Relay_0, Relay_1, Relay_2, Relay_3, Relay_4, Relay_5 };
 
@@ -152,6 +153,7 @@ int application_start( void )
 //        }
 //    }
 
+    ap_init();
     wifi_init( );
     user_udp_init( );
     key_init( );
@@ -162,7 +164,7 @@ int application_start( void )
     user_power_init();
 
     /* start http server thread */
-//      app_httpd_start();
+    app_httpd_start();
     while ( 1 )
     {
         main_num++;

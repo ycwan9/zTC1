@@ -4,7 +4,7 @@
 
 
 #include "mico.h"
-#include "MiCOKit_EXT.h"
+#include "micokit_ext.h"
 
 extern void sntp_init(void);
 

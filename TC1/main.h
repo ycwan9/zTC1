@@ -2,7 +2,7 @@
 #define __MAIN_H_
 
 #include "mico.h"
-#include "MiCOKit_EXT.h"
+#include "micokit_ext.h"
 
 #define VERSION "v0.10.1"
 
@@ -72,6 +72,7 @@ extern char strMac[16];
 extern uint32_t power;
 extern system_config_t * sys_config;
 extern user_config_t * user_config;
+extern char socket_status[32];
 
 extern mico_gpio_t Relay[Relay_NUM];
 

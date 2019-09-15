@@ -4,7 +4,7 @@
 
 
 #include "mico.h"
-#include "MiCOKit_EXT.h"
+#include "micokit_ext.h"
 
 
 enum {
@@ -21,6 +21,7 @@ enum {
 
 extern char wifi_status;
 extern void wifi_init(void);
+extern void ap_init(void);
 extern void wifi_start_easylink(void);
 
 

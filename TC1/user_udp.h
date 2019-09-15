@@ -4,7 +4,7 @@
 
 
 #include "mico.h"
-#include "MiCOKit_EXT.h"
+#include "micokit_ext.h"
 
 OSStatus user_udp_init( void );
 OSStatus user_udp_send( char *arg );

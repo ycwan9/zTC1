@@ -1,0 +1,310 @@
+<html>
+<head>
+
+<meta http-equiv="content-type" content="text/html" charset="utf-8">
+<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+<title>Welcom TC1</title>
+
+<style type="text/css">
+fieldset{margin-bottom:10px;border:#000 solid 1px;}
+input,select,button{padding:5px;border:#777 solid 1px;}
+button{background:none;border:1px #777 solid;}
+button:disabled,select:disabled,input:disabled{background:#bfbfbf;}
+td{padding:5px;}
+.socket input,.mode input{margin-right:-4px;}
+.submit{padding:5px;margin-top:5px;}
+.success{color:#58dc5c;}
+.error{color:#ff2d2d;}
+.info{color:#e700ea;}
+.network div{padding:5px;}
+.connect div{padding:5px;}
+.right{text-align:right;}
+.line{height:9px;border-bottom:1px solid #dedede;}
+#power_div{margin-top:10px;border-left:1px solid #000;border-bottom:1px solid #000;}
+#power_line{height:100px;position:relative;overflow:scroll;margin-top:-100px;}
+.power_pre{position:absolute;bottom:0;float:left;height:76px;width:0;border-left:1px solid #000;border-right:1px solid #000;}
+</style>
+
+</head>
+
+<body>
+
+<fieldset class="socket">
+    <legend>Power Controll</legend>
+    <table id="socket_tb">
+        <tr>
+            <td>
+                <input type="checkbox" id="socket1" name="socket">
+                <label for="socket1">Socket-1</label>
+            </td>
+            <td>
+                <input type="checkbox" id="socket2" name="socket">
+                <label for="socket2">Socket-2</label>
+            </td>
+            <td>
+                <input type="checkbox" id="socket3" name="socket">
+                <label for="socket3">Socket-3</label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="checkbox" id="socket4" name="socket">
+                <label for="socket4">Socket-4</label>
+            </td>
+            <td>
+                <input type="checkbox" id="socket5" name="socket">
+                <label for="socket5">Socket-5</label>
+            </td>
+            <td>
+                <input type="checkbox" id="socket6" name="socket">
+                <label for="socket6">Socket-6</label>
+            </td>
+        </tr>
+    </table>
+    <div class="submit">
+        <button class="submit_bt" onclick="SetSocket()">Submit</button>
+        <span class="status_sp success">OK</span>
+    </div>
+</fieldset>
+
+<fieldset class="chart">
+    <legend>Power Status</legend>
+    <div id="power_div">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+    <div id="power_line">
+        <div class="power_pre" style="height:70px;left:20px;"></div>
+        <div class="power_pre" style="height:75px;left:40px;"></div>
+        <div class="power_pre" style="height:80px;left:60px;"></div>
+        <div class="power_pre" style="height:85px;left:80px;"></div>
+        <div class="power_pre" style="height:80px;left:100px;"></div>
+        <div class="power_pre" style="height:75px;left:120px;"></div>
+        <div class="power_pre" style="height:70px;left:140px;"></div>
+        <div class="power_pre" style="height:65px;left:160px;"></div>
+        <div class="power_pre" style="height:70px;left:180px;"></div>
+        <div class="power_pre" style="height:75px;left:200px;"></div>
+        <div class="power_pre" style="height:80px;left:220px;"></div>
+        <div class="power_pre" style="height:85px;left:240px;"></div>
+        <div class="power_pre" style="height:90px;left:260px;"></div>
+        <div class="power_pre" style="height:85px;left:280px;"></div>
+        <div class="power_pre" style="height:80px;left:300px;"></div>
+        <div class="power_pre" style="height:78px;left:320px;"></div>
+        <div class="power_pre" style="height:76px;left:340px;"></div>
+        <div class="power_pre" style="height:72px;left:360px;"></div>
+        <div class="power_pre" style="height:85px;left:380px;"></div>
+        <div class="power_pre" style="height:80px;left:400px;"></div>
+        <div class="power_pre" style="height:75px;left:420px;"></div>
+        <div class="power_pre" style="height:70px;left:440px;"></div>
+        <div class="power_pre" style="height:65px;left:460px;"></div>
+        <div class="power_pre" style="height:70px;left:480px;"></div>
+        <div class="power_pre" style="height:75px;left:500px;"></div>
+        <div class="power_pre" style="height:80px;left:520px;"></div>
+        <div class="power_pre" style="height:85px;left:540px;"></div>
+        <div class="power_pre" style="height:90px;left:560px;"></div>
+        <div class="power_pre" style="height:85px;left:580px;"></div>
+        <div class="power_pre" style="height:80px;left:600px;"></div>
+        <div class="power_pre" style="height:78px;left:620px;"></div>
+        <div class="power_pre" style="height:76px;left:640px;"></div>
+        <div class="power_pre" style="height:72px;left:660px;"></div>
+        <div class="power_pre" style="height:85px;left:680px;"></div>
+        <div class="power_pre" style="height:80px;left:700px;"></div>
+    </div>
+</fieldset>
+
+<fieldset class="network">
+    <legend>Network config</legend>
+    <table>
+        <tr>
+            <td class="right">SSID:</td>
+            <td>
+                <select id="wifi" onchange="SelectWifi()">
+                    <option value="0">Manual</option>
+                    <option value="1">CMCC</option>
+                    <option value="2">China-Net</option>
+                    <option value="3">CMCT</option>
+                </select>
+                <button id="rescan">Rescan</button>
+            </td>
+        </tr>
+        <tr>
+            <td class="right">SSID:</td>
+            <td>
+                <input id="ssid" type="text" onchange="ChangeInput(1)"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="right">PSWD:</td>
+            <td>
+                <input id="pswd" type="password" onchange="ChangeInput(2)"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="right">MODE:</td>
+            <td class="mode">
+                <input type="radio" id="mode1" name="mode" onchange="ChangeMode(1)">
+                <label for="mode1">AP</label>
+                <input type="radio" id="mode2" name="mode" onchange="ChangeMode(2)">
+                <label for="mode2">STATION</label>
+            </td>
+        </tr>
+    </table>
+    <div class="submit">
+        <button class="submit_bt" onclick="SubmitNetwork()">Submit</button>
+        <span class="status_sp success">OK</span>
+    </div>
+</fieldset>
+
+<fieldset class="connect">
+    <legend>Connect Status</legend>
+    <table>
+        <tr>
+            <td class="right">IP:</td>
+            <td class="info">192.168.33.108</td>
+        </tr>
+        <tr>
+            <td class="right">Mask:</td>
+            <td class="info">255.255.255.0</td>
+        </tr>
+        <tr>
+            <td class="right">Gateway:</td>
+            <td class="info">192.168.33.1</td>
+        </tr>
+    </table>
+</fieldset>
+
+<script type="text/javascript">
+
+function Ajax(url, onsuccess, type, data) {
+    var xml_http = new XMLHttpRequest();
+    xml_http.open(type, url, true);
+    xml_http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xml_http.onreadystatechange = function () {
+        if (xml_http.readyState == 4) {
+            if (xml_http.status == 200) {
+                onsuccess(xml_http.responseText);
+            }
+            else {
+                alert("Ajax error: " + xml_http.status);
+            }
+        }
+    };
+    if (data != null && type == "POST") {
+        xml_http.send(data);
+    } else {
+        xml_http.send();
+    }
+}
+function HttpGet(url, onsuccess) {
+    Ajax(url, onsuccess, "GET", null);
+}
+function HttpPost(url, onsuccess, data) {
+    Ajax(url, onsuccess, "POST", data);
+}
+
+var submit_bts = document.getElementsByClassName("submit_bt");
+var info_spans = document.getElementsByClassName("status_sp");
+
+var socket_tb = document.getElementById("socket_tb");
+var checkboxs = socket_tb.getElementsByTagName("input");
+
+var rescan_btn = document.getElementById("rescan");
+var ssid_slt = document.getElementById("wifi");
+var ssid_ipt = document.getElementById("ssid");
+var pswd_ipt = document.getElementById("pswd");
+var mode_rd1 = document.getElementById("mode1");
+var mode_rd2 = document.getElementById("mode2");
+
+HttpGet("/socket", function (re) {
+    var status = re;
+    var status_arr = status.split(",");
+    for (var i = 0; i < status_arr.length; i++) {
+        checkboxs[i].checked = status_arr[i] == "1";
+    }
+});
+
+function SetOK(i) {
+    submit_bts[i].disabled = false;
+    info_spans[i].className = "status_sp success";
+    info_spans[i].innerHTML = "OK";
+}
+function SetIng(i) {
+    submit_bts[i].disabled = true;
+    info_spans[i].className = "status_sp info";
+    info_spans[i].innerHTML = "ing...";
+}
+
+function SetSocket() {
+    SetIng(0);
+    var sockets_st = "";
+    for (var i = 0; i < checkboxs.length; i++) {
+        sockets_st += (checkboxs[i].checked ? "1," : "0,");
+    }
+    HttpPost("/socket", function (re) {
+        SetOK(0);
+    }, sockets_st);
+}
+
+function SelectWifi() {
+    ssid_ipt.disabled = ssid_slt.value != "0";
+}
+var mode = 0;
+var ap_name = "TC1-AP";
+var ap_pswd = "12345678";
+var station_name = "";
+var station_pswd = "";
+function ChangeMode(m) {
+    if (mode == m) return;
+    if (m == 1) {
+        ssid_slt.value = "0";
+        ssid_slt.disabled = true;
+        rescan_btn.disabled = true;
+        ssid_ipt.disabled = false;
+        ssid_ipt.value = ap_name;
+        pswd_ipt.value = ap_pswd;
+    } else {
+        ssid_slt.value = "0";
+        ssid_slt.disabled = false;
+        rescan_btn.disabled = false;
+        ssid_ipt.disabled = false;
+        ssid_ipt.value = station_name;
+        pswd_ipt.value = station_pswd;
+    }
+    mode = m;
+}
+ChangeMode(1);
+
+mode_rd1.checked = true;
+function ChangeInput(type) {
+    if(mode == 1) {
+        ap_name = ssid_ipt.value;
+        ap_pswd = pswd_ipt.value;
+    } else {
+        station_name = ssid_ipt.value;
+        station_pswd = pswd_ipt.value;
+    }
+}
+
+function SubmitNetwork() {
+    if(mode == 1) {
+
+    } else {
+        var params = "ssid="+station_name+"&key="+station_pswd;
+        HttpPost("/wifi/config", function (re) {
+            alert(re);
+        }, params);
+    }
+}
+
+</script>
+</body>
+</html>

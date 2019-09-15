@@ -59,6 +59,29 @@ void wifi_easylink_completed_handle( network_InitTypeDef_st *nwkpara, void * arg
     micoWlanStopEasyLink( );
 }
 
+void wifi_config(char* wifi_ssid, char* wifi_key)
+{
+    os_log("wifi_easylink_wps_completed_handle:"); 
+    if (wifi_ssid == NULL || wifi_key == NULL)
+    {
+        os_log("EasyLink fail");
+        micoWlanStopEasyLink();
+        return;
+    }
+
+    os_log("ssid:\"%s\",\"%s\"", wifi_ssid, wifi_ssid);
+
+    //保存wifi及密码
+    strcpy(sys_config->micoSystemConfig.ssid, wifi_ssid);
+    strcpy(sys_config->micoSystemConfig.user_key, wifi_key);
+    sys_config->micoSystemConfig.user_keyLength = strlen(wifi_key);
+    mico_system_context_update(sys_config);
+
+    wifi_status = WIFI_STATE_NOCONNECT;
+    os_log("EasyLink stop");
+    micoWlanStopEasyLink();
+}
+
 //wifi已连接获取到IP地址 回调
 static void wifi_get_ip_callback( IPStatusTypedef *pnet, void * arg )
 {
@@ -92,7 +115,7 @@ static void wifi_led_timer_callback( void* arg )
             mico_rtos_stop_timer( &wifi_led_timer );
             break;
         case WIFI_STATE_NOCONNECT:
-            wifi_connect_sys_config( );
+            //wifi_connect_sys_config( );
             break;
 
         case WIFI_STATE_CONNECTING:
@@ -119,19 +142,22 @@ static void wifi_led_timer_callback( void* arg )
     }
 }
 
-void wifi_init( void )
+void wifi_connect(char* wifi_ssid, char* wifi_key)
 {
     //wifi配置初始化
-//    network_InitTypeDef_st wNetConfig;
+    network_InitTypeDef_st wNetConfig;
 
-//    memset(&wNetConfig, 0, sizeof(network_InitTypeDef_st));
-//    wNetConfig.wifi_mode = Station;
-//    snprintf(wNetConfig.wifi_ssid, 32, "Honor 9" );
-//    strcpy((char*)wNetConfig.wifi_key, "19910911");
-//    wNetConfig.dhcpMode = DHCP_Client;
-//    wNetConfig.wifi_retry_interval=6000;
-//    micoWlanStart(&wNetConfig);
+    memset(&wNetConfig, 0, sizeof(network_InitTypeDef_st));
+    wNetConfig.wifi_mode = Station;
+    snprintf(wNetConfig.wifi_ssid, 32, wifi_ssid);
+    strcpy((char*)wNetConfig.wifi_key, wifi_key);
+    wNetConfig.dhcpMode = DHCP_Client;
+    wNetConfig.wifi_retry_interval = 6000;
+    micoWlanStart(&wNetConfig);
+}
 
+void wifi_init( void )
+{
     //wifi状态下led闪烁定时器初始化
     mico_rtos_init_timer( &wifi_led_timer, 100, (void *) wifi_led_timer_callback, NULL );
     //easylink 完成回调
@@ -148,5 +174,57 @@ void wifi_init( void )
     micoWlanGetIPStatus( &para, Station );
     strcpy( strMac, para.mac );
 
+}
+
+#define ELAND_AP_SSID       "TC1-AP"
+#define ELAND_AP_KEY        "12345678"
+#define ELAND_AP_LOCAL_IP   "192.168.0.1"
+#define ELAND_AP_DNS_SERVER "192.168.0.1"
+#define ELAND_AP_NET_MASK   "255.255.255.0"
+
+void ap_init()
+{
+    os_log("Soft_ap_Server");
+    network_InitTypeDef_st wNetConfig;
+    memset(&wNetConfig, 0x0, sizeof(network_InitTypeDef_st));
+    strcpy((char *)wNetConfig.wifi_ssid, ELAND_AP_SSID);
+    strcpy((char *)wNetConfig.wifi_key, ELAND_AP_KEY);
+    wNetConfig.wifi_mode = Soft_AP;
+    wNetConfig.dhcpMode = DHCP_Server;
+    wNetConfig.wifi_retry_interval = 100;
+    strcpy((char *)wNetConfig.local_ip_addr, ELAND_AP_LOCAL_IP);
+    strcpy((char *)wNetConfig.net_mask, ELAND_AP_NET_MASK);
+    strcpy((char *)wNetConfig.dnsServer_ip_addr, ELAND_AP_DNS_SERVER);
+    os_log("ssid:%s  key:%s", wNetConfig.wifi_ssid, wNetConfig.wifi_key);
+    micoWlanStart(&wNetConfig);
+}
+
+
+
+static void Wifi_SoftAP_threed(mico_thread_arg_t arg)
+{
+    /*
+    network_InitTypeDef_st wNetConfig;
+    mico_rtos_lock_mutex(&WifiConfigMutex);
+    SendElandStateQueue(APServerStart);
+    micoWlanSuspend();
+    mico_rtos_thread_sleep(2);
+    Eland_httpd_start();
+    WifiSet_log("Soft_ap_Server");
+    memset(&wNetConfig, 0x0, sizeof(network_InitTypeDef_st));
+    strcpy((char *)wNetConfig.wifi_ssid, ELAND_AP_SSID);
+    strcpy((char *)wNetConfig.wifi_key, ELAND_AP_KEY);
+    wNetConfig.wifi_mode = Soft_AP;
+    wNetConfig.dhcpMode = DHCP_Server;
+    wNetConfig.wifi_retry_interval = 100;
+    strcpy((char *)wNetConfig.local_ip_addr, ELAND_AP_LOCAL_IP);
+    strcpy((char *)wNetConfig.net_mask, ELAND_AP_NET_MASK);
+    strcpy((char *)wNetConfig.dnsServer_ip_addr, ELAND_AP_DNS_SERVER);
+    WifiSet_log("ssid:%s  key:%s", wNetConfig.wifi_ssid, wNetConfig.wifi_key);
+    micoWlanStart(&wNetConfig);
+    mico_rtos_get_semaphore(&wifi_SoftAP_Sem, 5000);
+    mico_rtos_unlock_mutex(&WifiConfigMutex);
+    mico_rtos_delete_thread(NULL);
+    */
 }
 
