@@ -107,84 +107,23 @@ save_out:
     return err;
 }
 
-static int web_send_result_page(httpd_request_t *req)
+static int http_get_wifi_config(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
-    bool para_succ = false;
-    int buf_size = 512;
-    char *buf;
-    char value_ssid[maxSsidLen];
-    char value_pass[maxKeyLen];
-    char value_user[maxNameLen];
-    mico_Context_t* context = NULL;
 
-    context = mico_system_context_get( );
+    char* status = get_socket_status();
 
-    buf = malloc(buf_size);
+    err = httpd_send_all_header(req, HTTP_RES_200, strlen(status), HTTP_CONTENT_HTML_STR);
+    require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status headers."));
 
-    err = httpd_get_data(req, buf, buf_size);
-    require_noerr( err, Save_Out );
-
-    err = httpd_get_tag_from_post_data(buf, "SSID", value_ssid, maxSsidLen);
-    require_noerr( err, Save_Out );
-
-    err = httpd_get_tag_from_post_data(buf, "USER", value_user, maxNameLen);
-    require_noerr( err, Save_Out );
-
-    if(!strncmp(value_ssid, "\0", 1))
-        goto Save_Out;
-    if(!strncmp(value_user, "\0", 1))
-        goto Save_Out;
-
-    strncpy(context->micoSystemConfig.ssid, value_ssid, maxSsidLen);
-    strncpy(user_config->user, value_user, maxNameLen);
-
-    err = httpd_get_tag_from_post_data(buf, "PASS", value_pass, maxKeyLen);
-    require_noerr( err, Save_Out );
-
-    strncpy(context->micoSystemConfig.key, value_pass, maxKeyLen);
-    strncpy(context->micoSystemConfig.user_key, value_pass, maxKeyLen);
-    context->micoSystemConfig.keyLength = strlen(context->micoSystemConfig.key);
-    context->micoSystemConfig.user_keyLength = strlen(context->micoSystemConfig.key);
-
-    context->micoSystemConfig.channel = 0;
-    memset(context->micoSystemConfig.bssid, 0x0, 6);
-    context->micoSystemConfig.security = SECURITY_TYPE_AUTO;
-    context->micoSystemConfig.dhcpEnable = true;
-
-    para_succ = true;
-
-Save_Out:
-
-    if(para_succ == true)
-    {
-        err = httpd_send_all_header(req, HTTP_RES_200, sizeof(index_html), HTTP_CONTENT_HTML_STR);
-        require_noerr_action( err, exit, app_httpd_log("ERROR: Unable to send http index_html headers.") );
-
-        err = httpd_send_body(req->sock, index_html, sizeof(index_html));
-        require_noerr_action( err, exit, app_httpd_log("ERROR: Unable to send http index_html body.") );
-
-        context->micoSystemConfig.configured = allConfigured;
-
-        mico_system_context_update(context);
-
-        mico_system_power_perform( context, eState_Software_Reset );
-    }
-    else
-    {
-        err = httpd_send_all_header(req, HTTP_RES_200, sizeof(index_html), HTTP_CONTENT_HTML_STR);
-        require_noerr_action( err, exit, app_httpd_log("ERROR: Unable to send http index_html headers.") );
-
-        err = httpd_send_body(req->sock, index_html, sizeof(index_html));
-        require_noerr_action( err, exit, app_httpd_log("ERROR: Unable to send http index_html body.") );
-    }
+    err = httpd_send_body(req->sock, socket_status, strlen(status));
+    require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status body."));
 
 exit:
-    if(buf) free(buf);
     return err;
 }
 
-static int http_wifi_config(httpd_request_t *req)
+static int http_set_wifi_config(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
 
@@ -226,9 +165,8 @@ save_out:
 
 struct httpd_wsgi_call g_app_handlers[] = {
     {"/", HTTPD_HDR_DEFORT, 0, http_get_index_page, NULL, NULL, NULL},
-    {"/result.htm", HTTPD_HDR_DEFORT, 0, NULL, web_send_result_page, NULL, NULL},
     {"/socket", HTTPD_HDR_DEFORT, 0, http_get_socket_status, http_set_socket_status, NULL, NULL},
-    {"/wifi/config", HTTPD_HDR_DEFORT, 0, NULL, http_wifi_config, NULL, NULL},
+    {"/wifi/config", HTTPD_HDR_DEFORT, 0, http_get_wifi_config, http_set_wifi_config, NULL, NULL},
 };
 
 static int g_app_handlers_no = sizeof(g_app_handlers)/sizeof(struct httpd_wsgi_call);
