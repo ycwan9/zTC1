@@ -93,7 +93,7 @@ Client c;  // mqtt client object
 Network n;  // socket network for mqtt client
 
 static mico_worker_thread_t mqtt_client_worker_thread; /* Worker thread to manage send/recv events */
-static mico_timed_event_t mqtt_client_send_event;
+//static mico_timed_event_t mqtt_client_send_event;
 
 char topic_state[MAX_MQTT_TOPIC_SIZE];
 char topic_set[MAX_MQTT_TOPIC_SIZE];
@@ -264,7 +264,7 @@ void mqtt_client_thread(mico_thread_arg_t arg)
 {
     OSStatus err = kUnknownErr;
 
-    int i, rc = -1;
+    int rc = -1;
     fd_set readfds;
     struct timeval t = { 0, MQTT_YIELD_TMIE * 1000 };
 
@@ -378,7 +378,7 @@ void mqtt_client_thread(mico_thread_arg_t arg)
 
                 // send message to server
                 err = mqtt_msg_publish(&c, p_send_msg->topic, p_send_msg->qos, p_send_msg->retained,
-                                        p_send_msg->data,
+                                        (const unsigned char*)p_send_msg->data,
                                         p_send_msg->datalen);
 
                 require_noerr_string(err, MQTT_reconnect, "ERROR: MQTT publish data err");
@@ -513,8 +513,8 @@ OSStatus user_mqtt_send_plug_state(char plug_id)
     topic_buf = malloc(64); //
     if (send_buf != NULL && topic_buf != NULL)
     {
-        sprintf(topic_buf, "homeassistant/switch/%s/plug_%d/state", strMac, plug_id);
-        sprintf(send_buf, "{\"mac\":\"%s\",\"plug_%d\":{\"on\":%d}}", strMac, plug_id, user_config->plug[plug_id].on);
+        sprintf(topic_buf, "homeassistant/switch/%s/plug_%d/state", strMac, (int)plug_id);
+        sprintf(send_buf, "{\"mac\":\"%s\",\"plug_%d\":{\"on\":%d}}", strMac, plug_id, (int)user_config->plug[(int)plug_id].on);
         user_mqtt_send_topic(topic_buf, send_buf, 1);
     }
     if (send_buf) free(send_buf);
@@ -524,7 +524,6 @@ OSStatus user_mqtt_send_plug_state(char plug_id)
 //hass mqtt自动发现数据开关发送
 void user_mqtt_hass_auto(char plug_id)
 {
-    char i;
     char *send_buf = NULL;
     char *topic_buf = NULL;
     send_buf = malloc(512); //
@@ -538,7 +537,7 @@ void user_mqtt_hass_auto(char plug_id)
                  "\"cmd_t\":\"device/ztc1/set\","
                  "\"pl_on\":\"{\\\"mac\\\":\\\"%s\\\",\\\"plug_%d\\\":{\\\"on\\\":1}}\","
                  "\"pl_off\":\"{\\\"mac\\\":\\\"%s\\\",\\\"plug_%d\\\":{\\\"on\\\":0}}\""
-                 "}\0",
+                 "}",
                  plug_id, strMac + 8, strMac, plug_id, strMac, plug_id, strMac, plug_id);
         user_mqtt_send_topic(topic_buf, send_buf, 1);
     }
@@ -561,8 +560,8 @@ void user_mqtt_hass_auto_name(char plug_id)
                  "\"cmd_t\":\"device/ztc1/set\","
                  "\"pl_on\":\"{\\\"mac\\\":\\\"%s\\\",\\\"plug_%d\\\":{\\\"on\\\":1}}\","
                  "\"pl_off\":\"{\\\"mac\\\":\\\"%s\\\",\\\"plug_%d\\\":{\\\"on\\\":0}}\""
-                 "}\0",
-                 user_config->plug[plug_id].name, strMac, plug_id, strMac, plug_id, strMac, plug_id);
+                 "}",
+                 user_config->plug[(int)plug_id].name, strMac, plug_id, strMac, plug_id, strMac, plug_id);
         user_mqtt_send_topic(topic_buf, send_buf, 0);
     }
     if (send_buf)
@@ -573,7 +572,6 @@ void user_mqtt_hass_auto_name(char plug_id)
 //hass mqtt自动发现数据功率发送
 void user_mqtt_hass_auto_power(void)
 {
-    char i;
     char *send_buf = NULL;
     char *topic_buf = NULL;
     send_buf = malloc(512); //
@@ -628,7 +626,6 @@ void user_mqtt_hass_auto_power_name(void)
 
 void user_mqtt_hass_power(void)
 {
-    char i;
     char *send_buf = NULL;
     char *topic_buf = NULL;
     send_buf = malloc(512); //
@@ -636,7 +633,7 @@ void user_mqtt_hass_power(void)
     if (send_buf != NULL && topic_buf != NULL)
     {
         sprintf(topic_buf, "homeassistant/sensor/%s/power/state", strMac);
-        sprintf(send_buf, "{\"power\":\"%d.%d\"}", power / 10, power % 10);
+        sprintf(send_buf, "{\"power\":\"%d.%d\"}", (int)(power/10), (int)(power%10));
         user_mqtt_send_topic(topic_buf, send_buf, 0);
     }
     if (send_buf) free(send_buf);

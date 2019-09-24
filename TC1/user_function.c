@@ -70,7 +70,7 @@ void user_function_cmd_received(int udp_flag, char* pusrdata)
     //开始正式处理所有命令
     if ((p_name && cJSON_IsString(p_name) && strcmp(p_name->valuestring, sys_config->micoSystemConfig.name) == 0)    //name
          || (p_mac && cJSON_IsString(p_mac) && strcmp(p_mac->valuestring, strMac) == 0)   //mac
-        )
+       )
     {
         cJSON *json_send = cJSON_CreateObject();
         cJSON_AddStringToObject(json_send, "mac", strMac);
@@ -103,11 +103,11 @@ void user_function_cmd_received(int udp_flag, char* pusrdata)
             char *temp_buf = malloc(16);
             if (temp_buf != NULL)
             {
-                sprintf(temp_buf, "%d.%d", power / 10, power % 10);
+                sprintf(temp_buf, "%d.%d", (int)(power/10), (int)(power%10));
                 cJSON_AddStringToObject(json_send, "power", temp_buf);
                 free(temp_buf);
             }
-            os_log("power:%d",power);
+            os_log("power:%d", (int)power);
         }
         //解析主机setting-----------------------------------------------------------------
         cJSON *p_setting = cJSON_GetObjectItem(pJsonRoot, "setting");
@@ -311,7 +311,7 @@ bool json_plug_task_analysis(unsigned char x, unsigned char y, cJSON * pJsonRoot
              && cJSON_IsNumber(p_plug_task_repeat)
              && cJSON_IsNumber(p_plug_task_action)
              && cJSON_IsNumber(p_plug_task_on)
-                               )
+                              )
         {
             return_flag = true;
             user_config->plug[x].task[y].hour = p_plug_task_hour->valueint;

@@ -131,7 +131,7 @@ void rtc_thread(mico_thread_arg_t arg)
 
 
     mico_utc_time_t utc_time;
-    mico_utc_time_t utc_time_last;
+    mico_utc_time_t utc_time_last = 0;
     while (1)
     {   //上电后连接了wifi才开始走时否则等待连接
         micoWlanGetLinkStatus(&LinkStatus);
@@ -184,11 +184,11 @@ void rtc_thread(mico_thread_arg_t arg)
                 {
 
                     char repeat = user_config->plug[i].task[j].repeat;
-                    if (   //符合条件则改变继电器状态: 秒为0 时分符合设定值, 重复符合设定值
+                    if ( //符合条件则改变继电器状态: 秒为0 时分符合设定值, 重复符合设定值
                     rtc_time.sec == 0 && rtc_time.min == user_config->plug[i].task[j].minute
                     && rtc_time.hr == user_config->plug[i].task[j].hour
                     && ((repeat == 0x00) || repeat & (1 << (rtc_time.weekday - 1)))
-                   )
+                  )
                     {
                         if (user_config->plug[i].on != user_config->plug[i].task[j].action)
                         {

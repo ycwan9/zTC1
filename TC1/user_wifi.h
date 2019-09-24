@@ -23,7 +23,7 @@ extern char wifi_status;
 extern void wifi_init(void);
 extern void ap_init(void);
 extern void wifi_start_easylink(void);
-
+extern void wifi_connect(char* wifi_ssid, char* wifi_key);
 
 
 #endif

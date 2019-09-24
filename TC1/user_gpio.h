@@ -11,6 +11,7 @@ void key_init(void);
 void user_relay_set(unsigned char x,unsigned char y);
 void user_relay_set_all(char y);
 bool relay_out(void);
-char* get_socket_status();
+const unsigned char* get_socket_status();
+void set_socket_status(char* socket_status);
 
 #endif

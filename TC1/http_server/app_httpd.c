@@ -38,6 +38,7 @@
 #include "httpd_priv.h"
 #include "app_httpd.h"
 #include "user_gpio.h"
+#include "user_wifi.h"
 
 #include "main.h"
 
@@ -70,12 +71,12 @@ static int http_get_socket_status(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
 
-    char* status = get_socket_status();
+    const unsigned char* status = get_socket_status();
 
-    err = httpd_send_all_header(req, HTTP_RES_200, strlen(status), HTTP_CONTENT_HTML_STR);
+    err = httpd_send_all_header(req, HTTP_RES_200, strlen(socket_status), HTTP_CONTENT_HTML_STR);
     require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status headers."));
 
-    err = httpd_send_body(req->sock, socket_status, strlen(status));
+    err = httpd_send_body(req->sock, status, strlen(socket_status));
     require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status body."));
 
 exit:
@@ -96,10 +97,10 @@ static int http_set_socket_status(httpd_request_t *req)
 
     char* status = "OK";
 
-    err = httpd_send_all_header(req, HTTP_RES_200, strlen(status), HTTP_CONTENT_HTML_STR);
+    err = httpd_send_all_header(req, HTTP_RES_200, strlen(socket_status), HTTP_CONTENT_HTML_STR);
     require_noerr_action(err, save_out, app_httpd_log("ERROR: Unable to send http socket_status headers."));
 
-    err = httpd_send_body(req->sock, status, strlen(status));
+    err = httpd_send_body(req->sock, (const unsigned char*)status, strlen(socket_status));
     require_noerr_action(err, save_out, app_httpd_log("ERROR: Unable to send http socket_status body."));
 
 save_out:
@@ -111,12 +112,12 @@ static int http_get_wifi_config(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
 
-    char* status = get_socket_status();
+    const unsigned char* status = get_socket_status();
 
-    err = httpd_send_all_header(req, HTTP_RES_200, strlen(status), HTTP_CONTENT_HTML_STR);
+    err = httpd_send_all_header(req, HTTP_RES_200, strlen(socket_status), HTTP_CONTENT_HTML_STR);
     require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status headers."));
 
-    err = httpd_send_body(req->sock, socket_status, strlen(status));
+    err = httpd_send_body(req->sock, status, strlen(socket_status));
     require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status body."));
 
 exit:
@@ -147,10 +148,10 @@ static int http_set_wifi_config(httpd_request_t *req)
 
     char* status = "OK";
 
-    err = httpd_send_all_header(req, HTTP_RES_200, strlen(status), HTTP_CONTENT_HTML_STR);
+    err = httpd_send_all_header(req, HTTP_RES_200, strlen(socket_status), HTTP_CONTENT_HTML_STR);
     require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status headers."));
 
-    err = httpd_send_body(req->sock, status, strlen(status));
+    err = httpd_send_body(req->sock, (const unsigned char*)status, strlen(socket_status));
     require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status body."));
 
 exit:
@@ -158,8 +159,8 @@ exit:
 
 save_out:
     if (buf) free(buf);
-    if (ssid_size) free(ssid_size);
-    if (key_size) free(key_size);
+    if (wifi_ssid) free(wifi_ssid);
+    if (wifi_key) free(wifi_key);
     return err;
 }
 

@@ -20,7 +20,7 @@ void user_led_set(char x)
 
 bool relay_out(void)
 {
-    unsigned char i;
+    int i;
     for (i = 0; i < PLUG_NUM; i++)
     {
         if (user_config->plug[i].on != 0)
@@ -31,16 +31,16 @@ bool relay_out(void)
     return false;
 }
 
-char* get_socket_status()
+const unsigned char* get_socket_status()
 {
-    sprintf(socket_status, "%d,%d,%d,%d,%d,%d\0",
+    sprintf(socket_status, "%d,%d,%d,%d,%d,%d",
         user_config->plug[0].on,
         user_config->plug[1].on,
         user_config->plug[2].on,
         user_config->plug[3].on,
         user_config->plug[4].on,
         user_config->plug[5].on);
-    return socket_status;
+    return (const unsigned char*)socket_status;
 }
 
 void set_socket_status(char* socket_status)

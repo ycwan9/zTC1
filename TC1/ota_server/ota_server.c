@@ -50,7 +50,7 @@ static uint32_t offset = 0;
 
 static OSStatus onReceivedData(struct _HTTPHeader_t * httpHeader,
                                 uint32_t pos,
-                                char *data,
+                                uint8_t *data,
                                 size_t len,
                                 void * userContext);
 
@@ -228,7 +228,7 @@ static void ota_server_progress_set(OTA_STATE_E state)
 
     progress =(float) ota_server_context->download_state.download_begin_pos / ota_server_context->download_state.download_len;
     progress = progress*100;
-    if( ota_server_context->ota_server_cb != NULL)
+    if(ota_server_context->ota_server_cb != NULL)
         ota_server_context->ota_server_cb(state, progress);
 }
 
@@ -358,7 +358,7 @@ DELETE:
 }
 
 /*one request may receive multi reply*/
-static OSStatus onReceivedData(struct _HTTPHeader_t * inHeader, uint32_t inPos, char * inData,
+static OSStatus onReceivedData(struct _HTTPHeader_t * inHeader, uint32_t inPos, uint8_t * inData,
                                 size_t inLen, void * inUserContext)
 {
     OSStatus err = kNoErr;
@@ -373,7 +373,7 @@ static OSStatus onReceivedData(struct _HTTPHeader_t * inHeader, uint32_t inPos, 
         Md5Update(&md5, inData, inLen);
     }
 
-    MicoFlashWrite(MICO_PARTITION_OTA_TEMP, &offset, (char *) inData, inLen);
+    MicoFlashWrite(MICO_PARTITION_OTA_TEMP, &offset, inData, inLen);
 
     ota_server_progress_set(OTA_LOADING);
 

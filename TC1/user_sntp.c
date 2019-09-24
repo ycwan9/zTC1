@@ -4,6 +4,7 @@
 #include "main.h"
 //#include "user_gpio.h"
 #include "user_sntp.h"
+#include "sntp.h"
 
 /* Callback function when MiCO UTC time in sync to NTP server */
 static void sntp_time_call_back(void)

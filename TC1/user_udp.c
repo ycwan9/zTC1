@@ -104,7 +104,7 @@ void udp_thread(void *arg)
                 require_string(p_send_msg, exit, "Wrong data point");
 
                 // send message to server
-                err = udp_msg_send(udp_fd, p_send_msg->data, p_send_msg->datalen);
+                err = udp_msg_send(udp_fd, (const unsigned char*)p_send_msg->data, p_send_msg->datalen);
 //            require_noerr_string(err, MQTT_reconnect, "ERROR: udp publish data err");
 
                 os_log("udp send data success! msg=[%ld].\r\n", p_send_msg->datalen);
