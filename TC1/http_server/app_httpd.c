@@ -73,10 +73,10 @@ static int http_get_socket_status(httpd_request_t *req)
     char* status = get_socket_status();
 
     err = httpd_send_all_header(req, HTTP_RES_200, strlen(status), HTTP_CONTENT_HTML_STR);
-    require_noerr_action( err, exit, app_httpd_log("ERROR: Unable to send http socket_status headers.") );
+    require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status headers."));
 
     err = httpd_send_body(req->sock, socket_status, strlen(status));
-    require_noerr_action( err, exit, app_httpd_log("ERROR: Unable to send http socket_status body.") );
+    require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status body."));
 
 exit:
     return err;
@@ -188,7 +188,7 @@ static int _app_httpd_start()
     /*Initialize HTTPD*/
     if(is_http_init == false) {
         err = httpd_init();
-        require_noerr_action( err, exit, app_httpd_log("failed to initialize httpd") );
+        require_noerr_action(err, exit, app_httpd_log("failed to initialize httpd"));
         is_http_init = true;
     }
 
@@ -202,12 +202,12 @@ exit:
     return err;
 }
 
-int app_httpd_start( void )
+int app_httpd_start(void)
 {
     OSStatus err = kNoErr;
 
     err = _app_httpd_start();
-    require_noerr( err, exit );
+    require_noerr(err, exit);
 
     if (is_handlers_registered == false) {
         app_http_register_handlers();
@@ -225,7 +225,7 @@ int app_httpd_stop()
     /* HTTPD and services */
     app_httpd_log("stopping down httpd");
     err = httpd_stop();
-    require_noerr_action( err, exit, app_httpd_log("failed to halt httpd") );
+    require_noerr_action(err, exit, app_httpd_log("failed to halt httpd"));
 
 exit:
     return err;

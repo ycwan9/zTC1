@@ -31,7 +31,7 @@
  ******************************************************************************
  */
 
-int app_httpd_start( void );
+int app_httpd_start(void);
 
 int app_httpd_stop();
 
