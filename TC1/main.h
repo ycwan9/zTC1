@@ -57,7 +57,7 @@ typedef struct
     int mqtt_port;        //mqtt service port
     char mqtt_user[SETTING_MQTT_STRING_LENGTH_MAX];     //mqtt service user
     char mqtt_password[SETTING_MQTT_STRING_LENGTH_MAX];     //mqtt service user
-//     char mqtt_device_id[SETTING_MQTT_STRING_LENGTH_MAX];        //mqtt service user  device name
+//   char mqtt_device_id[SETTING_MQTT_STRING_LENGTH_MAX];        //mqtt service user  device name
 
     char version;
     user_plug_config_t plug[PLUG_NUM];

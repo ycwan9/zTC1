@@ -17,14 +17,14 @@ static uint32_t timer_irq_count = 0;
 static void power_timer_handler( void* arg )
 {
 
-//    uint8_t pin_input = MicoGpioInputGet( POWER );
+//  uint8_t pin_input = MicoGpioInputGet( POWER );
     uint32_t timer = 0;
 
     if ( timer_irq_count > 1 )
     {
         timer = (clock_count - clock_count_last);
 
-//    os_log("power_irq_handler:%09u %u %u",timer,timer_irq_count,timer_count);
+//  os_log("power_irq_handler:%09u %u %u",timer,timer_irq_count,timer_count);
         if ( timer_count > 3 )
         {
             timer /= 1000;
@@ -42,20 +42,20 @@ static void power_timer_handler( void* arg )
         timer_count++;
     }
 
-//    if ( clock_count_last != timer_count )
-//    {
+//  if ( clock_count_last != timer_count )
+//  {
 ////        os_log("power_irq_handler:%u-%u=%u",timer_count,clock_count_last,timer);
-//        timer = (timer_count - clock_count_last);
-//        if ( timer_count < clock_count_last ) timer += 0xffffffff;
+//    timer = (timer_count - clock_count_last);
+//    if ( timer_count < clock_count_last ) timer += 0xffffffff;
 //
-//        timer = timer / 1000;
-//        power = 15200000 / timer;
-//        os_log("power_irq_handler:%u,%07u",power,timer);
-//        clock_count_last = timer_count;
-//    }
-//    if(timer_count==0)  os_log("power_timer_handler Hight:%d",clock_count_last);
-//    timer_count++;
-//    clock_count_last=timer_count;
+//    timer = timer / 1000;
+//    power = 15200000 / timer;
+//    os_log("power_irq_handler:%u,%07u",power,timer);
+//    clock_count_last = timer_count;
+//  }
+//  if(timer_count==0)  os_log("power_timer_handler Hight:%d",clock_count_last);
+//  timer_count++;
+//  clock_count_last=timer_count;
 }
 
 static void power_irq_handler( void* arg )

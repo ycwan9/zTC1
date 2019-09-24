@@ -9,12 +9,12 @@
 static void sntp_time_call_back( void )
 {
     struct tm *     currentTime;
-//    iso8601_time_t  iso8601_time;
+//  iso8601_time_t  iso8601_time;
     mico_utc_time_t utc_time;
     mico_rtc_time_t rtc_time;
 
-//    mico_time_get_iso8601_time( &iso8601_time );
-//    os_log("sntp_time_synced: %.26s", (char*)&iso8601_time);
+//  mico_time_get_iso8601_time( &iso8601_time );
+//  os_log("sntp_time_synced: %.26s", (char*)&iso8601_time);
 
     mico_time_get_utc_time( &utc_time );
     utc_time+=28800; //+8:00

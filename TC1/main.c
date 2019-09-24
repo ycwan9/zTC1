@@ -57,7 +57,7 @@ void appRestoreDefault_callback( void * const user_config_data, uint32_t size )
         userConfigDefault->plug[i].name[6] = i + '1';
         userConfigDefault->plug[i].name[7] = 0;
 
-//        sprintf( userConfigDefault->plug[i].name, "²å×ù%d", i );//±àÂëÒì³£
+//      sprintf( userConfigDefault->plug[i].name, "²å×ù%d", i );//±àÂëÒì³£
         for ( j = 0; j < PLUG_TIME_TASK_NUM; j++ )
         {
             userConfigDefault->plug[i].task[j].hour = 0;
@@ -67,7 +67,7 @@ void appRestoreDefault_callback( void * const user_config_data, uint32_t size )
             userConfigDefault->plug[i].task[j].action = 1;
         }
     }
-//    mico_system_context_update( sys_config );
+//  mico_system_context_update( sys_config );
 
 }
 
@@ -80,13 +80,13 @@ int application_start( void )
     uint32_t power_last = 0xffffffff;
     OSStatus err = kNoErr;
 
-//    for ( i = 0; i < Relay_NUM; i++ )
-//    {
-//        MicoGpioOutputLow( Relay[(i)] );
-//        MicoGpioInitialize( Relay[i], OUTPUT_PUSH_PULL );
-//        MicoGpioOutputLow( Relay[(i)] );
-//        //MicoGpioOutputHigh(Relay[i]);
-//    }
+//  for ( i = 0; i < Relay_NUM; i++ )
+//  {
+//      MicoGpioOutputLow( Relay[(i)] );
+//      MicoGpioInitialize( Relay[i], OUTPUT_PUSH_PULL );
+//      MicoGpioOutputLow( Relay[(i)] );
+//      MicoGpioOutputHigh(Relay[i]);
+//  }
     /* Create mico system context and read application's config data from flash */
     sys_config = mico_system_context_init( sizeof(user_config_t) );
     user_config = ((system_context_t *) sys_config)->user_config_data;
@@ -141,17 +141,17 @@ int application_start( void )
     os_log( "mqtt_password:%s",user_config->mqtt_password );
 
     os_log( "version:%d",user_config->version );
-//    for ( i = 0; i < PLUG_NUM; i++ )
-//    {
-//        os_log("plug_%d:",i);
-//        os_log("\tname:%s:",user_config->plug[i].name);
-//        for ( j = 0; j < PLUG_TIME_TASK_NUM; j++ )
-//        {
-//            os_log("\t\ton:%d\t %02d:%02d repeat:0x%X",user_config->plug[i].task[j].on,
-//                user_config->plug[i].task[j].hour,user_config->plug[i].task[j].minute,
-//                user_config->plug[i].task[j].repeat);
-//        }
-//    }
+//  for ( i = 0; i < PLUG_NUM; i++ )
+//  {
+//      os_log("plug_%d:",i);
+//      os_log("\tname:%s:",user_config->plug[i].name);
+//      for ( j = 0; j < PLUG_TIME_TASK_NUM; j++ )
+//      {
+//          os_log("\t\ton:%d\t %02d:%02d repeat:0x%X",user_config->plug[i].task[j].on,
+//              user_config->plug[i].task[j].hour,user_config->plug[i].task[j].minute,
+//              user_config->plug[i].task[j].repeat);
+//      }
+//  }
 
     ap_init();
     wifi_init( );

@@ -175,7 +175,7 @@ static int ota_server_send_header( void )
 
     ret = ota_server_send( (uint8_t *) header, strlen( header ) );
 
-//    ota_server_log("send: %d\r\n%s", strlen(header), header);
+//  ota_server_log("send: %d\r\n%s", strlen(header), header);
     if ( header != NULL ) free( header );
     return ret;
 }

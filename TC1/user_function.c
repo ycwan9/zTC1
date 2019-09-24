@@ -56,7 +56,7 @@ void user_function_cmd_received( int udp_flag, uint8_t *pusrdata )
         cJSON_AddStringToObject( pRoot, "ip", para.ip );
 
         char *s = cJSON_Print( pRoot );
-//        os_log( "pRoot: %s\r\n", s );
+//      os_log( "pRoot: %s\r\n", s );
         user_send( udp_flag, s ); //发送数据
         free( (void *) s );
         cJSON_Delete( pRoot );
@@ -76,7 +76,7 @@ void user_function_cmd_received( int udp_flag, uint8_t *pusrdata )
         cJSON_AddStringToObject( json_send, "mac", strMac );
 
         //解析重启命令
-//        cJSON *p_cmd = cJSON_GetObjectItem( pJsonRoot, "name" );
+//      cJSON *p_cmd = cJSON_GetObjectItem( pJsonRoot, "name" );
         if(p_cmd && cJSON_IsString( p_cmd ) && strcmp( p_cmd->valuestring, "restart" ) == 0)
         {
             os_log("cmd:restart");
@@ -192,7 +192,7 @@ void user_function_cmd_received( int udp_flag, uint8_t *pusrdata )
         if ( return_flag == true )
         {
             char *json_str = cJSON_Print( json_send );
-//            os_log( "pRoot: %s\r\n", json_str );
+//          os_log( "pRoot: %s\r\n", json_str );
             user_send( udp_flag, json_str ); //发送数据
             free( (void *) json_str );
         }
@@ -270,8 +270,8 @@ bool json_plug_analysis( int udp_flag, unsigned char x, cJSON * pJsonRoot, cJSON
             cJSON_AddItemToObject( json_plug_send, "setting", json_plug_setting_send );
         }
     }
-//    cJSON *p_nvalue = cJSON_GetObjectItem( pJsonRoot, "nvalue" );
-//    if ( p_plug || p_nvalue )
+//  cJSON *p_nvalue = cJSON_GetObjectItem( pJsonRoot, "nvalue" );
+//  if ( p_plug || p_nvalue )
     cJSON_AddNumberToObject( json_plug_send, "on", user_config->plug[x].on );
 
     cJSON_AddItemToObject( pJsonSend, plug_str, json_plug_send );

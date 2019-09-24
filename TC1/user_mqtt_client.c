@@ -173,7 +173,7 @@ void user_mqtt_timer_func( void *arg )
                 break;
             default:
                 mico_stop_timer( &timer_handle );
-//            mico_deinit_timer( &timer_handle );
+//        mico_deinit_timer( &timer_handle );
                 break;
         }
     }
@@ -474,7 +474,7 @@ OSStatus user_mqtt_send_topic( char *topic, char *arg, char retained )
     OSStatus err = kUnknownErr;
     p_mqtt_send_msg_t p_send_msg = NULL;
 
-//    app_log("======App prepare to send ![%d]======", MicoGetMemoryInfo()->free_memory);
+//  app_log("======App prepare to send ![%d]======", MicoGetMemoryInfo()->free_memory);
 
     /* Send queue is full, pop the oldest */
     if ( mico_rtos_is_queue_full( &mqtt_msg_send_queue ) == true )

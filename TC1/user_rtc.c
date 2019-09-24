@@ -19,7 +19,7 @@ OSStatus user_sntp_get_time( )
     char ** pptr = NULL;
     struct in_addr ipp;
 
-//    mico_rtc_time_t rtc_time;
+//  mico_rtc_time_t rtc_time;
 
     hostent_content = gethostbyname( "pool.ntp.org" );
     pptr = hostent_content->h_addr_list;
@@ -69,16 +69,16 @@ OSStatus user_sntp_get_time( )
         mico_utc_time_ms_t utc_time_ms = (uint64_t) current_time.seconds * (uint64_t) 1000
                                          + (current_time.microseconds / 1000);
         mico_time_set_utc_time_ms( &utc_time_ms );
-//        mico_utc_time_t utc_time = utc_time_ms / 1000 + 28800; //+8:00
-//        struct tm * currentTime = localtime( (const time_t *) &utc_time );
-//        rtc_time.sec = currentTime->tm_sec;
-//        rtc_time.min = currentTime->tm_min;
-//        rtc_time.hr = currentTime->tm_hour;
-//        rtc_time.date = currentTime->tm_mday;
-//        rtc_time.weekday = currentTime->tm_wday;
-//        rtc_time.month = currentTime->tm_mon + 1;
-//        rtc_time.year = (currentTime->tm_year + 1900) % 100;
-//        MicoRtcSetTime( &rtc_time );
+//      mico_utc_time_t utc_time = utc_time_ms / 1000 + 28800; //+8:00
+//      struct tm * currentTime = localtime( (const time_t *) &utc_time );
+//      rtc_time.sec = currentTime->tm_sec;
+//      rtc_time.min = currentTime->tm_min;
+//      rtc_time.hr = currentTime->tm_hour;
+//      rtc_time.date = currentTime->tm_mday;
+//      rtc_time.weekday = currentTime->tm_wday;
+//      rtc_time.month = currentTime->tm_mon + 1;
+//      rtc_time.year = (currentTime->tm_year + 1900) % 100;
+//      MicoRtcSetTime( &rtc_time );
     }
     else
     {
@@ -92,22 +92,22 @@ OSStatus user_rtc_init( void )
 {
     OSStatus err = kNoErr;
 
-//    mico_rtc_time_t rtc_time;
-//    rtc_time.sec = 0;
-//    rtc_time.min = 0;
-//    rtc_time.hr = 0;
+//  mico_rtc_time_t rtc_time;
+//  rtc_time.sec = 0;
+//  rtc_time.min = 0;
+//  rtc_time.hr = 0;
 //
-//    rtc_time.date = 1;
-//    rtc_time.weekday = 1;
-//    rtc_time.month = 1;
-//    rtc_time.year = 1;
+//  rtc_time.date = 1;
+//  rtc_time.weekday = 1;
+//  rtc_time.month = 1;
+//  rtc_time.year = 1;
 //
-//    MicoRtcSetTime( &rtc_time );
+//  MicoRtcSetTime( &rtc_time );
 
-//    /* create mqtt msg send queue */
-//    err = mico_rtos_init_queue( &mqtt_msg_send_queue, "mqtt_msg_send_queue", sizeof(p_mqtt_send_msg_t),
-//                                MAX_MQTT_SEND_QUEUE_SIZE );
-//    require_noerr_action( err, exit, app_log("ERROR: create mqtt msg send queue err=%d.", err) );
+//  /* create mqtt msg send queue */
+//  err = mico_rtos_init_queue( &mqtt_msg_send_queue, "mqtt_msg_send_queue", sizeof(p_mqtt_send_msg_t),
+//                              MAX_MQTT_SEND_QUEUE_SIZE );
+//  require_noerr_action( err, exit, app_log("ERROR: create mqtt msg send queue err=%d.", err) );
 
     /* start rtc client */
     err = mico_rtos_create_thread( NULL, MICO_APPLICATION_PRIORITY, "rtc",
@@ -170,7 +170,7 @@ void rtc_thread( mico_thread_arg_t arg )
         rtc_time.month = currentTime->tm_mon + 1;
         rtc_time.year = (currentTime->tm_year + 1900) % 100;
 
-//        MicoRtcSetTime( &rtc_time );      //MicoRtc不自动走时!
+//      MicoRtcSetTime( &rtc_time );      //MicoRtc不自动走时!
 
         if ( rtc_time.sec == 0 )
             os_log("time:20%02d/%02d/%02d %d %02d:%02d:%02d",rtc_time.year,rtc_time.month,rtc_time.date,rtc_time.weekday,rtc_time.hr,rtc_time.min,rtc_time.sec);
@@ -251,7 +251,7 @@ void rtc_thread( mico_thread_arg_t arg )
 
             free( json_str );
             cJSON_Delete( json_send );
-//            os_log("cJSON_Delete");
+//          os_log("cJSON_Delete");
         }
 
         //SNTP服务 开机及每小时校准一次
@@ -273,7 +273,7 @@ void rtc_thread( mico_thread_arg_t arg )
         mico_rtos_thread_msleep( 900 );
     }
 
-//    exit:
+//  exit:
     os_log("EXIT: rtc exit with err = %d.", err);
     mico_rtos_delete_thread( NULL );
 }
