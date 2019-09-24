@@ -153,6 +153,7 @@ int application_start( void )
 //      }
 //  }
 
+    //sys_config = mico_system_context_init(sizeof(user_config_t)); //获取Flash中的配置
     ap_init();
     wifi_init( );
     user_udp_init( );

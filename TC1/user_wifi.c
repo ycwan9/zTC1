@@ -59,29 +59,6 @@ void wifi_easylink_completed_handle( network_InitTypeDef_st *nwkpara, void * arg
     micoWlanStopEasyLink( );
 }
 
-void wifi_config(char* wifi_ssid, char* wifi_key)
-{
-    os_log("wifi_easylink_wps_completed_handle:"); 
-    if (wifi_ssid == NULL || wifi_key == NULL)
-    {
-        os_log("EasyLink fail");
-        micoWlanStopEasyLink();
-        return;
-    }
-
-    os_log("ssid:\"%s\",\"%s\"", wifi_ssid, wifi_ssid);
-
-    //保存wifi及密码
-    strcpy(sys_config->micoSystemConfig.ssid, wifi_ssid);
-    strcpy(sys_config->micoSystemConfig.user_key, wifi_key);
-    sys_config->micoSystemConfig.user_keyLength = strlen(wifi_key);
-    mico_system_context_update(sys_config);
-
-    wifi_status = WIFI_STATE_NOCONNECT;
-    os_log("EasyLink stop");
-    micoWlanStopEasyLink();
-}
-
 //wifi已连接获取到IP地址 回调
 static void wifi_get_ip_callback( IPStatusTypedef *pnet, void * arg )
 {
@@ -154,6 +131,13 @@ void wifi_connect(char* wifi_ssid, char* wifi_key)
     wNetConfig.dhcpMode = DHCP_Client;
     wNetConfig.wifi_retry_interval = 6000;
     micoWlanStart(&wNetConfig);
+
+    //保存wifi及密码到Flash
+    strcpy(sys_config->micoSystemConfig.ssid, nwkpara->wifi_ssid);
+    strcpy(sys_config->micoSystemConfig.user_key, nwkpara->wifi_key);
+    sys_config->micoSystemConfig.user_keyLength = strlen(nwkpara->wifi_key);
+    mico_system_context_update(sys_config);
+    wifi_status = WIFI_STATE_NOCONNECT;
 }
 
 void wifi_init( void )
