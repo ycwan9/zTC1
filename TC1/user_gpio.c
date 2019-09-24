@@ -106,9 +106,8 @@ static void key_long_press(void)
 
 static void key_long_10s_press(void)
 {
-    OSStatus err;
-    char i = 0;
     os_log("WARNGIN: user params restored!");
+//  char i = 0;
 //  for (i = 0; i < 3; i++)
 //  {
 //      user_led_set(1);
@@ -123,7 +122,6 @@ static void key_long_10s_press(void)
 static void key_short_press(void)
 {
     char i;
-    OSStatus err;
 
     if (relay_out())
     {
@@ -138,9 +136,6 @@ static void key_short_press(void)
     {
         user_mqtt_send_plug_state(i);
     }
-
-
-
 }
 mico_timer_t user_key_timer;
 uint16_t key_time = 0;
@@ -148,11 +143,9 @@ uint16_t key_time = 0;
 
 static void key_timeout_handler(void* arg)
 {
-
-    static uint8_t key_trigger, key_continue;
-    static uint8_t key_last;
+    static char key_trigger, key_continue;
     //°´¼üÉ¨Ãè³ÌÐò
-    uint8_t tmp = ~(0xfe | MicoGpioInputGet(Button));
+    char tmp = ~(0xfe | MicoGpioInputGet(Button));
     key_trigger = tmp & (tmp ^ key_continue);
     key_continue = tmp;
 //  os_log("button scan:%02x %02x",key_trigger,key_continue);
@@ -161,9 +154,7 @@ static void key_timeout_handler(void* arg)
     {
         //any button pressed
         key_time++;
-        if (key_time < BUTTON_LONG_PRESS_TIME)
-            key_last = key_continue;
-        else
+        if (key_time <= BUTTON_LONG_PRESS_TIME)
         {
             os_log("button long pressed:%d",key_time);
 
@@ -198,7 +189,6 @@ static void key_timeout_handler(void* arg)
         {
             MicoSystemReboot();
         }
-        key_last = 0;
         mico_rtos_stop_timer(&user_key_timer);
     }
 }

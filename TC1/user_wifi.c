@@ -4,6 +4,7 @@
 #include "mico_socket.h"
 #include "user_gpio.h"
 #include "user_sntp.h"
+#include "user_function.h"
 
 #define os_log(format, ...)  custom_log("WIFI", format, ##__VA_ARGS__)
 
@@ -11,6 +12,7 @@ char wifi_status = WIFI_STATE_NOCONNECT;
 
 mico_timer_t wifi_led_timer;
 
+/*
 static void wifi_connect_sys_config(void)
 {
     if (strlen(sys_config->micoSystemConfig.ssid) > 0)
@@ -28,6 +30,7 @@ static void wifi_connect_sys_config(void)
     } else
         wifi_status = WIFI_STATE_FAIL;
 }
+*/
 void wifi_start_easylink()
 {
     wifi_status = WIFI_STATE_EASYLINK;

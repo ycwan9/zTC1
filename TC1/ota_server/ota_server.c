@@ -50,11 +50,11 @@ static uint32_t offset = 0;
 
 static OSStatus onReceivedData(struct _HTTPHeader_t * httpHeader,
                                 uint32_t pos,
-                                uint8_t *data,
+                                char *data,
                                 size_t len,
                                 void * userContext);
 
-static void hex2str(uint8_t *hex, int hex_len, char *str)
+static void hex2str(char *hex, int hex_len, char *str)
 {
   int i = 0;
   for(i=0; i<hex_len; i++){
@@ -73,7 +73,7 @@ static void upper2lower(char *str, int len)
   }
 }
 
-static int ota_server_send(uint8_t *data, int datalen)
+static int ota_server_send(char *data, int datalen)
 {
     int res = 0;
     if(ota_server_context->download_url.HTTP_SECURITY == HTTP_SECURITY_HTTP){
@@ -173,7 +173,7 @@ static int ota_server_send_header(void)
 
     j += sprintf(header + j, "\r\n");
 
-    ret = ota_server_send((uint8_t *) header, strlen(header));
+    ret = ota_server_send((char *) header, strlen(header));
 
 //  ota_server_log("send: %d\r\n%s", strlen(header), header);
     if (header != NULL) free(header);
@@ -322,7 +322,7 @@ static void ota_server_thread(mico_thread_arg_t arg)
             CRC16_Final(&crc_context, &crc16);
             if(ota_server_context->ota_check.is_md5 == true){
                 Md5Final(&md5, (unsigned char *) md5_value);
-                hex2str((uint8_t *)md5_value, 16, md5_value_string);
+                hex2str((char *)md5_value, 16, md5_value_string);
             }
             if (memcmp(md5_value_string, ota_server_context->ota_check.md5, OTA_MD5_LENTH) == 0){
                 ota_server_progress_set(OTA_SUCCE);
@@ -358,7 +358,7 @@ DELETE:
 }
 
 /*one request may receive multi reply*/
-static OSStatus onReceivedData(struct _HTTPHeader_t * inHeader, uint32_t inPos, uint8_t * inData,
+static OSStatus onReceivedData(struct _HTTPHeader_t * inHeader, uint32_t inPos, char * inData,
                                 size_t inLen, void * inUserContext)
 {
     OSStatus err = kNoErr;
@@ -373,7 +373,7 @@ static OSStatus onReceivedData(struct _HTTPHeader_t * inHeader, uint32_t inPos, 
         Md5Update(&md5, inData, inLen);
     }
 
-    MicoFlashWrite(MICO_PARTITION_OTA_TEMP, &offset, (uint8_t *) inData, inLen);
+    MicoFlashWrite(MICO_PARTITION_OTA_TEMP, &offset, (char *) inData, inLen);
 
     ota_server_progress_set(OTA_LOADING);
 

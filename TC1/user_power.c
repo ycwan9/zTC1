@@ -17,7 +17,7 @@ static uint32_t timer_irq_count = 0;
 static void power_timer_handler(void* arg)
 {
 
-//  uint8_t pin_input = MicoGpioInputGet(POWER);
+//  char pin_input = MicoGpioInputGet(POWER);
     uint32_t timer = 0;
 
     if (timer_irq_count > 1)

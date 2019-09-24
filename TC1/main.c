@@ -14,9 +14,9 @@
 
 
 char rtc_init = 0;    //sntp校时成功标志位
-uint32_t total_time=0;
+uint32_t total_time = 0;
 char strMac[16] = { 0 };
-uint32_t power=0;
+uint32_t power = 0;
 
 system_config_t * sys_config;
 user_config_t * user_config;
@@ -76,7 +76,7 @@ int application_start(void)
     int i;
     os_log("Start %s",VERSION);
 
-    uint8_t main_num=0;
+    char main_num=0;
     uint32_t power_last = 0xffffffff;
     OSStatus err = kNoErr;
 
@@ -174,11 +174,11 @@ int application_start(void)
         {
             power_last = power;
             main_num =0;
-            uint8_t *power_buf = NULL;
-            power_buf = malloc(128);
+            char* power_buf = malloc(128);
             if (power_buf != NULL)
             {
-                sprintf(power_buf, "{\"mac\":\"%s\",\"power\":\"%d.%d\",\"total_time\":%d}", strMac, power / 10, power % 10, total_time);
+                sprintf(power_buf, "{\"mac\":\"%s\",\"power\":\"%u.%u\",\"total_time\":%u}",
+                    strMac, (unsigned int)(power/10), (unsigned int)(power%10), (unsigned int)total_time);
                 user_send(0, power_buf);
                 free(power_buf);
             }

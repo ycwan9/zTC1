@@ -37,7 +37,7 @@ typedef struct
 {
     char hour;      //小时
     char minute;    //分钟
-    uint8_t repeat; //bit7:一次   bit6-0:周日-周一
+    char repeat; //bit7:一次   bit6-0:周日-周一
     char action;    //动作
     char on;    //开关
 } user_plug_task_config_t;

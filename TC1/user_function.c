@@ -27,7 +27,7 @@ void user_send(int udp_flag, char *s)
         user_mqtt_send(s);
 }
 
-void user_function_cmd_received(int udp_flag, uint8_t *pusrdata)
+void user_function_cmd_received(int udp_flag, char* pusrdata)
 {
 
     unsigned char i;
@@ -100,7 +100,7 @@ void user_function_cmd_received(int udp_flag, uint8_t *pusrdata)
         cJSON *p_power = cJSON_GetObjectItem(pJsonRoot, "power");
         if (p_power)
         {
-            uint8_t *temp_buf = malloc(16);
+            char *temp_buf = malloc(16);
             if (temp_buf != NULL)
             {
                 sprintf(temp_buf, "%d.%d", power / 10, power % 10);

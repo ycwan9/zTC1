@@ -13,7 +13,7 @@ mico_queue_t udp_msg_send_queue = NULL;
 typedef struct
 {
     uint32_t datalen;
-    uint8_t data[MAX_UDP_DATA_SIZE];
+    char data[MAX_UDP_DATA_SIZE];
 } udp_send_msg_t, *p_udp_send_msg_t;
 
 static OSStatus udp_msg_send(int socket, const unsigned char* msg, uint32_t msg_len);
@@ -49,7 +49,7 @@ void udp_thread(void *arg)
     p_udp_send_msg_t p_send_msg = NULL;
     int msg_send_event_fd = -1;
     char ip_address[16];
-    uint8_t *buf = NULL;
+    char *buf = NULL;
 
     /* create udp msg send queue */
     err = mico_rtos_init_queue(&udp_msg_send_queue, "uqp_msg_send_queue", sizeof(p_udp_send_msg_t),
@@ -125,7 +125,6 @@ void udp_thread(void *arg)
 static OSStatus udp_msg_send(int socket, const unsigned char* msg, uint32_t msg_len)
 {
     OSStatus err = kUnknownErr;
-    int ret = 0;
 
     require(msg_len && msg, exit);
 
@@ -139,7 +138,7 @@ static OSStatus udp_msg_send(int socket, const unsigned char* msg, uint32_t msg_
     /*the receiver should bind at port=20000*/
     sendto(socket, msg, msg_len, 0, (struct sockaddr *) &addr, sizeof(addr));
 
-    exit:
+exit:
     return err;
 }
 

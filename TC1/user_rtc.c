@@ -156,7 +156,7 @@ void rtc_thread(mico_thread_arg_t arg)
 
         if (utc_time_last != utc_time)
         {
-            utc_time_last == utc_time;
+            utc_time_last = utc_time;
             total_time++;
         }
 
@@ -183,7 +183,7 @@ void rtc_thread(mico_thread_arg_t arg)
                 if (user_config->plug[i].task[j].on != 0)
                 {
 
-                    uint8_t repeat = user_config->plug[i].task[j].repeat;
+                    char repeat = user_config->plug[i].task[j].repeat;
                     if (   //符合条件则改变继电器状态: 秒为0 时分符合设定值, 重复符合设定值
                     rtc_time.sec == 0 && rtc_time.min == user_config->plug[i].task[j].minute
                     && rtc_time.hr == user_config->plug[i].task[j].hour
