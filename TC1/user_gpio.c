@@ -56,9 +56,9 @@ void set_socket_status(char* socket_status)
 }
 
 /*user_relay_set
- * ÉèÖÃ¼ÌµçÆ÷¿ª¹Ø
- *  i:±àºÅ 0-5
- * on:¿ª¹Ø 0:¹Ø 1:¿ª
+ * è®¾ç½®ç»§ç”µå™¨å¼€å…³
+ *  i:ç¼–å· 0-5
+ * on:å¼€å…³ 0:å…³ 1:å¼€
  */
 void user_relay_set(unsigned char i, unsigned char on)
 {
@@ -86,8 +86,8 @@ void user_relay_set(unsigned char i, unsigned char on)
 }
 
 /*
- * ÉèÖÃËùÓĞ¼ÌµçÆ÷¿ª¹Ø
- * y: 0:È«²¿¹Ø 1:È«²¿¿ª
+ * è®¾ç½®æ‰€æœ‰ç»§ç”µå™¨å¼€å…³
+ * y: 0:å…¨éƒ¨å…³ 1:å…¨éƒ¨å¼€
  *
  */
 void user_relay_set_all(char y)
@@ -144,12 +144,12 @@ uint16_t key_time = 0;
 static void key_timeout_handler(void* arg)
 {
     static char key_trigger, key_continue;
-    //°´¼üÉ¨Ãè³ÌĞò
+    //æŒ‰é”®æ‰«æç¨‹åº
     char tmp = ~(0xfe | MicoGpioInputGet(Button));
     key_trigger = tmp & (tmp ^ key_continue);
     key_continue = tmp;
 //  os_log("button scan:%02x %02x",key_trigger,key_continue);
-    if (key_trigger != 0) key_time = 0; //ĞÂ°´¼ü°´ÏÂÊ±,ÖØĞÂ¿ªÊ¼°´¼ü¼ÆÊ±
+    if (key_trigger != 0) key_time = 0; //æ–°æŒ‰é”®æŒ‰ä¸‹æ—¶,é‡æ–°å¼€å§‹æŒ‰é”®è®¡æ—¶
     if (key_continue != 0)
     {
         //any button pressed
@@ -181,7 +181,7 @@ static void key_timeout_handler(void* arg)
     {
         //button released
         if (key_time < BUTTON_LONG_PRESS_TIME)
-        {   //100ms*10=1s ´óÓÚ1sÎª³¤°´
+        {   //100ms*10=1s å¤§äº1sä¸ºé•¿æŒ‰
             key_time = 0;
             os_log("button short pressed:%d",key_time);
             key_short_press();

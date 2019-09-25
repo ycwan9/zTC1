@@ -124,7 +124,7 @@ OSStatus user_rtc_init(void)
 void rtc_thread(mico_thread_arg_t arg)
 {
     int i, j;
-    char task_flag[PLUG_NUM] = { -1, -1, -1, -1, -1, -1 };   //¼ÇÂ¼Ã¿¸ö²å×ùÄÄ¸öÈÎÎñĞèÒª·µ»ØÊı¾İ
+    char task_flag[PLUG_NUM] = { -1, -1, -1, -1, -1, -1 };   //è®°å½•æ¯ä¸ªæ’åº§å“ªä¸ªä»»åŠ¡éœ€è¦è¿”å›æ•°æ®
     OSStatus err = kUnknownErr;
     LinkStatusTypeDef LinkStatus;
     mico_rtc_time_t rtc_time;
@@ -133,7 +133,7 @@ void rtc_thread(mico_thread_arg_t arg)
     mico_utc_time_t utc_time;
     mico_utc_time_t utc_time_last = 0;
     while (1)
-    {   //ÉÏµçºóÁ¬½ÓÁËwifi²Å¿ªÊ¼×ßÊ±·ñÔòµÈ´ıÁ¬½Ó
+    {   //ä¸Šç”µåè¿æ¥äº†wifiæ‰å¼€å§‹èµ°æ—¶å¦åˆ™ç­‰å¾…è¿æ¥
         micoWlanGetLinkStatus(&LinkStatus);
         if (LinkStatus.is_connected == 1)
         {
@@ -170,7 +170,7 @@ void rtc_thread(mico_thread_arg_t arg)
         rtc_time.month = currentTime->tm_mon + 1;
         rtc_time.year = (currentTime->tm_year + 1900) % 100;
 
-//      MicoRtcSetTime(&rtc_time);      //MicoRtc²»×Ô¶¯×ßÊ±!
+//      MicoRtcSetTime(&rtc_time);      //MicoRtcä¸è‡ªåŠ¨èµ°æ—¶!
 
         if (rtc_time.sec == 0)
             os_log("time:20%02d/%02d/%02d %d %02d:%02d:%02d",rtc_time.year,rtc_time.month,rtc_time.date,rtc_time.weekday,rtc_time.hr,rtc_time.min,rtc_time.sec);
@@ -184,7 +184,7 @@ void rtc_thread(mico_thread_arg_t arg)
                 {
 
                     char repeat = user_config->plug[i].task[j].repeat;
-                    if ( //·ûºÏÌõ¼şÔò¸Ä±ä¼ÌµçÆ÷×´Ì¬: ÃëÎª0 Ê±·Ö·ûºÏÉè¶¨Öµ, ÖØ¸´·ûºÏÉè¶¨Öµ
+                    if ( //ç¬¦åˆæ¡ä»¶åˆ™æ”¹å˜ç»§ç”µå™¨çŠ¶æ€: ç§’ä¸º0 æ—¶åˆ†ç¬¦åˆè®¾å®šå€¼, é‡å¤ç¬¦åˆè®¾å®šå€¼
                     rtc_time.sec == 0 && rtc_time.min == user_config->plug[i].task[j].minute
                     && rtc_time.hr == user_config->plug[i].task[j].hour
                     && ((repeat == 0x00) || repeat & (1 << (rtc_time.weekday - 1)))
@@ -207,7 +207,7 @@ void rtc_thread(mico_thread_arg_t arg)
             }
         }
 
-        //¸üĞÂ´¢´æÊı¾İ ¸üĞÂ¶¨Ê±ÈÎÎñÊı¾İ
+        //æ›´æ–°å‚¨å­˜æ•°æ® æ›´æ–°å®šæ—¶ä»»åŠ¡æ•°æ®
         if (update_user_config_flag == 1)
         {
             os_log("update_user_config_flag");
@@ -247,14 +247,14 @@ void rtc_thread(mico_thread_arg_t arg)
             }
 
             char *json_str = cJSON_Print(json_send);
-            user_send(false, json_str);    //·¢ËÍÊı¾İ
+            user_send(false, json_str);    //å‘é€æ•°æ®
 
             free(json_str);
             cJSON_Delete(json_send);
 //          os_log("cJSON_Delete");
         }
 
-        //SNTP·şÎñ ¿ª»ú¼°Ã¿Ğ¡Ê±Ğ£×¼Ò»´Î
+        //SNTPæœåŠ¡ å¼€æœºåŠæ¯å°æ—¶æ ¡å‡†ä¸€æ¬¡
         if (rtc_init != 1 || (rtc_time.sec == 0 && rtc_time.min == 0))
         {
             micoWlanGetLinkStatus(&LinkStatus);

@@ -13,7 +13,7 @@
 
 
 
-char rtc_init = 0;    //sntpĞ£Ê±³É¹¦±êÖ¾Î»
+char rtc_init = 0;    //sntpæ ¡æ—¶æˆåŠŸæ ‡å¿—ä½
 uint32_t total_time = 0;
 char strMac[16] = { 0 };
 uint32_t power = 0;
@@ -31,7 +31,7 @@ void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
     UNUSED_PARAMETER(size);
 
 
-    mico_system_context_get()->micoSystemConfig.name[0] = 1;   //ÔÚÏÂ´ÎÖØÆôÊ±Ê¹ÓÃÄ¬ÈÏÃû³Æ
+    mico_system_context_get()->micoSystemConfig.name[0] = 1;   //åœ¨ä¸‹æ¬¡é‡å¯æ—¶ä½¿ç”¨é»˜è®¤åç§°
     mico_system_context_get()->micoSystemConfig.name[1] = 0;
 
     user_config_t* userConfigDefault = user_config_data;
@@ -47,7 +47,7 @@ void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
     {
         userConfigDefault->plug[i].on = 1;
 
-        //²å×ùÃû³Æ ²å¿Ú1-6
+        //æ’åº§åç§° æ’å£1-6
         userConfigDefault->plug[i].name[0] = 0xe6;
         userConfigDefault->plug[i].name[1] = 0x8f;
         userConfigDefault->plug[i].name[2] = 0x92;
@@ -57,7 +57,7 @@ void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
         userConfigDefault->plug[i].name[6] = i + '1';
         userConfigDefault->plug[i].name[7] = 0;
 
-//      sprintf(userConfigDefault->plug[i].name, "²å×ù%d", i);//±àÂëÒì³£
+//      sprintf(userConfigDefault->plug[i].name, "æ’åº§%d", i);//ç¼–ç å¼‚å¸¸
         for (j = 0; j < PLUG_TIME_TASK_NUM; j++)
         {
             userConfigDefault->plug[i].task[j].hour = 0;
@@ -97,9 +97,9 @@ int application_start(void)
 
     MicoGpioInitialize((mico_gpio_t) Button, INPUT_PULL_UP);
     if (!MicoGpioInputGet(Button))
-    {   //¿ª»úÊ±°´Å¥×´Ì¬
+    {   //å¼€æœºæ—¶æŒ‰é’®çŠ¶æ€
         os_log("wifi_start_easylink");
-        wifi_status = WIFI_STATE_NOEASYLINK;  //wifi_initÖĞÆô¶¯easylink
+        wifi_status = WIFI_STATE_NOEASYLINK;  //wifi_initä¸­å¯åŠ¨easylink
     }
 
     MicoGpioInitialize((mico_gpio_t) Led, OUTPUT_PUSH_PULL);
@@ -120,7 +120,7 @@ int application_start(void)
     if (sys_config->micoSystemConfig.name[0] == 1)
     {
         IPStatusTypedef para;
-        os_log("micoWlanGetIPStatus:%d", micoWlanGetIPStatus(&para, Station));   //mac¶Á³öÀ´È«²¿ÊÇ0??!!!
+        os_log("micoWlanGetIPStatus:%d", micoWlanGetIPStatus(&para, Station));   //macè¯»å‡ºæ¥å…¨éƒ¨æ˜¯0??!!!
         strcpy(strMac, para.mac);
         os_log("result:%s",strMac);
         os_log("result:%s",para.mac);
@@ -153,7 +153,7 @@ int application_start(void)
 //      }
 //  }
 
-    //sys_config = mico_system_context_init(sizeof(user_config_t)); //»ñÈ¡FlashÖĞµÄÅäÖÃ
+    //sys_config = mico_system_context_init(sizeof(user_config_t)); //è·å–Flashä¸­çš„é…ç½®
     ap_init();
     wifi_init();
     user_udp_init();
@@ -169,7 +169,7 @@ int application_start(void)
     while (1)
     {
         main_num++;
-        //·¢ËÍ¹¦ÂÊÊı¾İ
+        //å‘é€åŠŸç‡æ•°æ®
         if (power_last != power || main_num>4)
         {
             power_last = power;
