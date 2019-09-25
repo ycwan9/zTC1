@@ -307,7 +307,7 @@ void mqtt_client_thread(mico_thread_arg_t arg)
         micoWlanGetLinkStatus(&LinkStatus);
         if (LinkStatus.is_connected != 1)
         {
-            mqtt_log("ERROR:WIFI not connection , waiting 3s for connecting and then connecting MQTT ", rc);
+            mqtt_log("ERROR:WIFI not connection , waiting 3s for connecting and then connecting MQTT ");
             mico_rtos_thread_sleep(3);
             continue;
         }
@@ -506,19 +506,21 @@ OSStatus user_mqtt_send(char *arg)
 //更新ha开关状态
 OSStatus user_mqtt_send_plug_state(char plug_id)
 {
-
     char *send_buf = NULL;
     char *topic_buf = NULL;
-    send_buf = malloc(64); //
-    topic_buf = malloc(64); //
+    send_buf = malloc(64);
+    topic_buf = malloc(64);
+    OSStatus oss_status = kUnknownErr;
     if (send_buf != NULL && topic_buf != NULL)
     {
         sprintf(topic_buf, "homeassistant/switch/%s/plug_%d/state", strMac, (int)plug_id);
         sprintf(send_buf, "{\"mac\":\"%s\",\"plug_%d\":{\"on\":%d}}", strMac, plug_id, (int)user_config->plug[(int)plug_id].on);
-        user_mqtt_send_topic(topic_buf, send_buf, 1);
+        oss_status = user_mqtt_send_topic(topic_buf, send_buf, 1);
     }
     if (send_buf) free(send_buf);
     if (topic_buf) free(topic_buf);
+
+    return oss_status;
 }
 
 //hass mqtt自动发现数据开关发送
