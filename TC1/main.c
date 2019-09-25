@@ -16,8 +16,8 @@ uint32_t total_time = 0;
 char strMac[16] = { 0 };
 uint32_t power = 0;
 
-system_config_t * sys_config;
-user_config_t * user_config;
+system_config_t* sys_config;
+user_config_t* user_config;
 char socket_status[32] = { 0 };
 
 mico_gpio_t Relay[Relay_NUM] = { Relay_0, Relay_1, Relay_2, Relay_3, Relay_4, Relay_5 };
@@ -83,7 +83,7 @@ int application_start(void)
 //  }
     /* Create mico system context and read application's config data from flash */
     sys_config = mico_system_context_init(sizeof(user_config_t));
-    user_config = ((system_context_t *) sys_config)->user_config_data;
+    user_config = ((system_context_t*)sys_config)->user_config_data;
     require_action(user_config, exit, err = kNoMemoryErr);
 
     err = mico_system_init(sys_config);
@@ -92,8 +92,8 @@ int application_start(void)
     MicoGpioInitialize((mico_gpio_t) Button, INPUT_PULL_UP);
     if (!MicoGpioInputGet(Button))
     {   //开机时按钮状态
-        os_log("wifi_start_easylink");
-        wifi_status = WIFI_STATE_NOEASYLINK;  //wifi_init中启动easylink
+        os_log("press ap_init");
+        ap_init();
     }
 
     MicoGpioInitialize((mico_gpio_t) Led, OUTPUT_PUSH_PULL);
@@ -146,11 +146,15 @@ int application_start(void)
 //      }
 //  }
 
-    if (user_config->last_wifi_status != NOTIFY_STATION_UP)
+    wifi_init();
+    if (sys_config->micoSystemConfig.reserved != NOTIFY_STATION_UP)
     {
         ap_init();
     }
-    wifi_init();
+    else
+    {
+        wifi_connect(sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key);
+    }
     user_udp_init();
     key_init();
     err = user_mqtt_init();

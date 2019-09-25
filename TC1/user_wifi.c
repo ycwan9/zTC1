@@ -31,36 +31,6 @@ static void wifi_connect_sys_config(void)
         wifi_status = WIFI_STATE_FAIL;
 }
 */
-void wifi_start_easylink()
-{
-    wifi_status = WIFI_STATE_EASYLINK;
-    micoWlanStartEasyLink(20000);
-    user_led_set(1);
-}
-
-//easylink 完成回调
-void wifi_easylink_completed_handle(network_InitTypeDef_st *nwkpara, void * arg)
-{
-    os_log("wifi_easylink_wps_completed_handle:");
-    if (nwkpara == NULL)
-    {
-        os_log("EasyLink fail");
-        micoWlanStopEasyLink();
-        return;
-    }
-
-    os_log("ssid:\"%s\",\"%s\"",nwkpara->wifi_ssid,nwkpara->wifi_key);
-
-    //保存wifi及密码
-    strcpy(sys_config->micoSystemConfig.ssid, nwkpara->wifi_ssid);
-    strcpy(sys_config->micoSystemConfig.user_key, nwkpara->wifi_key);
-    sys_config->micoSystemConfig.user_keyLength = strlen(nwkpara->wifi_key);
-    mico_system_context_update(sys_config);
-
-    wifi_status = WIFI_STATE_NOCONNECT;
-    os_log("EasyLink stop");
-    micoWlanStopEasyLink();
-}
 
 //wifi已连接获取到IP地址 回调
 static void wifi_get_ip_callback(IPStatusTypedef *pnet, void * arg)
@@ -75,19 +45,31 @@ static void wifi_status_callback(WiFiEvent status, void* arg)
 {
     if (status == NOTIFY_STATION_UP) //wifi连接成功
     {
-        user_config->last_wifi_status = status;
-        //wifi_status = WIFI_STATE_CONNECTED;
-        //关闭AP
-        OSStatus status = micoWlanSuspendSoftAP();
+        //user_config->last_wifi_status = status;
+        sys_config->micoSystemConfig.reserved = status;
+        mico_system_context_update(sys_config);
+
+        OSStatus status = micoWlanSuspendSoftAP(); //关闭AP
         if (status != kNoErr)
         {
             os_log("close ap error[%d]", status);
         }
+
+        //wifi_status = WIFI_STATE_CONNECTED;
     }
     else if (status == NOTIFY_STATION_DOWN) //wifi断开
     {
+        //user_config->last_wifi_status = status;
+        sys_config->micoSystemConfig.reserved = status;
+        mico_system_context_update(sys_config);
+
+        ap_init(); //打开AP
+
         wifi_status = WIFI_STATE_NOCONNECT;
-        if (!mico_rtos_is_timer_running(&wifi_led_timer)) mico_rtos_start_timer(&wifi_led_timer);
+        if (!mico_rtos_is_timer_running(&wifi_led_timer))
+        {
+            mico_rtos_start_timer(&wifi_led_timer);
+        }
     }
 }
 
@@ -107,19 +89,9 @@ static void wifi_led_timer_callback(void* arg)
         case WIFI_STATE_NOCONNECT:
             //wifi_connect_sys_config();
             break;
-
         case WIFI_STATE_CONNECTING:
-            //if (num > 1)
-        {
             num = 0;
             user_led_set(-1);
-        }
-            break;
-        case WIFI_STATE_NOEASYLINK:
-            wifi_start_easylink();
-            break;
-        case WIFI_STATE_EASYLINK:
-            user_led_set(1);
             break;
         case WIFI_STATE_CONNECTED:
             user_led_set(0);
@@ -157,8 +129,6 @@ void wifi_init(void)
 {
     //wifi状态下led闪烁定时器初始化
     mico_rtos_init_timer(&wifi_led_timer, 100, (void *) wifi_led_timer_callback, NULL);
-    //easylink 完成回调
-    mico_system_notify_register(mico_notify_EASYLINK_WPS_COMPLETED, (void *) wifi_easylink_completed_handle, NULL);
     //wifi已连接获取到IP地址 回调
     mico_system_notify_register(mico_notify_DHCP_COMPLETED, (void *) wifi_get_ip_callback, NULL);
     //wifi连接状态改变回调
