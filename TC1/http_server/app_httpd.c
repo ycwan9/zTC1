@@ -67,16 +67,20 @@ exit:
     return err;
 }
 
-static int http_get_socket_status(httpd_request_t *req)
+#define  TC1_STATUS_JSON "{'sockets':'%s','station_ssid':'%s','station_pwd':'%s','ap_ssid':'%s','ap_pwd':'%s'}"
+static int http_get_tc1_status(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
 
-    const unsigned char* status = get_socket_status();
+    const unsigned char* sockets = get_socket_status();
+    char* tc1_status = malloc(256);
+    sprintf(tc1_status, TC1_STATUS_JSON, sockets, sys_config->micoSystemConfig.ssid,
+        sys_config->micoSystemConfig.ssid, "TC1-AP", "123456");
 
-    err = httpd_send_all_header(req, HTTP_RES_200, strlen(socket_status), HTTP_CONTENT_HTML_STR);
+    err = httpd_send_all_header(req, HTTP_RES_200, strlen(tc1_status), HTTP_CONTENT_HTML_STR);
     require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status headers."));
 
-    err = httpd_send_body(req->sock, status, strlen(socket_status));
+    err = httpd_send_body(req->sock, (const unsigned char*)tc1_status, strlen(tc1_status));
     require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status body."));
 
 exit:
@@ -166,7 +170,8 @@ save_out:
 
 struct httpd_wsgi_call g_app_handlers[] = {
     {"/", HTTPD_HDR_DEFORT, 0, http_get_index_page, NULL, NULL, NULL},
-    {"/socket", HTTPD_HDR_DEFORT, 0, http_get_socket_status, http_set_socket_status, NULL, NULL},
+    {"/socket", HTTPD_HDR_DEFORT, 0, NULL, http_set_socket_status, NULL, NULL},
+    {"/status", HTTPD_HDR_DEFORT, 0, http_get_tc1_status, NULL, NULL, NULL},
     {"/wifi/config", HTTPD_HDR_DEFORT, 0, http_get_wifi_config, http_set_wifi_config, NULL, NULL},
 };
 

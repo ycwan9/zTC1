@@ -187,7 +187,7 @@ function Ajax(url, onsuccess, type, data) {
     xml_http.onreadystatechange = function () {
         if (xml_http.readyState == 4) {
             if (xml_http.status == 200) {
-                onsuccess(xml_http.responseText);
+                onsuccess(xml_http.responseText.replace(/'/g, '"'));
             }
             else {
                 alert("Ajax error: " + xml_http.status);
@@ -220,9 +220,9 @@ var pswd_ipt = document.getElementById("pswd");
 var mode_rd1 = document.getElementById("mode1");
 var mode_rd2 = document.getElementById("mode2");
 
-HttpGet("/socket", function (re) {
-    var status = re;
-    var status_arr = status.split(",");
+HttpGet("/status", function (re) {
+    var status = JSON.parse(re);
+    var status_arr = status.sockets.split(",");
     for (var i = 0; i < status_arr.length; i++) {
         checkboxs[i].checked = status_arr[i] == "1";
     }
