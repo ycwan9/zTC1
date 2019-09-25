@@ -11,9 +11,7 @@
 
 #define os_log(format, ...)  custom_log("TC1", format, ##__VA_ARGS__)
 
-
-
-char rtc_init = 0;    //sntp校时成功标志位
+char rtc_init = 0; //sntp校时成功标志位
 uint32_t total_time = 0;
 char strMac[16] = { 0 };
 uint32_t power = 0;
@@ -27,26 +25,23 @@ mico_gpio_t Relay[Relay_NUM] = { Relay_0, Relay_1, Relay_2, Relay_3, Relay_4, Re
 /* MICO system callback: Restore default configuration provided by application */
 void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
 {
-    int i, j;
     UNUSED_PARAMETER(size);
-
 
     mico_system_context_get()->micoSystemConfig.name[0] = 1;   //在下次重启时使用默认名称
     mico_system_context_get()->micoSystemConfig.name[1] = 0;
 
     user_config_t* userConfigDefault = user_config_data;
-
     userConfigDefault->user[0] = 0;
     userConfigDefault->mqtt_ip[0] = 0;
     userConfigDefault->mqtt_port = 0;
     userConfigDefault->mqtt_user[0] = 0;
     userConfigDefault->mqtt_password[0] = 0;
-
     userConfigDefault->version = USER_CONFIG_VERSION;
+
+    int i, j;
     for (i = 0; i < PLUG_NUM; i++)
     {
         userConfigDefault->plug[i].on = 1;
-
         //插座名称 插口1-6
         userConfigDefault->plug[i].name[0] = 0xe6;
         userConfigDefault->plug[i].name[1] = 0x8f;
@@ -68,7 +63,6 @@ void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
         }
     }
 //  mico_system_context_update(sys_config);
-
 }
 
 int application_start(void)
@@ -124,7 +118,6 @@ int application_start(void)
         strcpy(strMac, para.mac);
         os_log("result:%s",strMac);
         os_log("result:%s",para.mac);
-
 
         unsigned char mac1, mac2;
         mac1 = strtohex(strMac[8], strMac[9]);
@@ -185,9 +178,9 @@ int application_start(void)
             user_mqtt_hass_power();
         }
         mico_thread_msleep(1000);
-
     }
-    exit:
+
+exit:
     os_log("application_start ERROR!");
     return 0;
 }
