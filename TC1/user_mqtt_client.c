@@ -102,7 +102,7 @@ mico_timer_t timer_handle;
 static char timer_status = 0;
 void user_mqtt_timer_func(void *arg)
 {
-    char* buf1 = malloc(1024); //idx涓?浣嶆椂闀垮害涓?4
+    char* buf1 = malloc(1024); //idx为1位时长度为24
 
     LinkStatusTypeDef LinkStatus;
     micoWlanGetLinkStatus(&LinkStatus);
@@ -302,7 +302,8 @@ void mqtt_client_thread(mico_thread_arg_t arg)
     {
         isconnect = false;
         mico_rtos_thread_sleep(3);
-        if (MQTT_SERVER[0] < 0x20 || MQTT_SERVER[0] > 0x7f || MQTT_SERVER_PORT < 1) continue;  //鏈厤缃甿qtt鏈嶅姟鍣ㄦ椂涓嶈繛鎺?
+        if (MQTT_SERVER[0] < 0x20 || MQTT_SERVER[0] > 0x7f || MQTT_SERVER_PORT < 1) continue;  //未配置mqtt服务器时不连接
+
         micoWlanGetLinkStatus(&LinkStatus);
         if (LinkStatus.is_connected != 1)
         {
@@ -343,7 +344,7 @@ void mqtt_client_thread(mico_thread_arg_t arg)
     rc = MQTTSubscribe(&c, topic_set, QOS0, messageArrived);
     require_noerr_string(rc, MQTT_reconnect, "ERROR: MQTT client subscribe err.");
     mqtt_log("MQTT client subscribe success! recv_topic=[%s].", topic_set);
-    /*4.1 杩炴帴鎴愬姛鍚庡厛鏇存柊鍙戦€佷竴娆℃暟鎹?/
+    /*4.1 连接成功后先更新发送一次数据*/
     isconnect = true;
 
     mico_init_timer(&timer_handle, 150, user_mqtt_timer_func, &arg);
@@ -502,7 +503,8 @@ OSStatus user_mqtt_send(char *arg)
     return user_mqtt_send_topic(topic_state, arg, 0);
 }
 
-//鏇存柊ha寮€鍏崇姸鎬?OSStatus user_mqtt_send_plug_state(char plug_id)
+//更新ha开关状态
+OSStatus user_mqtt_send_plug_state(char plug_id)
 {
 
     char *send_buf = NULL;
@@ -519,7 +521,8 @@ OSStatus user_mqtt_send(char *arg)
     if (topic_buf) free(topic_buf);
 }
 
-//hass mqtt鑷姩鍙戠幇鏁版嵁寮€鍏冲彂閫?void user_mqtt_hass_auto(char plug_id)
+//hass mqtt自动发现数据开关发送
+void user_mqtt_hass_auto(char plug_id)
 {
     char *send_buf = NULL;
     char *topic_buf = NULL;
@@ -566,7 +569,8 @@ void user_mqtt_hass_auto_name(char plug_id)
     if (topic_buf)
         free(topic_buf);
 }
-//hass mqtt鑷姩鍙戠幇鏁版嵁鍔熺巼鍙戦€?void user_mqtt_hass_auto_power(void)
+//hass mqtt自动发现数据功率发送
+void user_mqtt_hass_auto_power(void)
 {
     char *send_buf = NULL;
     char *topic_buf = NULL;
