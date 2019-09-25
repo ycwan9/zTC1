@@ -60,14 +60,15 @@ typedef struct
     char version;
     user_plug_config_t plug[PLUG_NUM];
     char user[maxNameLen];
+    WiFiEvent last_wifi_status;
 } user_config_t;
 
 extern char rtc_init;
 extern uint32_t total_time;
 extern char strMac[16];
 extern uint32_t power;
-extern system_config_t * sys_config;
-extern user_config_t * user_config;
+extern system_config_t* sys_config;
+extern user_config_t* user_config;
 extern char socket_status[32];
 extern mico_gpio_t Relay[Relay_NUM];
 

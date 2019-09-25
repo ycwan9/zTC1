@@ -146,8 +146,10 @@ int application_start(void)
 //      }
 //  }
 
-    //sys_config = mico_system_context_init(sizeof(user_config_t)); //获取Flash中的配置
-    ap_init();
+    if (user_config->last_wifi_status != NOTIFY_STATION_UP)
+    {
+        ap_init();
+    }
     wifi_init();
     user_udp_init();
     key_init();

@@ -69,18 +69,28 @@ static void wifi_get_ip_callback(IPStatusTypedef *pnet, void * arg)
     wifi_status = WIFI_STATE_CONNECTED;
     user_function_cmd_received(1,"{\"cmd\":\"device report\"}");
 }
+
 //wifi连接状态改变回调
-static void wifi_status_callback(WiFiEvent status, void *arg)
+static void wifi_status_callback(WiFiEvent status, void* arg)
 {
     if (status == NOTIFY_STATION_UP) //wifi连接成功
     {
+        user_config->last_wifi_status = status;
         //wifi_status = WIFI_STATE_CONNECTED;
-    } else if (status == NOTIFY_STATION_DOWN) //wifi断开
+        //关闭AP
+        OSStatus status = micoWlanSuspendSoftAP();
+        if (status != kNoErr)
+        {
+            os_log("close ap error[%d]", status);
+        }
+    }
+    else if (status == NOTIFY_STATION_DOWN) //wifi断开
     {
         wifi_status = WIFI_STATE_NOCONNECT;
         if (!mico_rtos_is_timer_running(&wifi_led_timer)) mico_rtos_start_timer(&wifi_led_timer);
     }
 }
+
 //100ms定时器回调
 static void wifi_led_timer_callback(void* arg)
 {

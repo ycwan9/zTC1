@@ -1,11 +1,8 @@
-
 #ifndef __USER_WIFI_H_
 #define __USER_WIFI_H_
 
-
 #include "mico.h"
 #include "micokit_ext.h"
-
 
 enum {
    WIFI_STATE_FAIL,
@@ -17,13 +14,10 @@ enum {
    WIFI_STATE_EASYLINKING,
 };
 
-
-
 extern char wifi_status;
 extern void wifi_init(void);
 extern void ap_init(void);
 extern void wifi_start_easylink(void);
 extern void wifi_connect(char* wifi_ssid, char* wifi_key);
-
 
 #endif
