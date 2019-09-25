@@ -67,15 +67,15 @@ exit:
     return err;
 }
 
-#define  TC1_STATUS_JSON "{'sockets':'%s','station_ssid':'%s','station_pwd':'%s','ap_ssid':'%s','ap_pwd':'%s'}"
+#define  TC1_STATUS_JSON "{'sockets':'%s','mode':%d,'station_ssid':'%s','station_pwd':'%s','ap_ssid':'%s','ap_pwd':'%s'}"
 static int http_get_tc1_status(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
 
     const unsigned char* sockets = get_socket_status();
     char* tc1_status = malloc(256);
-    sprintf(tc1_status, TC1_STATUS_JSON, sockets, sys_config->micoSystemConfig.ssid,
-        sys_config->micoSystemConfig.ssid, "TC1-AP", "123456");
+    sprintf(tc1_status, TC1_STATUS_JSON, sockets, (int)sys_config->micoSystemConfig.reserved,
+        sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key, "TC1-AP", "123456");
 
     err = httpd_send_all_header(req, HTTP_RES_200, strlen(tc1_status), HTTP_CONTENT_HTML_STR);
     require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status headers."));

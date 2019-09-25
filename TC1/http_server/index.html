@@ -147,9 +147,9 @@
         <tr>
             <td class="right">MODE:</td>
             <td class="mode">
-                <input type="radio" id="mode1" name="mode" onchange="ChangeMode(1)">
+                <input type="radio" id="mode1" name="mode" onchange="ChangeMode(0)">
                 <label for="mode1">AP</label>
-                <input type="radio" id="mode2" name="mode" onchange="ChangeMode(2)">
+                <input type="radio" id="mode2" name="mode" onchange="ChangeMode(1)">
                 <label for="mode2">STATION</label>
             </td>
         </tr>
@@ -220,11 +220,23 @@ var pswd_ipt = document.getElementById("pswd");
 var mode_rd1 = document.getElementById("mode1");
 var mode_rd2 = document.getElementById("mode2");
 
+var mode = -1;
+var ap_name = "";
+var ap_pswd = "";
+var station_name = "";
+var station_pswd = "";
 HttpGet("/status", function (re) {
+    //re = "{'sockets':'%s','mode':%d,'station_ssid':'%s','station_pwd':'%s','ap_ssid':'%s','ap_pwd':'%s'}"
     var status = JSON.parse(re);
     var status_arr = status.sockets.split(",");
     for (var i = 0; i < status_arr.length; i++) {
         checkboxs[i].checked = status_arr[i] == "1";
+        station_name = status.station_ssid;
+        station_pswd = status.station_pwd;
+        ap_name = status.ap_ssid;
+        ap_pswd = status.ap_pwd;
+        //mode = status.mode;
+        ChangeMode(status.mode);
     }
 });
 
@@ -253,14 +265,12 @@ function SetSocket() {
 function SelectWifi() {
     ssid_ipt.disabled = ssid_slt.value != "0";
 }
-var mode = 0;
-var ap_name = "TC1-AP";
-var ap_pswd = "12345678";
-var station_name = "";
-var station_pswd = "";
+
 function ChangeMode(m) {
     if (mode == m) return;
-    if (m == 1) {
+    if (m != 1) {
+        //AP模式
+        mode_rd1.checked = true;
         ssid_slt.value = "0";
         ssid_slt.disabled = true;
         rescan_btn.disabled = true;
@@ -268,6 +278,8 @@ function ChangeMode(m) {
         ssid_ipt.value = ap_name;
         pswd_ipt.value = ap_pswd;
     } else {
+        //Station模式
+        mode_rd2.checked = true;
         ssid_slt.value = "0";
         ssid_slt.disabled = false;
         rescan_btn.disabled = false;
@@ -277,9 +289,7 @@ function ChangeMode(m) {
     }
     mode = m;
 }
-ChangeMode(1);
 
-mode_rd1.checked = true;
 function ChangeInput(type) {
     if(mode == 1) {
         ap_name = ssid_ipt.value;
