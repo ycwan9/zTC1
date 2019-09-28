@@ -165,15 +165,15 @@
     <table>
         <tr>
             <td class="right">IP:</td>
-            <td class="info">192.168.33.108</td>
+            <td class="info" id="ip"></td>
         </tr>
         <tr>
             <td class="right">Mask:</td>
-            <td class="info">255.255.255.0</td>
+            <td class="info" id="mask"></td>
         </tr>
         <tr>
             <td class="right">Gateway:</td>
-            <td class="info">192.168.33.1</td>
+            <td class="info" id="gateway"></td>
         </tr>
     </table>
 </fieldset>
@@ -220,6 +220,10 @@ var pswd_ipt = document.getElementById("pswd");
 var mode_rd1 = document.getElementById("mode1");
 var mode_rd2 = document.getElementById("mode2");
 
+var info_ip = document.getElementById("ip");
+var info_mask = document.getElementById("mask");
+var info_gateway = document.getElementById("gateway");
+
 var mode = -1;
 var ap_name = "";
 var ap_pswd = "";
@@ -237,6 +241,10 @@ HttpGet("/status", function (re) {
         ap_pswd = status.ap_pwd;
         //mode = status.mode;
         ChangeMode(status.mode);
+
+        info_ip.innerHTML = status.ip
+        info_mask.innerHTML = status.mask
+        info_gateway.innerHTML = status.gateway
     }
 });
 
