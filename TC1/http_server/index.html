@@ -129,7 +129,7 @@
                     <option value="2">China-Net</option>
                     <option value="3">CMCT</option>
                 </select>
-                <button id="rescan">Rescan</button>
+                <button id="rescan" onclick="Rescan()">Rescan</button>
             </td>
         </tr>
         <tr>
@@ -317,6 +317,29 @@ function SubmitNetwork() {
             alert(re);
         }, params);
     }
+}
+
+var get_ret = false;
+function Rescan() {
+    HttpPost("/wifi/scan", function (re) {
+        alert(re);
+        if (re == "OK") {
+            get_ret = true;
+            window.setTimeout(GetScanResult, 1000);
+        }
+    });
+}
+
+var tt = 5;
+function GetScanResult() {
+    HttpGet("/wifi/scan", function (re) {
+        console.log(re);
+        if (get_ret && tt <= 0) {
+            get_ret = 0
+        }
+        window.setTimeout(GetScanResult, 1000);
+        tt--;
+    });
 }
 
 </script>

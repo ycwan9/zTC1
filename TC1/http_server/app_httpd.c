@@ -39,16 +39,9 @@
 #include "app_httpd.h"
 #include "user_gpio.h"
 #include "user_wifi.h"
-
 #include "main.h"
-
 #include "web_data.c"
 
-#define HTTP_CONTENT_HTML_ZIP "text/html\r\nContent-Encoding: gzip"
-
-#define app_httpd_log(M, ...) custom_log("apphttpd", M, ##__VA_ARGS__)
-
-#define HTTPD_HDR_DEFORT (HTTPD_HDR_ADD_SERVER|HTTPD_HDR_ADD_CONN_CLOSE|HTTPD_HDR_ADD_PRAGMA_NO_CACHE)
 static bool is_http_init;
 static bool is_handlers_registered;
 struct httpd_wsgi_call g_app_handlers[];
@@ -67,22 +60,8 @@ exit:
     return err;
 }
 
-#define  TC1_STATUS_JSON \
-"{\
-    'sockets':'%s',\
-    'mode':%d,\
-    'station_ssid':'%s',\
-    'station_pwd':'%s',\
-    'ap_ssid':'%s',\
-    'ap_pwd':'%s',\
-    'ip':'%s',\
-    'mask':'%s',\
-    'gateway':'%s'\
-}"
 static int http_get_tc1_status(httpd_request_t *req)
 {
-    OSStatus err = kNoErr;
-
     const unsigned char* sockets = get_socket_status();
     char* ap_name = "TC1-AP";
     char* ap_pwd = "12345678";
@@ -94,11 +73,8 @@ static int http_get_tc1_status(httpd_request_t *req)
         sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key,
         ap_name, ap_pwd, ip, mask, gateway);
 
-    err = httpd_send_all_header(req, HTTP_RES_200, strlen(tc1_status), HTTP_CONTENT_HTML_STR);
-    require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status headers."));
-
-    err = httpd_send_body(req->sock, (const unsigned char*)tc1_status, strlen(tc1_status));
-    require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status body."));
+    OSStatus err = kNoErr;
+    send_http(tc1_status, strlen(tc1_status), exit, &err);
 
 exit:
     return err;
@@ -112,19 +88,13 @@ static int http_set_socket_status(httpd_request_t *req)
     char *buf = malloc(buf_size);
 
     err = httpd_get_data(req, buf, buf_size);
-    require_noerr(err, save_out);
+    require_noerr(err, exit);
 
     set_socket_status(buf);
 
-    char* status = "OK";
+    send_http("OK", 2, exit, &err);
 
-    err = httpd_send_all_header(req, HTTP_RES_200, strlen(socket_status), HTTP_CONTENT_HTML_STR);
-    require_noerr_action(err, save_out, app_httpd_log("ERROR: Unable to send http socket_status headers."));
-
-    err = httpd_send_body(req->sock, (const unsigned char*)status, strlen(socket_status));
-    require_noerr_action(err, save_out, app_httpd_log("ERROR: Unable to send http socket_status body."));
-
-save_out:
+exit:
     if (buf) free(buf);
     return err;
 }
@@ -157,31 +127,39 @@ static int http_set_wifi_config(httpd_request_t *req)
     char *wifi_key = malloc(key_size);
 
     err = httpd_get_data(req, buf, buf_size);
-    require_noerr(err, save_out);
+    require_noerr(err, exit);
 
     err = httpd_get_tag_from_post_data(buf, "ssid", wifi_ssid, ssid_size);
-    require_noerr(err, save_out);
+    require_noerr(err, exit);
 
     err = httpd_get_tag_from_post_data(buf, "key", wifi_key, key_size);
-    require_noerr(err, save_out);
+    require_noerr(err, exit);
 
     wifi_connect(wifi_ssid, wifi_key);
 
-    char* status = "OK";
-
-    err = httpd_send_all_header(req, HTTP_RES_200, strlen(socket_status), HTTP_CONTENT_HTML_STR);
-    require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status headers."));
-
-    err = httpd_send_body(req->sock, (const unsigned char*)status, strlen(socket_status));
-    require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status body."));
+    send_http("OK", 2, exit, &err);
 
 exit:
-    return err;
-
-save_out:
     if (buf) free(buf);
     if (wifi_ssid) free(wifi_ssid);
     if (wifi_key) free(wifi_key);
+    return err;
+}
+
+static int http_get_wifi_scan(httpd_request_t *req)
+{
+    OSStatus err = kNoErr;
+    send_http("OK", 2, exit, &err);
+exit:
+    return err;
+}
+
+static int http_set_wifi_scan(httpd_request_t *req)
+{
+    micoWlanStartScanAdv();
+    OSStatus err = kNoErr;
+    send_http("OK", 2, exit, &err);
+exit:
     return err;
 }
 
@@ -190,6 +168,7 @@ struct httpd_wsgi_call g_app_handlers[] = {
     {"/socket", HTTPD_HDR_DEFORT, 0, NULL, http_set_socket_status, NULL, NULL},
     {"/status", HTTPD_HDR_DEFORT, 0, http_get_tc1_status, NULL, NULL, NULL},
     {"/wifi/config", HTTPD_HDR_DEFORT, 0, http_get_wifi_config, http_set_wifi_config, NULL, NULL},
+    {"/wifi/scan", HTTPD_HDR_DEFORT, 0, http_get_wifi_scan, http_set_wifi_scan, NULL, NULL},
 };
 
 static int g_app_handlers_no = sizeof(g_app_handlers)/sizeof(struct httpd_wsgi_call);

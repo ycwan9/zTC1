@@ -31,6 +31,31 @@
  ******************************************************************************
  */
 
+#define HTTP_CONTENT_HTML_ZIP "text/html\r\nContent-Encoding: gzip"
+
+#define app_httpd_log(M, ...) custom_log("apphttpd", M, ##__VA_ARGS__)
+
+#define HTTPD_HDR_DEFORT (HTTPD_HDR_ADD_SERVER|HTTPD_HDR_ADD_CONN_CLOSE|HTTPD_HDR_ADD_PRAGMA_NO_CACHE)
+
+#define send_http(DATA, LEN, LABEL, P_ERR)                                                                 \
+    *(P_ERR) = httpd_send_all_header(req, HTTP_RES_200, LEN , HTTP_CONTENT_HTML_STR);                 \
+    require_noerr_action(*(P_ERR), LABEL, app_httpd_log("ERROR: Unable to send http DATA headers.")); \
+    *(P_ERR) = httpd_send_body(req->sock, (const unsigned char*)DATA, LEN);                           \
+    require_noerr_action(*(P_ERR), LABEL, app_httpd_log("ERROR: Unable to send http DATA body."));    \
+
+#define  TC1_STATUS_JSON \
+"{\
+    'sockets':'%s',\
+    'mode':%d,\
+    'station_ssid':'%s',\
+    'station_pwd':'%s',\
+    'ap_ssid':'%s',\
+    'ap_pwd':'%s',\
+    'ip':'%s',\
+    'mask':'%s',\
+    'gateway':'%s'\
+}"
+
 int app_httpd_start(void);
 
 int app_httpd_stop();
