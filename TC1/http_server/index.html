@@ -319,26 +319,26 @@ function SubmitNetwork() {
     }
 }
 
-var get_ret = false;
 function Rescan() {
     HttpPost("/wifi/scan", function (re) {
-        alert(re);
         if (re == "OK") {
-            get_ret = true;
+            rescan_btn.innerHTML = "Scanning...";
+            rescan_btn.disabled = true;
             window.setTimeout(GetScanResult, 1000);
+        } else {
+            alert(re);
         }
     });
 }
 
-var tt = 5;
 function GetScanResult() {
     HttpGet("/wifi/scan", function (re) {
-        console.log(re);
-        if (get_ret && tt <= 0) {
-            get_ret = 0
+        if (re == "OK") {
+            rescan_btn.innerHTML = "Rescan";
+            rescan_btn.disabled = false;
+            return;
         }
         window.setTimeout(GetScanResult, 1000);
-        tt--;
     });
 }
 

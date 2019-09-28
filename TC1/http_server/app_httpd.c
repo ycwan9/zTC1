@@ -148,8 +148,10 @@ exit:
 
 static int http_get_wifi_scan(httpd_request_t *req)
 {
+    static int n = 1;
     OSStatus err = kNoErr;
-    send_http("OK", 2, exit, &err);
+    char* re = (n++)%4 == 0 ? "OK" : "NO";
+    send_http(re, 2, exit, &err);
 exit:
     return err;
 }
