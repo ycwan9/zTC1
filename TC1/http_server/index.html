@@ -6,7 +6,7 @@
     <title>Welcom TC1</title>
     <style type="text/css">
     fieldset{margin-bottom:10px;border:#000 solid 1px;}
-    input,select,button{padding:5px;border:#777 solid 1px;}
+    input,select,button{padding:5px;background:white;border:#777 solid 1px;}
     button{background:none;border:1px #777 solid;}
     button:disabled,select:disabled,input:disabled{background:#bfbfbf;}
     td{padding:5px;}
@@ -269,6 +269,11 @@ function SetSocket() {
 
 function SelectWifi() {
     ssid_ipt.disabled = ssid_slt.value != "0";
+    if (ssid_slt.value == "0") {
+        ssid_ipt.value = station_name;
+    } else {
+        ssid_ipt.value = ssid_slt.options[ssid_slt.selectedIndex].text;
+    }
 }
 
 function ChangeMode(m) {
@@ -296,7 +301,7 @@ function ChangeMode(m) {
 }
 
 function ChangeInput(type) {
-    if(mode == 1) {
+    if(mode != 1) {
         ap_name = ssid_ipt.value;
         ap_pswd = pswd_ipt.value;
     } else {
@@ -334,7 +339,7 @@ function GetScanResult() {
             var ret = JSON.parse(re);
             var html = "<option value='0'>Manual</option>";
             for (var i = 0; i < ret.ssids.length; i++) {
-                html += "<option value='"+i+"'>"+ret.ssids[i]+"</option>";
+                html += "<option value='"+(i+1)+"'>"+ret.ssids[i]+"</option>";
             }
             ssid_slt.innerHTML = html;
 
