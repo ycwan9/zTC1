@@ -125,9 +125,6 @@
             <td>
                 <select id="wifi" onchange="SelectWifi()">
                     <option value="0">Manual</option>
-                    <option value="1">CMCC</option>
-                    <option value="2">China-Net</option>
-                    <option value="3">CMCT</option>
                 </select>
                 <button id="rescan" onclick="Rescan()">Rescan</button>
             </td>
@@ -335,6 +332,12 @@ function GetScanResult() {
     HttpGet("/wifi/scan", function (re) {
         if (re != "NO") {
             var ret = JSON.parse(re);
+            var html = "<option value='0'>Manual</option>";
+            for (var i = 0; i < ret.ssids.length; i++) {
+                html += "<option value='"+i+"'>"+ret.ssids[i]+"</option>";
+            }
+            ssid_slt.innerHTML = html;
+
             rescan_btn.innerHTML = "Rescan";
             rescan_btn.disabled = false;
             return;

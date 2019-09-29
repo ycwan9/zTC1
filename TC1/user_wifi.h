@@ -14,11 +14,10 @@ enum
 };
 
 #define WIFI_SCAN_RESULT_JSON "{'success':%d,'ssids':[%s],'secs':[%s]}"
-
+extern bool scaned;
 extern char* wifi_ret;
 
 extern char wifi_status;
-extern bool scaned;
 
 extern void wifi_init(void);
 extern void ap_init(void);
