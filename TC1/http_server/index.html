@@ -310,11 +310,30 @@ function ChangeInput(type) {
     }
 }
 
-function SubmitNetwork() {
-    if(mode == 1) {
+//Quotation Marks
+function ContainQM(str) {
+    if (str.indexOf("'") >= 0
+     || str.indexOf('"') >= 0
+     || str.indexOf(' ') >= 0
+     || str.length > 32) {
+        return true;
+    }
+    return false;
+}
+var qm_mess = "Sorry, can't use ' or \" or space.\n\nAlso, length <= 32."
 
+function SubmitNetwork() {
+    if(mode != 1) {
+        if (ContainQM(ap_name) || ContainQM(ap_pswd)) {
+            alert(qm_mess);
+            return;
+        }
     } else {
-        var params = "ssid="+station_name+"&key="+station_pswd;
+        if (ContainQM(station_name) || ContainQM(station_pswd)) {
+            alert(qm_mess);
+            return;
+        }
+        var params = station_name+" "+station_pswd;
         HttpPost("/wifi/config", function (re) {
             alert(re);
         }, params);

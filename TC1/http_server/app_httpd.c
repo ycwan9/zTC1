@@ -119,21 +119,15 @@ static int http_set_wifi_config(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
 
-    int buf_size = 512;
-    int ssid_size = 32;
-    int key_size = 64;
+    int buf_size = 97;
     char *buf = malloc(buf_size);
-    char *wifi_ssid = malloc(ssid_size);
-    char *wifi_key = malloc(key_size);
+    char *wifi_ssid = malloc(32);
+    char *wifi_key = malloc(64);
 
     err = httpd_get_data(req, buf, buf_size);
     require_noerr(err, exit);
 
-    err = httpd_get_tag_from_post_data(buf, "ssid", wifi_ssid, ssid_size);
-    require_noerr(err, exit);
-
-    err = httpd_get_tag_from_post_data(buf, "key", wifi_key, key_size);
-    require_noerr(err, exit);
+    sscanf(buf, "%s %s", wifi_ssid, wifi_key);
 
     wifi_connect(wifi_ssid, wifi_key);
 

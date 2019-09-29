@@ -89,9 +89,10 @@ void wifi_scan_callback(ScanResult_adv* scan_ret, void* arg)
     char* tmp2 = secs;
     for (; i < count; i++)
     {
-        sprintf(tmp1, "'%s',", scan_ret->ApList[i].ssid);
-        tmp1 += (strlen(scan_ret->ApList[i].ssid) + 3);
-
+        char* ssid = scan_ret->ApList[i].ssid;
+        if (strstr(ssid, "'") || strstr(ssid, "\"")) continue;
+        sprintf(tmp1, "'%s',", ssid);
+        tmp1 += (strlen(ssid) + 3);
         sprintf(tmp2, "%d,", scan_ret->ApList[i].security);
         tmp2 += 2;
     }
