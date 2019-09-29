@@ -73,10 +73,35 @@ static void wifi_status_callback(WiFiEvent status, void* arg)
     }
 }
 
+bool scaned = false;
+char* wifi_ret = NULL;
 //wifi扫描结果回调
-void wifi_scan_callback(ScanResult *pApList, mico_Context_t * const inContext)
+void wifi_scan_callback(ScanResult_adv* scan_ret, void* arg)
 {
-    os_log("wifi_scan_callback ApNum[%d] ApList[0](%s)", (int)pApList[0].ApNum, pApList[0].ApList[0].ssid);
+    int count = (int)scan_ret->ApNum;
+    os_log("wifi_scan_callback ApNum[%d] ApList[0](%s)", count, scan_ret->ApList[0].ssid);
+
+    int i = 0;
+    wifi_ret = malloc(sizeof(char)*count * (32 + 2) + 50);
+    char* ssids = malloc(sizeof(char)*count * 32);
+    char* secs = malloc(sizeof(char)*count * 2);
+    char* tmp1 = ssids;
+    char* tmp2 = secs;
+    for (; i < count; i++)
+    {
+        sprintf(tmp1, "'%s',", scan_ret->ApList[i].ssid);
+        tmp1 += (strlen(scan_ret->ApList[i].ssid) + 3);
+
+        sprintf(tmp2, "%d,", scan_ret->ApList[i].security);
+        tmp2 += 2;
+    }
+    *(--tmp1) = 0;
+    *(--tmp2) = 0;
+
+    sprintf(wifi_ret, WIFI_SCAN_RESULT_JSON, 1, ssids, secs);
+
+    scaned = true;
+    free(ssids);
 }
 
 
@@ -141,8 +166,8 @@ void wifi_init(void)
     //wifi连接状态改变回调
     mico_system_notify_register(mico_notify_WIFI_STATUS_CHANGED, (void*) wifi_status_callback, NULL);
     //wifi扫描结果回调
-    mico_system_notify_register(mico_notify_WIFI_SCAN_COMPLETED, (void*)wifi_scan_callback, NULL);
-    
+    mico_system_notify_register(mico_notify_WIFI_SCAN_ADV_COMPLETED, (void*)wifi_scan_callback, NULL);
+
     //sntp_init();
     //启动定时器开始进行wifi连接
     if (!mico_rtos_is_timer_running(&wifi_led_timer)) mico_rtos_start_timer(&wifi_led_timer);

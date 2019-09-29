@@ -43,7 +43,7 @@
     *(P_ERR) = httpd_send_body(req->sock, (const unsigned char*)DATA, LEN);                           \
     require_noerr_action(*(P_ERR), LABEL, app_httpd_log("ERROR: Unable to send http DATA body."));    \
 
-#define  TC1_STATUS_JSON \
+#define TC1_STATUS_JSON \
 "{\
     'sockets':'%s',\
     'mode':%d,\

@@ -333,7 +333,8 @@ function Rescan() {
 
 function GetScanResult() {
     HttpGet("/wifi/scan", function (re) {
-        if (re == "OK") {
+        if (re != "NO") {
+            var ret = JSON.parse(re);
             rescan_btn.innerHTML = "Rescan";
             rescan_btn.disabled = false;
             return;
