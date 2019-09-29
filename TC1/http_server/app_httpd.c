@@ -153,17 +153,13 @@ static int http_get_wifi_scan(httpd_request_t *req)
     {
         scaned = false;
         send_http(wifi_ret, strlen(wifi_ret), exit, &err);
+        free(wifi_ret);
     }
     else
     {
         send_http("NO", 2, exit, &err);
     }
 
-    /*
-    static int n = 1;
-    char* re = (n++)%4 == 0 ? "OK" : "NO";
-    send_http(re, 2, exit, &err);
-    */
 exit:
     return err;
 }

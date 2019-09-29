@@ -102,6 +102,7 @@ void wifi_scan_callback(ScanResult_adv* scan_ret, void* arg)
 
     scaned = true;
     free(ssids);
+    free(secs);
 }
 
 
