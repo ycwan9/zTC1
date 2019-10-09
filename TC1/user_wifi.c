@@ -11,7 +11,7 @@
 char wifi_status = WIFI_STATE_NOCONNECT;
 
 mico_timer_t wifi_led_timer;
-IpStatus ip_status = { "0.0.0.0", "0.0.0.0", "0.0.0.0" };
+IpStatus ip_status = { ELAND_AP_LOCAL_IP, ELAND_AP_LOCAL_IP, ELAND_AP_NET_MASK };
 
 //wifi已连接获取到IP地址回调
 static void WifiGetIpCallback(IPStatusTypedef *pnet, void * arg)
@@ -164,12 +164,6 @@ void WifiInit(void)
     strcpy(strMac, para.mac);
 
 }
-
-#define ELAND_AP_SSID       "TC1-AP"
-#define ELAND_AP_KEY        "12345678"
-#define ELAND_AP_LOCAL_IP   "192.168.0.1"
-#define ELAND_AP_DNS_SERVER "192.168.0.1"
-#define ELAND_AP_NET_MASK   "255.255.255.0"
 
 void ApInit()
 {

@@ -63,12 +63,10 @@ exit:
 static int HttpGetTc1Status(httpd_request_t *req)
 {
     const unsigned char* sockets = GetSocketStatus();
-    char* ap_name = "TC1-AP";
-    char* ap_pwd = "12345678";
     char* tc1_status = malloc(256);
     sprintf(tc1_status, TC1_STATUS_JSON, sockets, (int)sys_config->micoSystemConfig.reserved,
         sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key,
-        ap_name, ap_pwd, ip_status.ip, ip_status.mask, ip_status.gateway);
+        ELAND_AP_SSID, ELAND_AP_KEY, ip_status.ip, ip_status.mask, ip_status.gateway);
 
     OSStatus err = kNoErr;
     send_http(tc1_status, strlen(tc1_status), exit, &err);
