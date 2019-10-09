@@ -74,13 +74,6 @@ int application_start(void)
     uint32_t power_last = 0xffffffff;
     OSStatus err = kNoErr;
 
-//  for (i = 0; i < Relay_NUM; i++)
-//  {
-//      MicoGpioOutputLow(Relay[(i)]);
-//      MicoGpioInitialize(Relay[i], OUTPUT_PUSH_PULL);
-//      MicoGpioOutputLow(Relay[(i)]);
-//      MicoGpioOutputHigh(Relay[i]);
-//  }
     /* Create mico system context and read application's config data from flash */
     sys_config = mico_system_context_init(sizeof(user_config_t));
     user_config = ((system_context_t*)sys_config)->user_config_data;
@@ -132,19 +125,7 @@ int application_start(void)
     os_log("mqtt_port:%d",user_config->mqtt_port);
     os_log("mqtt_user:%s",user_config->mqtt_user);
     os_log("mqtt_password:%s",user_config->mqtt_password);
-
     os_log("version:%d",user_config->version);
-//  for (i = 0; i < SOCKET_NUM; i++)
-//  {
-//      os_log("socket_%d:",i);
-//      os_log("\tname:%s:",user_config->socket[i].name);
-//      for (j = 0; j < SOCKET_TIME_TASK_NUM; j++)
-//      {
-//          os_log("\t\ton:%d\t %02d:%02d repeat:0x%X",user_config->socket[i].task[j].on,
-//              user_config->socket[i].task[j].hour,user_config->socket[i].task[j].minute,
-//              user_config->socket[i].task[j].repeat);
-//      }
-//  }
 
     StationInit();
     if (sys_config->micoSystemConfig.reserved != NOTIFY_STATION_UP)

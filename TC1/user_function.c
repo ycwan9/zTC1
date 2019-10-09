@@ -56,11 +56,9 @@ void user_function_cmd_received(int udp_flag, char* pusrdata)
         cJSON_AddStringToObject(pRoot, "ip", para.ip);
 
         char *s = cJSON_Print(pRoot);
-//      os_log("pRoot: %s\r\n", s);
         user_send(udp_flag, s); //发送数据
         free((void *) s);
         cJSON_Delete(pRoot);
-        //          cJSON_Delete(p_cmd);
     }
 
     //以下为解析命令部分
@@ -76,7 +74,6 @@ void user_function_cmd_received(int udp_flag, char* pusrdata)
         cJSON_AddStringToObject(json_send, "mac", strMac);
 
         //解析重启命令
-//      cJSON *p_cmd = cJSON_GetObjectItem(pJsonRoot, "name");
         if(p_cmd && cJSON_IsString(p_cmd) && strcmp(p_cmd->valuestring, "restart") == 0)
         {
             os_log("cmd:restart");
@@ -192,7 +189,6 @@ void user_function_cmd_received(int udp_flag, char* pusrdata)
         if (return_flag == true)
         {
             char *json_str = cJSON_Print(json_send);
-//          os_log("pRoot: %s\r\n", json_str);
             user_send(udp_flag, json_str); //发送数据
             free((void *) json_str);
         }
@@ -270,8 +266,6 @@ bool json_socket_analysis(int udp_flag, unsigned char x, cJSON * pJsonRoot, cJSO
             cJSON_AddItemToObject(json_socket_send, "setting", json_socket_setting_send);
         }
     }
-//  cJSON *p_nvalue = cJSON_GetObjectItem(pJsonRoot, "nvalue");
-//  if (p_socket || p_nvalue)
     cJSON_AddNumberToObject(json_socket_send, "on", user_config->socket[x].on);
 
     cJSON_AddItemToObject(pJsonSend, socket_str, json_socket_send);
@@ -310,8 +304,7 @@ bool json_socket_task_analysis(unsigned char x, unsigned char y, cJSON * pJsonRo
              && cJSON_IsNumber(p_socket_task_minute)
              && cJSON_IsNumber(p_socket_task_repeat)
              && cJSON_IsNumber(p_socket_task_action)
-             && cJSON_IsNumber(p_socket_task_on)
-                              )
+             && cJSON_IsNumber(p_socket_task_on))
         {
             return_flag = true;
             user_config->socket[x].task[y].hour = p_socket_task_hour->valueint;
@@ -335,21 +328,27 @@ bool json_socket_task_analysis(unsigned char x, unsigned char y, cJSON * pJsonRo
 unsigned char strtohex(char a, char b)
 {
     if (a >= 0x30 && a <= 0x39)
+    {
         a -= 0x30;
+    }
     else if (a >= 0x41 && a <= 0x46)
     {
         a = a + 10 - 0x41;
-    } else if (a >= 0x61 && a <= 0x66)
+    }
+    else if (a >= 0x61 && a <= 0x66)
     {
         a = a + 10 - 0x61;
     }
 
     if (b >= 0x30 && b <= 0x39)
+    {
         b -= 0x30;
+    }
     else if (b >= 0x41 && b <= 0x46)
     {
         b = b + 10 - 0x41;
-    } else if (b >= 0x61 && b <= 0x66)
+    }
+    else if (b >= 0x61 && b <= 0x66)
     {
         b = b + 10 - 0x61;
     }

@@ -107,14 +107,6 @@ static void KeyLongPress(void)
 static void KeyLong10sPress(void)
 {
     os_log("WARNGIN: user params restored!");
-//  char i = 0;
-//  for (i = 0; i < 3; i++)
-//  {
-//      UserLedSet(1);
-//      mico_rtos_thread_msleep(100);
-//      UserLedSet(0);
-//  }
-//
     appRestoreDefault_callback(user_config, sizeof(user_config_t));
     sys_config->micoSystemConfig.ssid[0] = 0;
     mico_system_context_update(mico_system_context_get());
@@ -148,7 +140,6 @@ static void KeyTimeoutHandler(void* arg)
     char tmp = ~(0xfe | MicoGpioInputGet(Button));
     key_trigger = tmp & (tmp ^ key_continue);
     key_continue = tmp;
-//  os_log("button scan:%02x %02x",key_trigger,key_continue);
     if (key_trigger != 0) key_time = 0; //新按键按下时,重新开始按键计时
     if (key_continue != 0)
     {

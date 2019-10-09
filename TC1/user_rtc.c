@@ -69,16 +69,6 @@ OSStatus user_sntp_get_time()
         mico_utc_time_ms_t utc_time_ms = (uint64_t) current_time.seconds * (uint64_t) 1000
                                          + (current_time.microseconds / 1000);
         mico_time_set_utc_time_ms(&utc_time_ms);
-//      mico_utc_time_t utc_time = utc_time_ms / 1000 + 28800; //+8:00
-//      struct tm * currentTime = localtime((const time_t *) &utc_time);
-//      rtc_time.sec = currentTime->tm_sec;
-//      rtc_time.min = currentTime->tm_min;
-//      rtc_time.hr = currentTime->tm_hour;
-//      rtc_time.date = currentTime->tm_mday;
-//      rtc_time.weekday = currentTime->tm_wday;
-//      rtc_time.month = currentTime->tm_mon + 1;
-//      rtc_time.year = (currentTime->tm_year + 1900) % 100;
-//      MicoRtcSetTime(&rtc_time);
     }
     else
     {
