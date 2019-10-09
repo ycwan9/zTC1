@@ -11,10 +11,15 @@
 char wifi_status = WIFI_STATE_NOCONNECT;
 
 mico_timer_t wifi_led_timer;
+IpStatus ip_status = { "0.0.0.0", "0.0.0.0", "0.0.0.0" };
 
 //wifi已连接获取到IP地址回调
 static void WifiGetIpCallback(IPStatusTypedef *pnet, void * arg)
 {
+    strcpy(ip_status.ip, pnet->ip);
+    strcpy(ip_status.gateway, pnet->gate);
+    strcpy(ip_status.mask, pnet->mask);
+
     os_log("got IP:%s", pnet->ip);
     wifi_status = WIFI_STATE_CONNECTED;
     user_function_cmd_received(1,"{\"cmd\":\"device report\"}");

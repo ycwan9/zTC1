@@ -65,13 +65,10 @@ static int HttpGetTc1Status(httpd_request_t *req)
     const unsigned char* sockets = GetSocketStatus();
     char* ap_name = "TC1-AP";
     char* ap_pwd = "12345678";
-    char* ip = "192.168.33.222";
-    char* mask = "255.255.255.0";
-    char* gateway = "192.168.33.1";
     char* tc1_status = malloc(256);
     sprintf(tc1_status, TC1_STATUS_JSON, sockets, (int)sys_config->micoSystemConfig.reserved,
         sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key,
-        ap_name, ap_pwd, ip, mask, gateway);
+        ap_name, ap_pwd, ip_status.ip, ip_status.mask, ip_status.gateway);
 
     OSStatus err = kNoErr;
     send_http(tc1_status, strlen(tc1_status), exit, &err);

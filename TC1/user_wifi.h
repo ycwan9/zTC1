@@ -19,6 +19,14 @@ extern char* wifi_ret;
 
 extern char wifi_status;
 
+typedef struct {
+    char ip[16];
+    char gateway[16];
+    char mask[16];
+} IpStatus;
+
+extern IpStatus ip_status;
+
 extern void WifiInit(void);
 extern void ApInit(void);
 extern void WifiConnect(char* wifi_ssid, char* wifi_key);

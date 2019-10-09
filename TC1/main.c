@@ -82,20 +82,20 @@ int application_start(void)
     err = mico_system_init(sys_config);
     require_noerr(err, exit);
 
-    MicoGpioInitialize((mico_gpio_t) Button, INPUT_PULL_UP);
+    bool open_ap = false;
+    MicoGpioInitialize((mico_gpio_t)Button, INPUT_PULL_UP);
     if (!MicoGpioInputGet(Button))
     {   //开机时按钮状态
         os_log("press ap_init");
         ApInit();
+        open_ap = true;
     }
 
-    bool open_ap = false;
     MicoGpioInitialize((mico_gpio_t) Led, OUTPUT_PUSH_PULL);
     for (i = 0; i < Relay_NUM; i++)
     {
         MicoGpioInitialize(Relay[i], OUTPUT_PUSH_PULL);
         UserRelaySet(i, user_config->socket[i].on);
-        open_ap = true;
     }
     MicoSysLed(0);
 
@@ -130,13 +130,10 @@ int application_start(void)
     os_log("version:%d",user_config->version);
 
     WifiInit();
-    if (sys_config->micoSystemConfig.reserved != NOTIFY_STATION_UP && !open_ap)
+    if (!open_ap)
     {
-        ApInit();
-    }
-    else
-    {
-        WifiConnect(sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key);
+        if (sys_config->micoSystemConfig.reserved != NOTIFY_STATION_UP) ApInit();
+        else WifiConnect(sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key);
     }
     user_udp_init();
     KeyInit();
