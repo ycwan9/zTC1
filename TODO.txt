@@ -1,4 +1,6 @@
 
-1. 
-
+1. 获取真实IP
+2. AP名拼Mac地址
+3. Home Assistant
+4. 记录功率信息
 
