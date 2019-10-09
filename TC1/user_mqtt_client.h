@@ -14,9 +14,9 @@
 extern OSStatus user_mqtt_init(void);
 extern OSStatus user_mqtt_send(char *arg);
 extern bool user_mqtt_isconnect(void);
-extern OSStatus user_mqtt_send_plug_state(char plug_id);
-extern void user_mqtt_hass_auto(char plug_id);
-extern void user_mqtt_hass_auto_name(char plug_id);
+extern OSStatus user_mqtt_send_socket_state(char socket_id);
+extern void user_mqtt_hass_auto(char socket_id);
+extern void user_mqtt_hass_auto_name(char socket_id);
 extern void user_mqtt_hass_power(void);
 extern void user_mqtt_hass_auto_power(void);
 extern void user_mqtt_hass_auto_power_name(void);

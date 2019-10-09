@@ -82,8 +82,8 @@ static OSStatus mqtt_msg_publish(Client *c, const char* topic, char qos, char re
 
 OSStatus user_recv_handler(void *arg);
 
-OSStatus user_mqtt_send_plug_state(char plug_id);
-void user_mqtt_hass_auto(char plug_id);
+OSStatus user_mqtt_send_socket_state(char socket_id);
+void user_mqtt_hass_auto(char socket_id);
 void user_mqtt_hass_auto_power(void);
 
 bool isconnect = false;
@@ -160,7 +160,7 @@ void user_mqtt_timer_func(void *arg)
                 break;
             case 15:
                 if (buf1 == NULL) break;
-                sprintf(buf1, "{\"mac\":\"%s\",\"version\":null,\"plug_0\":{\"on\":null,\"setting\":{\"name\":null}},\"plug_1\":{\"on\":null,\"setting\":{\"name\":null}},\"plug_2\":{\"on\":null,\"setting\":{\"name\":null}},\"plug_3\":{\"on\":null,\"setting\":{\"name\":null}},\"plug_4\":{\"on\":null,\"setting\":{\"name\":null}},\"plug_5\":{\"on\":null,\"setting\":{\"name\":null}}}", strMac);
+                sprintf(buf1, "{\"mac\":\"%s\",\"version\":null,\"socket_0\":{\"on\":null,\"setting\":{\"name\":null}},\"socket_1\":{\"on\":null,\"setting\":{\"name\":null}},\"socket_2\":{\"on\":null,\"setting\":{\"name\":null}},\"socket_3\":{\"on\":null,\"setting\":{\"name\":null}},\"socket_4\":{\"on\":null,\"setting\":{\"name\":null}},\"socket_5\":{\"on\":null,\"setting\":{\"name\":null}}}", strMac);
                 user_function_cmd_received(0, buf1);
                 free(buf1);
                 break;
@@ -504,7 +504,7 @@ OSStatus user_mqtt_send(char *arg)
 }
 
 //更新ha开关状态
-OSStatus user_mqtt_send_plug_state(char plug_id)
+OSStatus user_mqtt_send_socket_state(char socket_id)
 {
     char *send_buf = NULL;
     char *topic_buf = NULL;
@@ -513,8 +513,8 @@ OSStatus user_mqtt_send_plug_state(char plug_id)
     OSStatus oss_status = kUnknownErr;
     if (send_buf != NULL && topic_buf != NULL)
     {
-        sprintf(topic_buf, "homeassistant/switch/%s/plug_%d/state", strMac, (int)plug_id);
-        sprintf(send_buf, "{\"mac\":\"%s\",\"plug_%d\":{\"on\":%d}}", strMac, plug_id, (int)user_config->plug[(int)plug_id].on);
+        sprintf(topic_buf, "homeassistant/switch/%s/socket_%d/state", strMac, (int)socket_id);
+        sprintf(send_buf, "{\"mac\":\"%s\",\"socket_%d\":{\"on\":%d}}", strMac, socket_id, (int)user_config->socket[(int)socket_id].on);
         oss_status = user_mqtt_send_topic(topic_buf, send_buf, 1);
     }
     if (send_buf) free(send_buf);
@@ -524,7 +524,7 @@ OSStatus user_mqtt_send_plug_state(char plug_id)
 }
 
 //hass mqtt自动发现数据开关发送
-void user_mqtt_hass_auto(char plug_id)
+void user_mqtt_hass_auto(char socket_id)
 {
     char *send_buf = NULL;
     char *topic_buf = NULL;
@@ -532,22 +532,22 @@ void user_mqtt_hass_auto(char plug_id)
     topic_buf = malloc(128); //
     if (send_buf != NULL && topic_buf != NULL)
     {
-        sprintf(topic_buf, "homeassistant/switch/%s/plug_%d/config", strMac, plug_id);
+        sprintf(topic_buf, "homeassistant/switch/%s/socket_%d/config", strMac, socket_id);
         sprintf(send_buf, "{"
-                 "\"name\":\"zTC1_plug%d_%s\","
-                 "\"stat_t\":\"homeassistant/switch/%s/plug_%d/state\","
+                 "\"name\":\"zTC1_socket%d_%s\","
+                 "\"stat_t\":\"homeassistant/switch/%s/socket_%d/state\","
                  "\"cmd_t\":\"device/ztc1/set\","
-                 "\"pl_on\":\"{\\\"mac\\\":\\\"%s\\\",\\\"plug_%d\\\":{\\\"on\\\":1}}\","
-                 "\"pl_off\":\"{\\\"mac\\\":\\\"%s\\\",\\\"plug_%d\\\":{\\\"on\\\":0}}\""
+                 "\"pl_on\":\"{\\\"mac\\\":\\\"%s\\\",\\\"socket_%d\\\":{\\\"on\\\":1}}\","
+                 "\"pl_off\":\"{\\\"mac\\\":\\\"%s\\\",\\\"socket_%d\\\":{\\\"on\\\":0}}\""
                  "}",
-                 plug_id, strMac + 8, strMac, plug_id, strMac, plug_id, strMac, plug_id);
+                 socket_id, strMac + 8, strMac, socket_id, strMac, socket_id, strMac, socket_id);
         user_mqtt_send_topic(topic_buf, send_buf, 1);
     }
     if (send_buf) free(send_buf);
     if (topic_buf) free(topic_buf);
 
 }
-void user_mqtt_hass_auto_name(char plug_id)
+void user_mqtt_hass_auto_name(char socket_id)
 {
     char *send_buf = NULL;
     char *topic_buf = NULL;
@@ -555,15 +555,15 @@ void user_mqtt_hass_auto_name(char plug_id)
     topic_buf = (char *) malloc(64);
     if (send_buf != NULL && topic_buf != NULL)
     {
-        sprintf(topic_buf, "homeassistant/switch/%s/plug_%d/config", strMac, plug_id);
+        sprintf(topic_buf, "homeassistant/switch/%s/socket_%d/config", strMac, socket_id);
         sprintf(send_buf, "{"
                  "\"name\":\"%s\","
-                 "\"stat_t\":\"homeassistant/switch/%s/plug_%d/state\","
+                 "\"stat_t\":\"homeassistant/switch/%s/socket_%d/state\","
                  "\"cmd_t\":\"device/ztc1/set\","
-                 "\"pl_on\":\"{\\\"mac\\\":\\\"%s\\\",\\\"plug_%d\\\":{\\\"on\\\":1}}\","
-                 "\"pl_off\":\"{\\\"mac\\\":\\\"%s\\\",\\\"plug_%d\\\":{\\\"on\\\":0}}\""
+                 "\"pl_on\":\"{\\\"mac\\\":\\\"%s\\\",\\\"socket_%d\\\":{\\\"on\\\":1}}\","
+                 "\"pl_off\":\"{\\\"mac\\\":\\\"%s\\\",\\\"socket_%d\\\":{\\\"on\\\":0}}\""
                  "}",
-                 user_config->plug[(int)plug_id].name, strMac, plug_id, strMac, plug_id, strMac, plug_id);
+                 user_config->socket[(int)socket_id].name, strMac, socket_id, strMac, socket_id, strMac, socket_id);
         user_mqtt_send_topic(topic_buf, send_buf, 0);
     }
     if (send_buf)

@@ -41,25 +41,25 @@ void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
     int i, j;
     for (i = 0; i < SOCKET_NUM; i++)
     {
-        userConfigDefault->plug[i].on = 1;
+        userConfigDefault->socket[i].on = 1;
         //插座名称 插口1-6
-        userConfigDefault->plug[i].name[0] = 0xe6;
-        userConfigDefault->plug[i].name[1] = 0x8f;
-        userConfigDefault->plug[i].name[2] = 0x92;
-        userConfigDefault->plug[i].name[3] = 0xe5;
-        userConfigDefault->plug[i].name[4] = 0x8f;
-        userConfigDefault->plug[i].name[5] = 0xa3;
-        userConfigDefault->plug[i].name[6] = i + '1';
-        userConfigDefault->plug[i].name[7] = 0;
+        userConfigDefault->socket[i].name[0] = 0xe6;
+        userConfigDefault->socket[i].name[1] = 0x8f;
+        userConfigDefault->socket[i].name[2] = 0x92;
+        userConfigDefault->socket[i].name[3] = 0xe5;
+        userConfigDefault->socket[i].name[4] = 0x8f;
+        userConfigDefault->socket[i].name[5] = 0xa3;
+        userConfigDefault->socket[i].name[6] = i + '1';
+        userConfigDefault->socket[i].name[7] = 0;
 
-//      sprintf(userConfigDefault->plug[i].name, "插座%d", i);//编码异常
+//      sprintf(userConfigDefault->socket[i].name, "插座%d", i);//编码异常
         for (j = 0; j < SOCKET_TIME_TASK_NUM; j++)
         {
-            userConfigDefault->plug[i].task[j].hour = 0;
-            userConfigDefault->plug[i].task[j].minute = 0;
-            userConfigDefault->plug[i].task[j].repeat = 0x00;
-            userConfigDefault->plug[i].task[j].on = 0;
-            userConfigDefault->plug[i].task[j].action = 1;
+            userConfigDefault->socket[i].task[j].hour = 0;
+            userConfigDefault->socket[i].task[j].minute = 0;
+            userConfigDefault->socket[i].task[j].repeat = 0x00;
+            userConfigDefault->socket[i].task[j].on = 0;
+            userConfigDefault->socket[i].task[j].action = 1;
         }
     }
 //  mico_system_context_update(sys_config);
@@ -100,11 +100,11 @@ int application_start(void)
     for (i = 0; i < Relay_NUM; i++)
     {
         MicoGpioInitialize(Relay[i], OUTPUT_PUSH_PULL);
-        UserRelaySet(i, user_config->plug[i].on);
+        UserRelaySet(i, user_config->socket[i].on);
     }
     MicoSysLed(0);
 
-    if (user_config->version != USER_CONFIG_VERSION || user_config->plug[0].task[0].hour < 0 || user_config->plug[0].task[0].hour > 23)
+    if (user_config->version != USER_CONFIG_VERSION || user_config->socket[0].task[0].hour < 0 || user_config->socket[0].task[0].hour > 23)
     {
         os_log("WARNGIN: user params restored!");
         err = mico_system_context_restore(sys_config);
@@ -136,13 +136,13 @@ int application_start(void)
     os_log("version:%d",user_config->version);
 //  for (i = 0; i < SOCKET_NUM; i++)
 //  {
-//      os_log("plug_%d:",i);
-//      os_log("\tname:%s:",user_config->plug[i].name);
+//      os_log("socket_%d:",i);
+//      os_log("\tname:%s:",user_config->socket[i].name);
 //      for (j = 0; j < SOCKET_TIME_TASK_NUM; j++)
 //      {
-//          os_log("\t\ton:%d\t %02d:%02d repeat:0x%X",user_config->plug[i].task[j].on,
-//              user_config->plug[i].task[j].hour,user_config->plug[i].task[j].minute,
-//              user_config->plug[i].task[j].repeat);
+//          os_log("\t\ton:%d\t %02d:%02d repeat:0x%X",user_config->socket[i].task[j].on,
+//              user_config->socket[i].task[j].hour,user_config->socket[i].task[j].minute,
+//              user_config->socket[i].task[j].repeat);
 //      }
 //  }
 

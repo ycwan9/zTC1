@@ -16,8 +16,8 @@ void user_function_set_last_time()
     last_time = UpTicks();
 }
 
-bool json_plug_analysis(int udp_flag, unsigned char x, cJSON * pJsonRoot, cJSON * pJsonSend);
-bool json_plug_task_analysis(unsigned char x, unsigned char y, cJSON * pJsonRoot, cJSON * pJsonSend);
+bool json_socket_analysis(int udp_flag, unsigned char x, cJSON * pJsonRoot, cJSON * pJsonSend);
+bool json_socket_task_analysis(unsigned char x, unsigned char y, cJSON * pJsonRoot, cJSON * pJsonSend);
 
 void user_send(int udp_flag, char *s)
 {
@@ -180,10 +180,10 @@ void user_function_cmd_received(int udp_flag, char* pusrdata)
             cJSON_AddItemToObject(json_send, "setting", json_setting_send);
         }
 
-        //解析plug-----------------------------------------------------------------
+        //解析socket-----------------------------------------------------------------
         for (i = 0; i < SOCKET_NUM; i++)
         {
-            if (json_plug_analysis(udp_flag, i, pJsonRoot, json_send))
+            if (json_socket_analysis(udp_flag, i, pJsonRoot, json_send))
                 update_user_config_flag = true;
         }
 
@@ -214,67 +214,67 @@ void user_function_cmd_received(int udp_flag, char* pusrdata)
  *udp_flag:发送udp/mqtt标志位,此处修改插座开关状态时,需要实时更新给domoticz
  *x:插座编号
  */
-bool json_plug_analysis(int udp_flag, unsigned char x, cJSON * pJsonRoot, cJSON * pJsonSend)
+bool json_socket_analysis(int udp_flag, unsigned char x, cJSON * pJsonRoot, cJSON * pJsonSend)
 {
     if (!pJsonRoot) return false;
     if (!pJsonSend) return false;
     char i;
     bool return_flag = false;
-    char plug_str[] = "plug_X";
-    plug_str[5] = x + '0';
+    char socket_str[] = "socket_X";
+    socket_str[5] = x + '0';
 
-    cJSON *p_plug = cJSON_GetObjectItem(pJsonRoot, plug_str);
-    if (!p_plug) return_flag = false;
+    cJSON *p_socket = cJSON_GetObjectItem(pJsonRoot, socket_str);
+    if (!p_socket) return_flag = false;
 
-    cJSON *json_plug_send = cJSON_CreateObject();
+    cJSON *json_socket_send = cJSON_CreateObject();
 
-    //解析plug on------------------------------------------------------
-    if (p_plug)
+    //解析socket on------------------------------------------------------
+    if (p_socket)
     {
-        cJSON *p_plug_on = cJSON_GetObjectItem(p_plug, "on");
-        if (p_plug_on)
+        cJSON *p_socket_on = cJSON_GetObjectItem(p_socket, "on");
+        if (p_socket_on)
         {
-            if (cJSON_IsNumber(p_plug_on))
+            if (cJSON_IsNumber(p_socket_on))
             {
-                UserRelaySet(x, p_plug_on->valueint);
+                UserRelaySet(x, p_socket_on->valueint);
                 return_flag = true;
             }
-            user_mqtt_send_plug_state(x);
+            user_mqtt_send_socket_state(x);
         }
 
-        //解析plug中setting项目----------------------------------------------
-        cJSON *p_plug_setting = cJSON_GetObjectItem(p_plug, "setting");
-        if (p_plug_setting)
+        //解析socket中setting项目----------------------------------------------
+        cJSON *p_socket_setting = cJSON_GetObjectItem(p_socket, "setting");
+        if (p_socket_setting)
         {
-            cJSON *json_plug_setting_send = cJSON_CreateObject();
-            //解析plug中setting中name----------------------------------------
-            cJSON *p_plug_setting_name = cJSON_GetObjectItem(p_plug_setting, "name");
-            if (p_plug_setting_name)
+            cJSON *json_socket_setting_send = cJSON_CreateObject();
+            //解析socket中setting中name----------------------------------------
+            cJSON *p_socket_setting_name = cJSON_GetObjectItem(p_socket_setting, "name");
+            if (p_socket_setting_name)
             {
-                if (cJSON_IsString(p_plug_setting_name))
+                if (cJSON_IsString(p_socket_setting_name))
                 {
                     return_flag = true;
-                    sprintf(user_config->plug[x].name, p_plug_setting_name->valuestring);
+                    sprintf(user_config->socket[x].name, p_socket_setting_name->valuestring);
                     user_mqtt_hass_auto_name(x);
                 }
-                cJSON_AddStringToObject(json_plug_setting_send, "name", user_config->plug[x].name);
+                cJSON_AddStringToObject(json_socket_setting_send, "name", user_config->socket[x].name);
             }
 
-            //解析plug中setting中task----------------------------------------
+            //解析socket中setting中task----------------------------------------
             for (i = 0; i < SOCKET_TIME_TASK_NUM; i++)
             {
-                if (json_plug_task_analysis(x, i, p_plug_setting, json_plug_setting_send))
+                if (json_socket_task_analysis(x, i, p_socket_setting, json_socket_setting_send))
                     return_flag = true;
             }
 
-            cJSON_AddItemToObject(json_plug_send, "setting", json_plug_setting_send);
+            cJSON_AddItemToObject(json_socket_send, "setting", json_socket_setting_send);
         }
     }
 //  cJSON *p_nvalue = cJSON_GetObjectItem(pJsonRoot, "nvalue");
-//  if (p_plug || p_nvalue)
-    cJSON_AddNumberToObject(json_plug_send, "on", user_config->plug[x].on);
+//  if (p_socket || p_nvalue)
+    cJSON_AddNumberToObject(json_socket_send, "on", user_config->socket[x].on);
 
-    cJSON_AddItemToObject(pJsonSend, plug_str, json_plug_send);
+    cJSON_AddItemToObject(pJsonSend, socket_str, json_socket_send);
     return return_flag;
 }
 
@@ -282,53 +282,53 @@ bool json_plug_analysis(int udp_flag, unsigned char x, cJSON * pJsonRoot, cJSON 
  *解析处理定时任务json
  *x:插座编号 y:任务编号
  */
-bool json_plug_task_analysis(unsigned char x, unsigned char y, cJSON * pJsonRoot, cJSON * pJsonSend)
+bool json_socket_task_analysis(unsigned char x, unsigned char y, cJSON * pJsonRoot, cJSON * pJsonSend)
 {
     if (!pJsonRoot) return false;
     bool return_flag = false;
 
-    char plug_task_str[] = "task_X";
-    plug_task_str[5] = y + '0';
+    char socket_task_str[] = "task_X";
+    socket_task_str[5] = y + '0';
 
-    cJSON *p_plug_task = cJSON_GetObjectItem(pJsonRoot, plug_task_str);
-    if (!p_plug_task) return false;
+    cJSON *p_socket_task = cJSON_GetObjectItem(pJsonRoot, socket_task_str);
+    if (!p_socket_task) return false;
 
-    cJSON *json_plug_task_send = cJSON_CreateObject();
+    cJSON *json_socket_task_send = cJSON_CreateObject();
 
-    cJSON *p_plug_task_hour = cJSON_GetObjectItem(p_plug_task, "hour");
-    cJSON *p_plug_task_minute = cJSON_GetObjectItem(p_plug_task, "minute");
-    cJSON *p_plug_task_repeat = cJSON_GetObjectItem(p_plug_task, "repeat");
-    cJSON *p_plug_task_action = cJSON_GetObjectItem(p_plug_task, "action");
-    cJSON *p_plug_task_on = cJSON_GetObjectItem(p_plug_task, "on");
+    cJSON *p_socket_task_hour = cJSON_GetObjectItem(p_socket_task, "hour");
+    cJSON *p_socket_task_minute = cJSON_GetObjectItem(p_socket_task, "minute");
+    cJSON *p_socket_task_repeat = cJSON_GetObjectItem(p_socket_task, "repeat");
+    cJSON *p_socket_task_action = cJSON_GetObjectItem(p_socket_task, "action");
+    cJSON *p_socket_task_on = cJSON_GetObjectItem(p_socket_task, "on");
 
-    if (p_plug_task_hour && p_plug_task_minute && p_plug_task_repeat &&
-         p_plug_task_action
-         && p_plug_task_on)
+    if (p_socket_task_hour && p_socket_task_minute && p_socket_task_repeat &&
+         p_socket_task_action
+         && p_socket_task_on)
     {
 
-        if (cJSON_IsNumber(p_plug_task_hour)
-             && cJSON_IsNumber(p_plug_task_minute)
-             && cJSON_IsNumber(p_plug_task_repeat)
-             && cJSON_IsNumber(p_plug_task_action)
-             && cJSON_IsNumber(p_plug_task_on)
+        if (cJSON_IsNumber(p_socket_task_hour)
+             && cJSON_IsNumber(p_socket_task_minute)
+             && cJSON_IsNumber(p_socket_task_repeat)
+             && cJSON_IsNumber(p_socket_task_action)
+             && cJSON_IsNumber(p_socket_task_on)
                               )
         {
             return_flag = true;
-            user_config->plug[x].task[y].hour = p_plug_task_hour->valueint;
-            user_config->plug[x].task[y].minute = p_plug_task_minute->valueint;
-            user_config->plug[x].task[y].repeat = p_plug_task_repeat->valueint;
-            user_config->plug[x].task[y].action = p_plug_task_action->valueint;
-            user_config->plug[x].task[y].on = p_plug_task_on->valueint;
+            user_config->socket[x].task[y].hour = p_socket_task_hour->valueint;
+            user_config->socket[x].task[y].minute = p_socket_task_minute->valueint;
+            user_config->socket[x].task[y].repeat = p_socket_task_repeat->valueint;
+            user_config->socket[x].task[y].action = p_socket_task_action->valueint;
+            user_config->socket[x].task[y].on = p_socket_task_on->valueint;
         }
 
     }
-    cJSON_AddNumberToObject(json_plug_task_send, "hour", user_config->plug[x].task[y].hour);
-    cJSON_AddNumberToObject(json_plug_task_send, "minute", user_config->plug[x].task[y].minute);
-    cJSON_AddNumberToObject(json_plug_task_send, "repeat", user_config->plug[x].task[y].repeat);
-    cJSON_AddNumberToObject(json_plug_task_send, "action", user_config->plug[x].task[y].action);
-    cJSON_AddNumberToObject(json_plug_task_send, "on", user_config->plug[x].task[y].on);
+    cJSON_AddNumberToObject(json_socket_task_send, "hour", user_config->socket[x].task[y].hour);
+    cJSON_AddNumberToObject(json_socket_task_send, "minute", user_config->socket[x].task[y].minute);
+    cJSON_AddNumberToObject(json_socket_task_send, "repeat", user_config->socket[x].task[y].repeat);
+    cJSON_AddNumberToObject(json_socket_task_send, "action", user_config->socket[x].task[y].action);
+    cJSON_AddNumberToObject(json_socket_task_send, "on", user_config->socket[x].task[y].on);
 
-    cJSON_AddItemToObject(pJsonSend, plug_task_str, json_plug_task_send);
+    cJSON_AddItemToObject(pJsonSend, socket_task_str, json_socket_task_send);
     return return_flag;
 }
 

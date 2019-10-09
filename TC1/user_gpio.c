@@ -23,7 +23,7 @@ bool RelayOut(void)
     int i;
     for (i = 0; i < SOCKET_NUM; i++)
     {
-        if (user_config->plug[i].on != 0)
+        if (user_config->socket[i].on != 0)
         {
             return true;
         }
@@ -34,12 +34,12 @@ bool RelayOut(void)
 const unsigned char* GetSocketStatus()
 {
     sprintf(socket_status, "%d,%d,%d,%d,%d,%d",
-        user_config->plug[0].on,
-        user_config->plug[1].on,
-        user_config->plug[2].on,
-        user_config->plug[3].on,
-        user_config->plug[4].on,
-        user_config->plug[5].on);
+        user_config->socket[0].on,
+        user_config->socket[1].on,
+        user_config->socket[2].on,
+        user_config->socket[3].on,
+        user_config->socket[4].on,
+        user_config->socket[5].on);
     return (const unsigned char*)socket_status;
 }
 
@@ -73,7 +73,7 @@ void UserRelaySet(unsigned char i, unsigned char on)
         MicoGpioOutputLow(relay[i]);
     }
 
-    user_config->plug[i].on = on;
+    user_config->socket[i].on = on;
 
     if (RelayOut())
     {
@@ -134,7 +134,7 @@ static void KeyShortPress(void)
 
     for (i = 0; i < SOCKET_NUM; i++)
     {
-        user_mqtt_send_plug_state(i);
+        user_mqtt_send_socket_state(i);
     }
 }
 mico_timer_t user_key_timer;

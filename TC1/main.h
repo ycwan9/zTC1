@@ -40,14 +40,14 @@ typedef struct
     char repeat; //bit7:一次 bit6-0:周日-周一
     char action; //动作
     char on;     //开关
-} user_plug_task_config_t;
+} user_socket_task_config_t;
 
 typedef struct
 {
     char name[SOCKET_NAME_LENGTH];
     char on;    //记录当前开关
-    user_plug_task_config_t task[SOCKET_TIME_TASK_NUM];
-} user_plug_config_t;
+    user_socket_task_config_t task[SOCKET_TIME_TASK_NUM];
+} user_socket_config_t;
 
 //用户保存参数结构体
 typedef struct
@@ -58,7 +58,7 @@ typedef struct
     char mqtt_password[SETTING_MQTT_STRING_LENGTH_MAX];  //mqtt service user
 //  char mqtt_device_id[SETTING_MQTT_STRING_LENGTH_MAX]; //mqtt service user device name
     char version;
-    user_plug_config_t plug[SOCKET_NUM];
+    user_socket_config_t socket[SOCKET_NUM];
     char user[maxNameLen];
     WiFiEvent last_wifi_status;
 } user_config_t;

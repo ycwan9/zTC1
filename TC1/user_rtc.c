@@ -180,26 +180,26 @@ void rtc_thread(mico_thread_arg_t arg)
         {
             for (j = 0; j < SOCKET_TIME_TASK_NUM; j++)
             {
-                if (user_config->plug[i].task[j].on != 0)
+                if (user_config->socket[i].task[j].on != 0)
                 {
 
-                    char repeat = user_config->plug[i].task[j].repeat;
+                    char repeat = user_config->socket[i].task[j].repeat;
                     if ( //符合条件则改变继电器状态: 秒为0 时分符合设定值, 重复符合设定值
-                    rtc_time.sec == 0 && rtc_time.min == user_config->plug[i].task[j].minute
-                    && rtc_time.hr == user_config->plug[i].task[j].hour
+                    rtc_time.sec == 0 && rtc_time.min == user_config->socket[i].task[j].minute
+                    && rtc_time.hr == user_config->socket[i].task[j].hour
                     && ((repeat == 0x00) || repeat & (1 << (rtc_time.weekday - 1)))
                   )
                     {
-                        if (user_config->plug[i].on != user_config->plug[i].task[j].action)
+                        if (user_config->socket[i].on != user_config->socket[i].task[j].action)
                         {
-                            UserRelaySet(i, user_config->plug[i].task[j].action);
+                            UserRelaySet(i, user_config->socket[i].task[j].action);
                             update_user_config_flag = 1;
-                            user_mqtt_send_plug_state(i);
+                            user_mqtt_send_socket_state(i);
                         }
                         if (repeat == 0x00)
                         {
                             task_flag[i] = j;
-                            user_config->plug[i].task[j].on = 0;
+                            user_config->socket[i].task[j].on = 0;
                             update_user_config_flag = 1;
                         }
                     }
@@ -219,31 +219,31 @@ void rtc_thread(mico_thread_arg_t arg)
 
             for (i = 0; i < SOCKET_NUM; i++)
             {
-                char strTemp1[] = "plug_X";
+                char strTemp1[] = "socket_X";
                 strTemp1[5] = i + '0';
-                cJSON *json_send_plug = cJSON_CreateObject();
-                cJSON_AddNumberToObject(json_send_plug, "on", user_config->plug[i].on);
+                cJSON *json_send_socket = cJSON_CreateObject();
+                cJSON_AddNumberToObject(json_send_socket, "on", user_config->socket[i].on);
 
                 if (task_flag[i] >= 0)
                 {
-                    cJSON *json_send_plug_setting = cJSON_CreateObject();
+                    cJSON *json_send_socket_setting = cJSON_CreateObject();
 
                     j = task_flag[i];
                     char strTemp2[] = "task_X";
                     strTemp2[5] = j + '0';
-                    cJSON *json_send_plug_task = cJSON_CreateObject();
-                    cJSON_AddNumberToObject(json_send_plug_task, "hour", user_config->plug[i].task[j].hour);
-                    cJSON_AddNumberToObject(json_send_plug_task, "minute", user_config->plug[i].task[j].minute);
-                    cJSON_AddNumberToObject(json_send_plug_task, "repeat", user_config->plug[i].task[j].repeat);
-                    cJSON_AddNumberToObject(json_send_plug_task, "action", user_config->plug[i].task[j].action);
-                    cJSON_AddNumberToObject(json_send_plug_task, "on", user_config->plug[i].task[j].on);
-                    cJSON_AddItemToObject(json_send_plug_setting, strTemp2, json_send_plug_task);
+                    cJSON *json_send_socket_task = cJSON_CreateObject();
+                    cJSON_AddNumberToObject(json_send_socket_task, "hour", user_config->socket[i].task[j].hour);
+                    cJSON_AddNumberToObject(json_send_socket_task, "minute", user_config->socket[i].task[j].minute);
+                    cJSON_AddNumberToObject(json_send_socket_task, "repeat", user_config->socket[i].task[j].repeat);
+                    cJSON_AddNumberToObject(json_send_socket_task, "action", user_config->socket[i].task[j].action);
+                    cJSON_AddNumberToObject(json_send_socket_task, "on", user_config->socket[i].task[j].on);
+                    cJSON_AddItemToObject(json_send_socket_setting, strTemp2, json_send_socket_task);
 
-                    cJSON_AddItemToObject(json_send_plug, "setting", json_send_plug_setting);
+                    cJSON_AddItemToObject(json_send_socket, "setting", json_send_socket_setting);
 
                     task_flag[i] = -1;
                 }
-                cJSON_AddItemToObject(json_send, strTemp1, json_send_plug);
+                cJSON_AddItemToObject(json_send, strTemp1, json_send_socket);
             }
 
             char *json_str = cJSON_Print(json_send);
