@@ -11,7 +11,7 @@
 char wifi_status = WIFI_STATE_NOCONNECT;
 
 mico_timer_t wifi_led_timer;
-IpStatus ip_status = { ELAND_AP_LOCAL_IP, ELAND_AP_LOCAL_IP, ELAND_AP_NET_MASK };
+IpStatus ip_status = { 0, ELAND_AP_LOCAL_IP, ELAND_AP_LOCAL_IP, ELAND_AP_NET_MASK };
 
 //wifi已连接获取到IP地址回调
 static void WifiGetIpCallback(IPStatusTypedef *pnet, void * arg)
@@ -40,6 +40,7 @@ static void WifiStatusCallback(WiFiEvent status, void* arg)
             os_log("close ap error[%d]", status);
         }
 
+        ip_status.mode = 1;
         //wifi_status = WIFI_STATE_CONNECTED;
     }
     else if (status == NOTIFY_STATION_DOWN) //wifi断开
@@ -55,6 +56,10 @@ static void WifiStatusCallback(WiFiEvent status, void* arg)
         {
             mico_rtos_start_timer(&wifi_led_timer);
         }
+    }
+    else if (status == NOTIFY_AP_UP)
+    {
+        ip_status.mode = 0;
     }
 }
 

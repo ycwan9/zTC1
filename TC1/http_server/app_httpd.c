@@ -64,7 +64,7 @@ static int HttpGetTc1Status(httpd_request_t *req)
 {
     const unsigned char* sockets = GetSocketStatus();
     char* tc1_status = malloc(256);
-    sprintf(tc1_status, TC1_STATUS_JSON, sockets, (int)sys_config->micoSystemConfig.reserved,
+    sprintf(tc1_status, TC1_STATUS_JSON, sockets, ip_status.mode,
         sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key,
         ELAND_AP_SSID, ELAND_AP_KEY, ip_status.ip, ip_status.mask, ip_status.gateway);
 
