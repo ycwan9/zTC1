@@ -77,6 +77,7 @@ static int http_get_tc1_status(httpd_request_t *req)
     send_http(tc1_status, strlen(tc1_status), exit, &err);
 
 exit:
+    if (tc1_status) free(tc1_status);
     return err;
 }
 
@@ -102,15 +103,8 @@ exit:
 static int http_get_wifi_config(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
-
     const unsigned char* status = get_socket_status();
-
-    err = httpd_send_all_header(req, HTTP_RES_200, strlen(socket_status), HTTP_CONTENT_HTML_STR);
-    require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status headers."));
-
-    err = httpd_send_body(req->sock, status, strlen(socket_status));
-    require_noerr_action(err, exit, app_httpd_log("ERROR: Unable to send http socket_status body."));
-
+    send_http(status, strlen(status), exit, &err);
 exit:
     return err;
 }
