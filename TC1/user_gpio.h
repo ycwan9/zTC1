@@ -6,12 +6,12 @@
 #include "mico.h"
 #include "micokit_ext.h"
 
-void user_led_set(char x);
-void key_init(void);
-void user_relay_set(unsigned char x,unsigned char y);
-void user_relay_set_all(char y);
-bool relay_out(void);
-const unsigned char* get_socket_status();
-void set_socket_status(char* socket_status);
+void UserLedSet(char x);
+void KeyInit(void);
+void UserRelaySet(unsigned char x,unsigned char y);
+void UserRelaySetAll(char y);
+bool RelayOut(void);
+const unsigned char* GetSocketStatus();
+void SetSocketStatus(char* socket_status);
 
 #endif

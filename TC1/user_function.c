@@ -236,7 +236,7 @@ bool json_plug_analysis(int udp_flag, unsigned char x, cJSON * pJsonRoot, cJSON 
         {
             if (cJSON_IsNumber(p_plug_on))
             {
-                user_relay_set(x, p_plug_on->valueint);
+                UserRelaySet(x, p_plug_on->valueint);
                 return_flag = true;
             }
             user_mqtt_send_plug_state(x);

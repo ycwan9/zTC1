@@ -406,9 +406,9 @@ void mqtt_client_thread(mico_thread_arg_t arg)
 
     mqtt_client_release(&c, &n);
     isconnect = false;
-    user_led_set(-1);
+    UserLedSet(-1);
     mico_rtos_thread_msleep(100);
-    user_led_set(-1);
+    UserLedSet(-1);
     mico_rtos_thread_sleep(5);
     goto MQTT_start;
 

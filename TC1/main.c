@@ -100,7 +100,7 @@ int application_start(void)
     for (i = 0; i < Relay_NUM; i++)
     {
         MicoGpioInitialize(Relay[i], OUTPUT_PUSH_PULL);
-        user_relay_set(i, user_config->plug[i].on);
+        UserRelaySet(i, user_config->plug[i].on);
     }
     MicoSysLed(0);
 
@@ -156,7 +156,7 @@ int application_start(void)
         WifiConnect(sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key);
     }
     user_udp_init();
-    key_init();
+    KeyInit();
     err = user_mqtt_init();
     require_noerr(err, exit);
     err = user_rtc_init();

@@ -192,7 +192,7 @@ void rtc_thread(mico_thread_arg_t arg)
                     {
                         if (user_config->plug[i].on != user_config->plug[i].task[j].action)
                         {
-                            user_relay_set(i, user_config->plug[i].task[j].action);
+                            UserRelaySet(i, user_config->plug[i].task[j].action);
                             update_user_config_flag = 1;
                             user_mqtt_send_plug_state(i);
                         }

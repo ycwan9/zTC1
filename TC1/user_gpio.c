@@ -8,7 +8,7 @@
 
 mico_gpio_t relay[Relay_NUM] = { Relay_0, Relay_1, Relay_2, Relay_3, Relay_4, Relay_5 };
 
-void user_led_set(char x)
+void UserLedSet(char x)
 {
     if (x == -1)
         MicoGpioOutputTrigger(Led);
@@ -18,7 +18,7 @@ void user_led_set(char x)
         MicoGpioOutputLow(Led);
 }
 
-bool relay_out(void)
+bool RelayOut(void)
 {
     int i;
     for (i = 0; i < PLUG_NUM; i++)
@@ -31,7 +31,7 @@ bool relay_out(void)
     return false;
 }
 
-const unsigned char* get_socket_status()
+const unsigned char* GetSocketStatus()
 {
     sprintf(socket_status, "%d,%d,%d,%d,%d,%d",
         user_config->plug[0].on,
@@ -43,7 +43,7 @@ const unsigned char* get_socket_status()
     return (const unsigned char*)socket_status;
 }
 
-void set_socket_status(char* socket_status)
+void SetSocketStatus(char* socket_status)
 {
     int ons[6] = { 0 };
     sscanf(socket_status, "%d,%d,%d,%d,%d,%d,",
@@ -51,16 +51,16 @@ void set_socket_status(char* socket_status)
     int i = 0;
     for (i = 0; i < PLUG_NUM; i++)
     {
-        user_relay_set(i, ons[i]);
+        UserRelaySet(i, ons[i]);
     }
 }
 
-/*user_relay_set
+/*UserRelaySet
  * 设置继电器开关
  *  i:编号 0-5
  * on:开关 0:关 1:开
  */
-void user_relay_set(unsigned char i, unsigned char on)
+void UserRelaySet(unsigned char i, unsigned char on)
 {
     if (i >= PLUG_NUM) return;
 
@@ -75,13 +75,13 @@ void user_relay_set(unsigned char i, unsigned char on)
 
     user_config->plug[i].on = on;
 
-    if (relay_out())
+    if (RelayOut())
     {
-        user_led_set(1);
+        UserLedSet(1);
     }
     else
     {
-        user_led_set(0);
+        UserLedSet(0);
     }
 }
 
@@ -90,46 +90,46 @@ void user_relay_set(unsigned char i, unsigned char on)
  * y: 0:全部关 1:全部开
  *
  */
-void user_relay_set_all(char y)
+void UserRelaySetAll(char y)
 {
     int i;
     for (i = 0; i < PLUG_NUM; i++)
-        user_relay_set(i, y);
+        UserRelaySet(i, y);
 }
 
-static void key_long_press(void)
+static void KeyLongPress(void)
 {
-//  os_log("key_long_press");
-//  user_led_set(1);
+//  os_log("KeyLongPress");
+//  UserLedSet(1);
 //  user_mqtt_send("mqtt test");
 }
 
-static void key_long_10s_press(void)
+static void KeyLong10sPress(void)
 {
     os_log("WARNGIN: user params restored!");
 //  char i = 0;
 //  for (i = 0; i < 3; i++)
 //  {
-//      user_led_set(1);
+//      UserLedSet(1);
 //      mico_rtos_thread_msleep(100);
-//      user_led_set(0);
+//      UserLedSet(0);
 //  }
 //
     appRestoreDefault_callback(user_config, sizeof(user_config_t));
     sys_config->micoSystemConfig.ssid[0] = 0;
     mico_system_context_update(mico_system_context_get());
 }
-static void key_short_press(void)
+static void KeyShortPress(void)
 {
     char i;
 
-    if (relay_out())
+    if (RelayOut())
     {
-        user_relay_set_all(0);
+        UserRelaySetAll(0);
     }
     else
     {
-        user_relay_set_all(1);
+        UserRelaySetAll(1);
     }
 
     for (i = 0; i < PLUG_NUM; i++)
@@ -141,7 +141,7 @@ mico_timer_t user_key_timer;
 uint16_t key_time = 0;
 #define BUTTON_LONG_PRESS_TIME    10     //100ms*10=1s
 
-static void key_timeout_handler(void* arg)
+static void KeyTimeoutHandler(void* arg)
 {
     static char key_trigger, key_continue;
     //按键扫描程序
@@ -160,19 +160,19 @@ static void key_timeout_handler(void* arg)
 
             if (key_time == 30)
             {
-                key_long_press();
+                KeyLongPress();
             }
             else if (key_time == 100)
             {
-                key_long_10s_press();
+                KeyLong10sPress();
             }
             else if (key_time == 102)
             {
-                user_led_set(1);
+                UserLedSet(1);
             }
             else if (key_time == 103)
             {
-                user_led_set(0);
+                UserLedSet(0);
                 key_time = 101;
             }
         }
@@ -184,7 +184,7 @@ static void key_timeout_handler(void* arg)
         {   //100ms*10=1s 大于1s为长按
             key_time = 0;
             os_log("button short pressed:%d",key_time);
-            key_short_press();
+            KeyShortPress();
         } else if (key_time > 100)
         {
             MicoSystemReboot();
@@ -193,16 +193,16 @@ static void key_timeout_handler(void* arg)
     }
 }
 
-static void key_falling_irq_handler(void* arg)
+static void KeyFallingIrqHandler(void* arg)
 {
     mico_rtos_start_timer(&user_key_timer);
 }
-void key_init(void)
+void KeyInit(void)
 {
     MicoGpioInitialize(Button, INPUT_PULL_UP);
-    mico_rtos_init_timer(&user_key_timer, 100, key_timeout_handler, NULL);
+    mico_rtos_init_timer(&user_key_timer, 100, KeyTimeoutHandler, NULL);
 
-    MicoGpioEnableIRQ(Button, IRQ_TRIGGER_FALLING_EDGE, key_falling_irq_handler, NULL);
+    MicoGpioEnableIRQ(Button, IRQ_TRIGGER_FALLING_EDGE, KeyFallingIrqHandler, NULL);
 
 }
 

@@ -97,7 +97,7 @@ static void WifiLedTimerCallback(void* arg)
     {
         case WIFI_STATE_FAIL:
             os_log("wifi connect fail");
-            user_led_set(0);
+            UserLedSet(0);
             mico_rtos_stop_timer(&wifi_led_timer);
             break;
         case WIFI_STATE_NOCONNECT:
@@ -105,15 +105,15 @@ static void WifiLedTimerCallback(void* arg)
             break;
         case WIFI_STATE_CONNECTING:
             num = 0;
-            user_led_set(-1);
+            UserLedSet(-1);
             break;
         case WIFI_STATE_CONNECTED:
-            user_led_set(0);
+            UserLedSet(0);
             mico_rtos_stop_timer(&wifi_led_timer);
-            if (relay_out())
-                user_led_set(1);
+            if (RelayOut())
+                UserLedSet(1);
             else
-                user_led_set(0);
+                UserLedSet(0);
             break;
     }
 }

@@ -62,7 +62,7 @@ exit:
 
 static int HttpGetTc1Status(httpd_request_t *req)
 {
-    const unsigned char* sockets = get_socket_status();
+    const unsigned char* sockets = GetSocketStatus();
     char* ap_name = "TC1-AP";
     char* ap_pwd = "12345678";
     char* ip = "192.168.33.222";
@@ -91,7 +91,7 @@ static int HttpSetSocketStatus(httpd_request_t *req)
     err = httpd_get_data(req, buf, buf_size);
     require_noerr(err, exit);
 
-    set_socket_status(buf);
+    SetSocketStatus(buf);
 
     send_http("OK", 2, exit, &err);
 
@@ -103,7 +103,7 @@ exit:
 static int HttpGetWifiConfig(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
-    const unsigned char* status = get_socket_status();
+    const unsigned char* status = GetSocketStatus();
     send_http(status, strlen(status), exit, &err);
 exit:
     return err;
