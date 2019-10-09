@@ -39,7 +39,7 @@ void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
     userConfigDefault->version = USER_CONFIG_VERSION;
 
     int i, j;
-    for (i = 0; i < PLUG_NUM; i++)
+    for (i = 0; i < SOCKET_NUM; i++)
     {
         userConfigDefault->plug[i].on = 1;
         //插座名称 插口1-6
@@ -53,7 +53,7 @@ void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
         userConfigDefault->plug[i].name[7] = 0;
 
 //      sprintf(userConfigDefault->plug[i].name, "插座%d", i);//编码异常
-        for (j = 0; j < PLUG_TIME_TASK_NUM; j++)
+        for (j = 0; j < SOCKET_TIME_TASK_NUM; j++)
         {
             userConfigDefault->plug[i].task[j].hour = 0;
             userConfigDefault->plug[i].task[j].minute = 0;
@@ -134,11 +134,11 @@ int application_start(void)
     os_log("mqtt_password:%s",user_config->mqtt_password);
 
     os_log("version:%d",user_config->version);
-//  for (i = 0; i < PLUG_NUM; i++)
+//  for (i = 0; i < SOCKET_NUM; i++)
 //  {
 //      os_log("plug_%d:",i);
 //      os_log("\tname:%s:",user_config->plug[i].name);
-//      for (j = 0; j < PLUG_TIME_TASK_NUM; j++)
+//      for (j = 0; j < SOCKET_TIME_TASK_NUM; j++)
 //      {
 //          os_log("\t\ton:%d\t %02d:%02d repeat:0x%X",user_config->plug[i].task[j].on,
 //              user_config->plug[i].task[j].hour,user_config->plug[i].task[j].minute,

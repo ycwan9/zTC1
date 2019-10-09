@@ -21,7 +21,7 @@ void UserLedSet(char x)
 bool RelayOut(void)
 {
     int i;
-    for (i = 0; i < PLUG_NUM; i++)
+    for (i = 0; i < SOCKET_NUM; i++)
     {
         if (user_config->plug[i].on != 0)
         {
@@ -49,7 +49,7 @@ void SetSocketStatus(char* socket_status)
     sscanf(socket_status, "%d,%d,%d,%d,%d,%d,",
         &ons[0], &ons[1], &ons[2], &ons[3], &ons[4], &ons[5]);
     int i = 0;
-    for (i = 0; i < PLUG_NUM; i++)
+    for (i = 0; i < SOCKET_NUM; i++)
     {
         UserRelaySet(i, ons[i]);
     }
@@ -62,7 +62,7 @@ void SetSocketStatus(char* socket_status)
  */
 void UserRelaySet(unsigned char i, unsigned char on)
 {
-    if (i >= PLUG_NUM) return;
+    if (i >= SOCKET_NUM) return;
 
     if (on == Relay_ON)
     {
@@ -93,7 +93,7 @@ void UserRelaySet(unsigned char i, unsigned char on)
 void UserRelaySetAll(char y)
 {
     int i;
-    for (i = 0; i < PLUG_NUM; i++)
+    for (i = 0; i < SOCKET_NUM; i++)
         UserRelaySet(i, y);
 }
 
@@ -132,7 +132,7 @@ static void KeyShortPress(void)
         UserRelaySetAll(1);
     }
 
-    for (i = 0; i < PLUG_NUM; i++)
+    for (i = 0; i < SOCKET_NUM; i++)
     {
         user_mqtt_send_plug_state(i);
     }

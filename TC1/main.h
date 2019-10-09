@@ -14,9 +14,9 @@
 #define USER_CONFIG_VERSION 2
 #define SETTING_MQTT_STRING_LENGTH_MAX 32 //必须4字节对齐。
 
-#define PLUG_NAME_LENGTH   32
-#define PLUG_NUM           6  //插座数量
-#define PLUG_TIME_TASK_NUM 5  //每个插座最多5组定时任务
+#define SOCKET_NAME_LENGTH   32
+#define SOCKET_NUM           6  //插座数量
+#define SOCKET_TIME_TASK_NUM 5  //每个插座最多5组定时任务
 
 #define Led    MICO_GPIO_5
 #define Button MICO_GPIO_23
@@ -31,7 +31,7 @@
 #define Relay_3   MICO_GPIO_7
 #define Relay_4   MICO_GPIO_9
 #define Relay_5   MICO_GPIO_18
-#define Relay_NUM PLUG_NUM
+#define Relay_NUM SOCKET_NUM
 
 typedef struct
 {
@@ -44,9 +44,9 @@ typedef struct
 
 typedef struct
 {
-    char name[PLUG_NAME_LENGTH];
+    char name[SOCKET_NAME_LENGTH];
     char on;    //记录当前开关
-    user_plug_task_config_t task[PLUG_TIME_TASK_NUM];
+    user_plug_task_config_t task[SOCKET_TIME_TASK_NUM];
 } user_plug_config_t;
 
 //用户保存参数结构体
@@ -58,7 +58,7 @@ typedef struct
     char mqtt_password[SETTING_MQTT_STRING_LENGTH_MAX];  //mqtt service user
 //  char mqtt_device_id[SETTING_MQTT_STRING_LENGTH_MAX]; //mqtt service user device name
     char version;
-    user_plug_config_t plug[PLUG_NUM];
+    user_plug_config_t plug[SOCKET_NUM];
     char user[maxNameLen];
     WiFiEvent last_wifi_status;
 } user_config_t;

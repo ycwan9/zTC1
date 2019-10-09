@@ -124,7 +124,7 @@ OSStatus user_rtc_init(void)
 void rtc_thread(mico_thread_arg_t arg)
 {
     int i, j;
-    char task_flag[PLUG_NUM] = { -1, -1, -1, -1, -1, -1 };   //记录每个插座哪个任务需要返回数据
+    char task_flag[SOCKET_NUM] = { -1, -1, -1, -1, -1, -1 };   //记录每个插座哪个任务需要返回数据
     OSStatus err = kUnknownErr;
     LinkStatusTypeDef LinkStatus;
     mico_rtc_time_t rtc_time;
@@ -176,9 +176,9 @@ void rtc_thread(mico_thread_arg_t arg)
             os_log("time:20%02d/%02d/%02d %d %02d:%02d:%02d",rtc_time.year,rtc_time.month,rtc_time.date,rtc_time.weekday,rtc_time.hr,rtc_time.min,rtc_time.sec);
 
         char update_user_config_flag = 0;
-        for (i = 0; i < PLUG_NUM; i++)
+        for (i = 0; i < SOCKET_NUM; i++)
         {
-            for (j = 0; j < PLUG_TIME_TASK_NUM; j++)
+            for (j = 0; j < SOCKET_TIME_TASK_NUM; j++)
             {
                 if (user_config->plug[i].task[j].on != 0)
                 {
@@ -217,7 +217,7 @@ void rtc_thread(mico_thread_arg_t arg)
             cJSON *json_send = cJSON_CreateObject();
             cJSON_AddStringToObject(json_send, "mac", strMac);
 
-            for (i = 0; i < PLUG_NUM; i++)
+            for (i = 0; i < SOCKET_NUM; i++)
             {
                 char strTemp1[] = "plug_X";
                 strTemp1[5] = i + '0';

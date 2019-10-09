@@ -181,7 +181,7 @@ void user_function_cmd_received(int udp_flag, char* pusrdata)
         }
 
         //解析plug-----------------------------------------------------------------
-        for (i = 0; i < PLUG_NUM; i++)
+        for (i = 0; i < SOCKET_NUM; i++)
         {
             if (json_plug_analysis(udp_flag, i, pJsonRoot, json_send))
                 update_user_config_flag = true;
@@ -261,7 +261,7 @@ bool json_plug_analysis(int udp_flag, unsigned char x, cJSON * pJsonRoot, cJSON 
             }
 
             //解析plug中setting中task----------------------------------------
-            for (i = 0; i < PLUG_TIME_TASK_NUM; i++)
+            for (i = 0; i < SOCKET_TIME_TASK_NUM; i++)
             {
                 if (json_plug_task_analysis(x, i, p_plug_setting, json_plug_setting_send))
                     return_flag = true;
