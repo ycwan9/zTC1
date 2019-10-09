@@ -19,7 +19,7 @@ extern char* wifi_ret;
 
 extern char wifi_status;
 
-extern void StationInit(void);
+extern void WifiInit(void);
 extern void ApInit(void);
 extern void WifiConnect(char* wifi_ssid, char* wifi_key);
 

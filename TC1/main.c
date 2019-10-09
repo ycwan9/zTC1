@@ -89,11 +89,13 @@ int application_start(void)
         ApInit();
     }
 
+    bool open_ap = false;
     MicoGpioInitialize((mico_gpio_t) Led, OUTPUT_PUSH_PULL);
     for (i = 0; i < Relay_NUM; i++)
     {
         MicoGpioInitialize(Relay[i], OUTPUT_PUSH_PULL);
         UserRelaySet(i, user_config->socket[i].on);
+        open_ap = true;
     }
     MicoSysLed(0);
 
@@ -127,8 +129,8 @@ int application_start(void)
     os_log("mqtt_password:%s",user_config->mqtt_password);
     os_log("version:%d",user_config->version);
 
-    StationInit();
-    if (sys_config->micoSystemConfig.reserved != NOTIFY_STATION_UP)
+    WifiInit();
+    if (sys_config->micoSystemConfig.reserved != NOTIFY_STATION_UP && !open_ap)
     {
         ApInit();
     }
@@ -145,7 +147,7 @@ int application_start(void)
     user_power_init();
 
     /* start http server thread */
-    app_httpd_start();
+    AppHttpdStart();
     while (1)
     {
         main_num++;

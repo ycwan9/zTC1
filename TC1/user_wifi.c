@@ -43,7 +43,7 @@ static void WifiStatusCallback(WiFiEvent status, void* arg)
         sys_config->micoSystemConfig.reserved = status;
         mico_system_context_update(sys_config);
 
-        ap_init(); //打开AP
+        ApInit(); //打开AP
 
         wifi_status = WIFI_STATE_NOCONNECT;
         if (!mico_rtos_is_timer_running(&wifi_led_timer))
@@ -139,7 +139,7 @@ void WifiConnect(char* wifi_ssid, char* wifi_key)
     wifi_status = WIFI_STATE_NOCONNECT;
 }
 
-void StationInit(void)
+void WifiInit(void)
 {
     //wifi状态下led闪烁定时器初始化
     mico_rtos_init_timer(&wifi_led_timer, 100, (void *) WifiLedTimerCallback, NULL);
