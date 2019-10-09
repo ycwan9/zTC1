@@ -46,7 +46,7 @@ static bool is_http_init;
 static bool is_handlers_registered;
 struct httpd_wsgi_call g_app_handlers[];
 
-static int http_get_index_page(httpd_request_t *req)
+static int HttpGetIndexPage(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
 
@@ -60,7 +60,7 @@ exit:
     return err;
 }
 
-static int http_get_tc1_status(httpd_request_t *req)
+static int HttpGetTc1Status(httpd_request_t *req)
 {
     const unsigned char* sockets = get_socket_status();
     char* ap_name = "TC1-AP";
@@ -81,7 +81,7 @@ exit:
     return err;
 }
 
-static int http_set_socket_status(httpd_request_t *req)
+static int HttpSetSocketStatus(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
 
@@ -100,7 +100,7 @@ exit:
     return err;
 }
 
-static int http_get_wifi_config(httpd_request_t *req)
+static int HttpGetWifiConfig(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
     const unsigned char* status = get_socket_status();
@@ -109,7 +109,7 @@ exit:
     return err;
 }
 
-static int http_set_wifi_config(httpd_request_t *req)
+static int HttpSetWifiConfig(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
 
@@ -123,7 +123,7 @@ static int http_set_wifi_config(httpd_request_t *req)
 
     sscanf(buf, "%s %s", wifi_ssid, wifi_key);
 
-    wifi_connect(wifi_ssid, wifi_key);
+    WifiConnect(wifi_ssid, wifi_key);
 
     send_http("OK", 2, exit, &err);
 
@@ -134,7 +134,7 @@ exit:
     return err;
 }
 
-static int http_get_wifi_scan(httpd_request_t *req)
+static int HttpGetWifiScan(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
     if (scaned)
@@ -152,7 +152,7 @@ exit:
     return err;
 }
 
-static int http_set_wifi_scan(httpd_request_t *req)
+static int HttpSetWifiScan(httpd_request_t *req)
 {
     micoWlanStartScanAdv();
     OSStatus err = kNoErr;
@@ -162,16 +162,16 @@ exit:
 }
 
 struct httpd_wsgi_call g_app_handlers[] = {
-    {"/", HTTPD_HDR_DEFORT, 0, http_get_index_page, NULL, NULL, NULL},
-    {"/socket", HTTPD_HDR_DEFORT, 0, NULL, http_set_socket_status, NULL, NULL},
-    {"/status", HTTPD_HDR_DEFORT, 0, http_get_tc1_status, NULL, NULL, NULL},
-    {"/wifi/config", HTTPD_HDR_DEFORT, 0, http_get_wifi_config, http_set_wifi_config, NULL, NULL},
-    {"/wifi/scan", HTTPD_HDR_DEFORT, 0, http_get_wifi_scan, http_set_wifi_scan, NULL, NULL},
+    {"/", HTTPD_HDR_DEFORT, 0, HttpGetIndexPage, NULL, NULL, NULL},
+    {"/socket", HTTPD_HDR_DEFORT, 0, NULL, HttpSetSocketStatus, NULL, NULL},
+    {"/status", HTTPD_HDR_DEFORT, 0, HttpGetTc1Status, NULL, NULL, NULL},
+    {"/wifi/config", HTTPD_HDR_DEFORT, 0, HttpGetWifiConfig, HttpSetWifiConfig, NULL, NULL},
+    {"/wifi/scan", HTTPD_HDR_DEFORT, 0, HttpGetWifiScan, HttpSetWifiScan, NULL, NULL},
 };
 
 static int g_app_handlers_no = sizeof(g_app_handlers)/sizeof(struct httpd_wsgi_call);
 
-static void app_http_register_handlers()
+static void AppHttpRegisterHandlers()
 {
     int rc;
     rc = httpd_register_wsgi_handlers(g_app_handlers, g_app_handlers_no);
@@ -180,7 +180,7 @@ static void app_http_register_handlers()
     }
 }
 
-static int _app_httpd_start()
+static int _AppHttpdStart()
 {
     OSStatus err = kNoErr;
     app_httpd_log("initializing web-services");
@@ -202,15 +202,15 @@ exit:
     return err;
 }
 
-int app_httpd_start(void)
+int AppHttpdStart(void)
 {
     OSStatus err = kNoErr;
 
-    err = _app_httpd_start();
+    err = _AppHttpdStart();
     require_noerr(err, exit);
 
     if (is_handlers_registered == false) {
-        app_http_register_handlers();
+        AppHttpRegisterHandlers();
         is_handlers_registered = true;
     }
 
@@ -218,7 +218,7 @@ exit:
     return err;
 }
 
-int app_httpd_stop()
+int AppHttpdStop()
 {
     OSStatus err = kNoErr;
 

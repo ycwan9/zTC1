@@ -93,7 +93,7 @@ int application_start(void)
     if (!MicoGpioInputGet(Button))
     {   //开机时按钮状态
         os_log("press ap_init");
-        ap_init();
+        ApInit();
     }
 
     MicoGpioInitialize((mico_gpio_t) Led, OUTPUT_PUSH_PULL);
@@ -146,14 +146,14 @@ int application_start(void)
 //      }
 //  }
 
-    wifi_init();
+    StationInit();
     if (sys_config->micoSystemConfig.reserved != NOTIFY_STATION_UP)
     {
-        ap_init();
+        ApInit();
     }
     else
     {
-        wifi_connect(sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key);
+        WifiConnect(sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key);
     }
     user_udp_init();
     key_init();

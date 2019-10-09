@@ -12,28 +12,8 @@ char wifi_status = WIFI_STATE_NOCONNECT;
 
 mico_timer_t wifi_led_timer;
 
-/*
-static void wifi_connect_sys_config(void)
-{
-    if (strlen(sys_config->micoSystemConfig.ssid) > 0)
-    {
-        os_log("connect ssid:%s key:%s",sys_config->micoSystemConfig.ssid,sys_config->micoSystemConfig.user_key);
-        network_InitTypeDef_st wNetConfig;
-        memset(&wNetConfig, 0, sizeof(network_InitTypeDef_st));
-        strcpy(wNetConfig.wifi_ssid, sys_config->micoSystemConfig.ssid);
-        strcpy(wNetConfig.wifi_key, sys_config->micoSystemConfig.user_key);
-        wNetConfig.wifi_mode = Station;
-        wNetConfig.dhcpMode = DHCP_Client;
-        wNetConfig.wifi_retry_interval = 6000;
-        micoWlanStart(&wNetConfig);
-        wifi_status = WIFI_STATE_CONNECTING;
-    } else
-        wifi_status = WIFI_STATE_FAIL;
-}
-*/
-
-//wifi已连接获取到IP地址 回调
-static void wifi_get_ip_callback(IPStatusTypedef *pnet, void * arg)
+//wifi已连接获取到IP地址回调
+static void WifiGetIpCallback(IPStatusTypedef *pnet, void * arg)
 {
     os_log("got IP:%s", pnet->ip);
     wifi_status = WIFI_STATE_CONNECTED;
@@ -41,7 +21,7 @@ static void wifi_get_ip_callback(IPStatusTypedef *pnet, void * arg)
 }
 
 //wifi连接状态改变回调
-static void wifi_status_callback(WiFiEvent status, void* arg)
+static void WifiStatusCallback(WiFiEvent status, void* arg)
 {
     if (status == NOTIFY_STATION_UP) //wifi连接成功
     {
@@ -76,7 +56,7 @@ static void wifi_status_callback(WiFiEvent status, void* arg)
 bool scaned = false;
 char* wifi_ret = NULL;
 //wifi扫描结果回调
-void wifi_scan_callback(ScanResult_adv* scan_ret, void* arg)
+void WifiScanCallback(ScanResult_adv* scan_ret, void* arg)
 {
     int count = (int)scan_ret->ApNum;
     os_log("wifi_scan_callback ApNum[%d] ApList[0](%s)", count, scan_ret->ApList[0].ssid);
@@ -108,7 +88,7 @@ void wifi_scan_callback(ScanResult_adv* scan_ret, void* arg)
 
 
 //100ms定时器回调
-static void wifi_led_timer_callback(void* arg)
+static void WifiLedTimerCallback(void* arg)
 {
     static unsigned int num = 0;
     num++;
@@ -138,7 +118,7 @@ static void wifi_led_timer_callback(void* arg)
     }
 }
 
-void wifi_connect(char* wifi_ssid, char* wifi_key)
+void WifiConnect(char* wifi_ssid, char* wifi_key)
 {
     //wifi配置初始化
     network_InitTypeDef_st wNetConfig;
@@ -159,16 +139,16 @@ void wifi_connect(char* wifi_ssid, char* wifi_key)
     wifi_status = WIFI_STATE_NOCONNECT;
 }
 
-void wifi_init(void)
+void StationInit(void)
 {
     //wifi状态下led闪烁定时器初始化
-    mico_rtos_init_timer(&wifi_led_timer, 100, (void *) wifi_led_timer_callback, NULL);
+    mico_rtos_init_timer(&wifi_led_timer, 100, (void *) WifiLedTimerCallback, NULL);
     //wifi已连接获取到IP地址 回调
-    mico_system_notify_register(mico_notify_DHCP_COMPLETED, (void *) wifi_get_ip_callback, NULL);
+    mico_system_notify_register(mico_notify_DHCP_COMPLETED, (void *)WifiGetIpCallback, NULL);
     //wifi连接状态改变回调
-    mico_system_notify_register(mico_notify_WIFI_STATUS_CHANGED, (void*) wifi_status_callback, NULL);
+    mico_system_notify_register(mico_notify_WIFI_STATUS_CHANGED, (void*) WifiStatusCallback, NULL);
     //wifi扫描结果回调
-    mico_system_notify_register(mico_notify_WIFI_SCAN_ADV_COMPLETED, (void*)wifi_scan_callback, NULL);
+    mico_system_notify_register(mico_notify_WIFI_SCAN_ADV_COMPLETED, (void*)WifiScanCallback, NULL);
 
     //sntp_init();
     //启动定时器开始进行wifi连接
@@ -186,7 +166,7 @@ void wifi_init(void)
 #define ELAND_AP_DNS_SERVER "192.168.0.1"
 #define ELAND_AP_NET_MASK   "255.255.255.0"
 
-void ap_init()
+void ApInit()
 {
     os_log("Soft_ap_Server");
     network_InitTypeDef_st wNetConfig;

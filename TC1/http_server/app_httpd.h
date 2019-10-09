@@ -56,7 +56,6 @@
     'gateway':'%s'\
 }"
 
-int app_httpd_start(void);
-
-int app_httpd_stop();
+int AppHttpdStart(void);
+int AppHttpdStop();
 
