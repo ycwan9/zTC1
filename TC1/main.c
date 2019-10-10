@@ -27,7 +27,7 @@ void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
 {
     UNUSED_PARAMETER(size);
 
-    mico_system_context_get()->micoSystemConfig.name[0] = 1;   //在下次重启时使用默认名称
+    mico_system_context_get()->micoSystemConfig.name[0] = 1; //在下次重启时使用默认名称
     mico_system_context_get()->micoSystemConfig.name[1] = 0;
 
     user_config_t* userConfigDefault = user_config_data;
@@ -51,8 +51,8 @@ void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
         userConfigDefault->socket[i].name[5] = 0xa3;
         userConfigDefault->socket[i].name[6] = i + '1';
         userConfigDefault->socket[i].name[7] = 0;
+        //sprintf(userConfigDefault->socket[i].name, "插座%d", i);//编码异常
 
-//      sprintf(userConfigDefault->socket[i].name, "插座%d", i);//编码异常
         for (j = 0; j < SOCKET_TIME_TASK_NUM; j++)
         {
             userConfigDefault->socket[i].task[j].hour = 0;
@@ -62,7 +62,7 @@ void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
             userConfigDefault->socket[i].task[j].action = 1;
         }
     }
-//  mico_system_context_update(sys_config);
+    //mico_system_context_update(sys_config);
 }
 
 int application_start(void)
@@ -71,10 +71,9 @@ int application_start(void)
     os_log("Start %s",VERSION);
 
     char main_num=0;
-    uint32_t power_last = 0xffffffff;
     OSStatus err = kNoErr;
 
-    /* Create mico system context and read application's config data from flash */
+    // Create mico system context and read application's config data from flash
     sys_config = mico_system_context_init(sizeof(user_config_t));
     user_config = ((system_context_t*)sys_config)->user_config_data;
     require_action(user_config, exit, err = kNoMemoryErr);
@@ -99,7 +98,9 @@ int application_start(void)
     }
     MicoSysLed(0);
 
-    if (user_config->version != USER_CONFIG_VERSION || user_config->socket[0].task[0].hour < 0 || user_config->socket[0].task[0].hour > 23)
+    if (user_config->version != USER_CONFIG_VERSION
+        || user_config->socket[0].task[0].hour < 0
+        || user_config->socket[0].task[0].hour > 23)
     {
         os_log("WARNGIN: user params restored!");
         err = mico_system_context_restore(sys_config);
@@ -109,8 +110,8 @@ int application_start(void)
     if (sys_config->micoSystemConfig.name[0] == 1)
     {
         IPStatusTypedef para;
-        os_log("micoWlanGetIPStatus:%d", micoWlanGetIPStatus(&para, Station));   //mac读出来全部是0??!!!
-        strcpy(strMac, para.mac);
+        os_log("micoWlanGetIPStatus:%d", micoWlanGetIPStatus(&para, Station));
+        strcpy(strMac, para.mac); //mac读出来全部是0??!!!
         os_log("result:%s",strMac);
         os_log("result:%s",para.mac);
 
@@ -132,8 +133,15 @@ int application_start(void)
     WifiInit();
     if (!open_ap)
     {
-        if (sys_config->micoSystemConfig.reserved != NOTIFY_STATION_UP) ApInit();
-        else WifiConnect(sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key);
+        if (sys_config->micoSystemConfig.reserved != NOTIFY_STATION_UP)
+        {
+            ApInit();
+        }
+        else
+        {
+            WifiConnect(sys_config->micoSystemConfig.ssid,
+                sys_config->micoSystemConfig.user_key);
+        }
     }
     user_udp_init();
     KeyInit();
@@ -141,26 +149,23 @@ int application_start(void)
     require_noerr(err, exit);
     err = user_rtc_init();
     require_noerr(err, exit);
-    user_power_init();
+    PowerInit();
 
-    /* start http server thread */
-    AppHttpdStart();
+    uint32_t power_last = 0xffffffff;
+    AppHttpdStart(); // start http server thread
+    char* power_buf = malloc(128);
+    if (!power_buf) goto exit;
     while (1)
     {
         main_num++;
         //发送功率数据
-        if (power_last != power || main_num>4)
+        if (power_last != power || main_num > 4)
         {
             power_last = power;
             main_num =0;
-            char* power_buf = malloc(128);
-            if (power_buf != NULL)
-            {
-                sprintf(power_buf, "{\"mac\":\"%s\",\"power\":\"%u.%u\",\"total_time\":%u}",
-                    strMac, (unsigned int)(power/10), (unsigned int)(power%10), (unsigned int)total_time);
-                user_send(0, power_buf);
-                free(power_buf);
-            }
+            sprintf(power_buf, "{\"mac\":\"%s\",\"power\":\"%u.%u\",\"total_time\":%u}",
+                strMac, (unsigned int)(power / 10), (unsigned int)(power % 10), (unsigned int)total_time);
+            user_send(0, power_buf);
             user_mqtt_hass_power();
         }
         mico_thread_msleep(1000);
@@ -168,6 +173,7 @@ int application_start(void)
 
 exit:
     os_log("application_start ERROR!");
+    if (power_buf) free(power_buf);
     return 0;
 }
 

@@ -14,9 +14,8 @@ static uint32_t clock_count = 0;
 static uint32_t timer_count = 0;
 static uint32_t timer_irq_count = 0;
 
-static void power_timer_handler(void* arg)
+static void PowerTimerHandler(void* arg)
 {
-
     uint32_t timer = 0;
 
     if (timer_irq_count > 1)
@@ -47,21 +46,21 @@ static void power_timer_handler(void* arg)
     }
 }
 
-static void power_irq_handler(void* arg)
+static void PowerIrqHandler(void* arg)
 {
     clock_count = mico_nanosecond_clock_value();
     if (timer_irq_count == 0) clock_count_last = clock_count;
     timer_irq_count++;
 }
 
-void user_power_init(void)
+void PowerInit(void)
 {
     os_log("user_power_init");
 
     MicoGpioInitialize(POWER, INPUT_PULL_UP);
-    mico_rtos_init_timer(&power_timer, 1000, power_timer_handler, NULL);
+    mico_rtos_init_timer(&power_timer, 1000, PowerTimerHandler, NULL);
     mico_rtos_start_timer(&power_timer);
 
-    MicoGpioEnableIRQ(POWER, IRQ_TRIGGER_FALLING_EDGE, power_irq_handler, NULL);
+    MicoGpioEnableIRQ(POWER, IRQ_TRIGGER_FALLING_EDGE, PowerIrqHandler, NULL);
 }
 
