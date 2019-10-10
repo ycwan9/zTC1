@@ -256,7 +256,7 @@ function GetPowerRecord() {
     var power = JSON.parse(re);
     var html = "";
     for (var i = 0; i < power.powers.length; i++) {
-        html += "<div class='power_pre' style='height:70px;left:20px;'></div>";
+        html += "<div class='power_pre' style='height:"+power.powers[i]+"px;left:"+((i+1)*10)+"px;'></div>";
         power_line.innerHTML = html;
         //滑动到最后
     }

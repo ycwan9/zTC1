@@ -5,7 +5,7 @@
 typedef struct
 {
     int idx;
-    uint32_t* powers;
+    uint32_t powers[PW_NUM];
 } PowerRecord;
 
 extern PowerRecord power_record;

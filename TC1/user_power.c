@@ -10,7 +10,7 @@
 
 mico_timer_t power_timer;
 
-PowerRecord power_record = { 0, NULL };
+PowerRecord power_record = { 0, { 50,55,60,65,70,75,80,85,90,95,90,85,80,75,70,65,60,65,70,75,80,85,90,95,90,85,80,75,70,65,60,65,70,75,80,85,90,95,90,85,80,75,70,65,60 } };
 
 static uint32_t clock_count_last = 0;
 static uint32_t clock_count = 0;
@@ -21,10 +21,6 @@ char power_record_str[1101] = { 0 };
 
 void SetPowerRecord(PowerRecord* pr, uint32_t pw)
 {
-    if (pr->powers == NULL)
-    {
-        pr->powers = malloc(sizeof(uint32_t)*PW_NUM);
-    }
     if (pr->idx >= PW_NUM)
     {
         pr->idx = 0;
