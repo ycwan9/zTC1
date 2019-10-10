@@ -56,6 +56,8 @@
     'gateway':'%s'\
 }"
 
+#define POWER_INFO_JSON "{'idx':%d, 'powers:[%s]'}"
+
 int AppHttpdStart(void);
 int AppHttpdStop();
 

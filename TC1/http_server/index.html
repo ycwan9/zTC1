@@ -22,6 +22,8 @@
     #power_div{margin-top:10px;border-left:1px solid #000;border-bottom:1px solid #000;}
     #power_line{height:100px;position:relative;overflow:scroll;margin-top:-100px;}
     .power_pre{position:absolute;bottom:0;float:left;height:76px;width:0;border-left:1px solid #000;border-right:1px solid #000;}
+    .power_by{text-align:center;}
+    .power_by a{text-decoration:none;}
     </style>
 </head>
 <body>
@@ -175,6 +177,8 @@
     </table>
 </fieldset>
 
+<p class="power_by">power by <a href="https://github.com/zogodo/zTC1" target="_blank">github/zTC1</a></p>
+
 <script type="text/javascript">
 
 function Ajax(url, onsuccess, type, data) {
@@ -210,6 +214,8 @@ var info_spans = document.getElementsByClassName("status_sp");
 var socket_tb = document.getElementById("socket_tb");
 var checkboxs = socket_tb.getElementsByTagName("input");
 
+var power_line = document.getElementById("power_line");
+
 var rescan_btn = document.getElementById("rescan");
 var ssid_slt = document.getElementById("wifi");
 var ssid_ipt = document.getElementById("ssid");
@@ -244,6 +250,18 @@ HttpGet("/status", function (re) {
         info_gateway.innerHTML = status.gateway
     }
 });
+
+function GetPowerRecord() {
+    HttpGet("/power", function (re) {
+    var power = JSON.parse(re);
+    var html = "";
+    for (var i = 0; i < power.powers.length; i++) {
+        html += "<div class='power_pre' style='height:70px;left:20px;'></div>";
+        power_line.innerHTML = html;
+        //滑动到最后
+    }
+});
+}
 
 function SetOK(i) {
     submit_bts[i].disabled = false;

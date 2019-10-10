@@ -39,12 +39,14 @@
 #include "app_httpd.h"
 #include "user_gpio.h"
 #include "user_wifi.h"
+#include "user_power.h"
 #include "main.h"
 #include "web_data.c"
 
 static bool is_http_init;
 static bool is_handlers_registered;
 struct httpd_wsgi_call g_app_handlers[];
+char power_info_json[1130] = { 0 };
 
 static int HttpGetIndexPage(httpd_request_t *req)
 {
@@ -92,6 +94,16 @@ static int HttpSetSocketStatus(httpd_request_t *req)
 
 exit:
     if (buf) free(buf);
+    return err;
+}
+
+static int HttpGetPowerInfo(httpd_request_t *req)
+{
+    char* powers = GetPowerRecord();
+    sprintf(power_info_json, POWER_INFO_JSON, power_record.idx, powers);
+    OSStatus err = kNoErr;
+    send_http(power_info_json, strlen(power_info_json), exit, &err);
+exit:
     return err;
 }
 
@@ -160,6 +172,7 @@ struct httpd_wsgi_call g_app_handlers[] = {
     {"/", HTTPD_HDR_DEFORT, 0, HttpGetIndexPage, NULL, NULL, NULL},
     {"/socket", HTTPD_HDR_DEFORT, 0, NULL, HttpSetSocketStatus, NULL, NULL},
     {"/status", HTTPD_HDR_DEFORT, 0, HttpGetTc1Status, NULL, NULL, NULL},
+    {"/power", HTTPD_HDR_DEFORT, 0, HttpGetPowerInfo, NULL, NULL, NULL},
     {"/wifi/config", HTTPD_HDR_DEFORT, 0, HttpGetWifiConfig, HttpSetWifiConfig, NULL, NULL},
     {"/wifi/scan", HTTPD_HDR_DEFORT, 0, HttpGetWifiScan, HttpSetWifiScan, NULL, NULL},
 };

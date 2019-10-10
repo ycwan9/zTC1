@@ -6,13 +6,44 @@
 #include "user_udp.h"
 #include "user_mqtt_client.h"
 #include "user_function.h"
+#include "user_power.h"
 
 mico_timer_t power_timer;
+
+PowerRecord power_record = { 0, NULL };
 
 static uint32_t clock_count_last = 0;
 static uint32_t clock_count = 0;
 static uint32_t timer_count = 0;
 static uint32_t timer_irq_count = 0;
+
+char power_record_str[1101] = { 0 };
+
+void SetPowerRecord(PowerRecord* pr, uint32_t pw)
+{
+    if (pr->powers == NULL)
+    {
+        pr->powers = malloc(sizeof(uint32_t)*PW_NUM);
+    }
+    if (pr->idx >= PW_NUM)
+    {
+        pr->idx = 0;
+    }
+    pr->powers[pr->idx++] = pw;
+}
+
+char* GetPowerRecord()
+{
+    int i = 0;
+    char* tmp = power_record_str;
+    for (; i < PW_NUM; i++)
+    {
+        sprintf(tmp, "%d,", power_record.powers[i]);
+        tmp += strlen(tmp);
+    }
+    *(--tmp) = 0;
+    return power_record_str;
+}
 
 static void PowerTimerHandler(void* arg)
 {
