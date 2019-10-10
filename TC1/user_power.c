@@ -10,7 +10,17 @@
 
 mico_timer_t power_timer;
 
-PowerRecord power_record = { 44, { 50,55,60,65,70,75,80,85,90,95,90,85,80,75,70,65,60,65,70,75,80,85,90,95,90,85,80,75,70,65,60,65,70,75,80,85,90,95,90,85,80,75,70,65,60 } };
+PowerRecord power_record = { 44, {
+    0,1,2,3,4,5,6,7,8,9,
+    10,11,12,13,14,15,16,17,18,19,
+    20,21,22,23,24,25,26,27,28,29,
+    30,31,32,33,34,35,36,37,38,39,
+    40,41,42,43,44,45,46,47,48,49,
+    50,51,52,53,54,55,56,57,58,59,
+    60,61,62,63,64,65,66,67,68,69,
+    70,71,72,73,74,75,76,77,78,79,
+    80,81,82,83,84,85,86,87,88,89,
+    90,91,92,93,94,95,96,97,98,99 } };
 
 static uint32_t clock_count_last = 0;
 static uint32_t clock_count = 0;
@@ -26,13 +36,13 @@ void SetPowerRecord(PowerRecord* pr, uint32_t pw)
 
 char* GetPowerRecord(int idx)
 {
-    if (idx > power_record.idx) return NULL;
+    if (idx > power_record.idx) return "";
 
     int i = idx > 0 ? idx : (power_record.idx - PW_NUM - 1);
     char* tmp = power_record_str;
     for (; i <= power_record.idx; i++)
     {
-        sprintf(tmp, "%d,", power_record.powers[i%PW_NUM]);
+        sprintf(tmp, "%u,", (unsigned int)power_record.powers[i%PW_NUM]);
         tmp += strlen(tmp);
     }
     *(--tmp) = 0;

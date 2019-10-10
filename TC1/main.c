@@ -161,7 +161,7 @@ int application_start(void)
         //发送功率数据
         if (power_last != power || main_num > 4)
         {
-            SetPowerRecord(&power_record, power);
+            //SetPowerRecord(&power_record, power);
             power_last = power;
             main_num =0;
             sprintf(power_buf, "{\"mac\":\"%s\",\"power\":\"%u.%u\",\"total_time\":%u}",

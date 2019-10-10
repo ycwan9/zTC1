@@ -81,41 +81,7 @@
         <div class="line"></div>
     </div>
     <div id="power_line">
-        <div class="power_pre" style="height:70px;left:20px;"></div>
-        <div class="power_pre" style="height:75px;left:40px;"></div>
-        <div class="power_pre" style="height:80px;left:60px;"></div>
-        <div class="power_pre" style="height:85px;left:80px;"></div>
-        <div class="power_pre" style="height:80px;left:100px;"></div>
-        <div class="power_pre" style="height:75px;left:120px;"></div>
-        <div class="power_pre" style="height:70px;left:140px;"></div>
-        <div class="power_pre" style="height:65px;left:160px;"></div>
-        <div class="power_pre" style="height:70px;left:180px;"></div>
-        <div class="power_pre" style="height:75px;left:200px;"></div>
-        <div class="power_pre" style="height:80px;left:220px;"></div>
-        <div class="power_pre" style="height:85px;left:240px;"></div>
-        <div class="power_pre" style="height:90px;left:260px;"></div>
-        <div class="power_pre" style="height:85px;left:280px;"></div>
-        <div class="power_pre" style="height:80px;left:300px;"></div>
-        <div class="power_pre" style="height:78px;left:320px;"></div>
-        <div class="power_pre" style="height:76px;left:340px;"></div>
-        <div class="power_pre" style="height:72px;left:360px;"></div>
-        <div class="power_pre" style="height:85px;left:380px;"></div>
-        <div class="power_pre" style="height:80px;left:400px;"></div>
-        <div class="power_pre" style="height:75px;left:420px;"></div>
-        <div class="power_pre" style="height:70px;left:440px;"></div>
-        <div class="power_pre" style="height:65px;left:460px;"></div>
-        <div class="power_pre" style="height:70px;left:480px;"></div>
-        <div class="power_pre" style="height:75px;left:500px;"></div>
-        <div class="power_pre" style="height:80px;left:520px;"></div>
-        <div class="power_pre" style="height:85px;left:540px;"></div>
-        <div class="power_pre" style="height:90px;left:560px;"></div>
-        <div class="power_pre" style="height:85px;left:580px;"></div>
-        <div class="power_pre" style="height:80px;left:600px;"></div>
-        <div class="power_pre" style="height:78px;left:620px;"></div>
-        <div class="power_pre" style="height:76px;left:640px;"></div>
-        <div class="power_pre" style="height:72px;left:660px;"></div>
-        <div class="power_pre" style="height:85px;left:680px;"></div>
-        <div class="power_pre" style="height:80px;left:700px;"></div>
+        <!-- <div class="power_pre" style="height:70px;left:20px;"></div> -->
     </div>
 </fieldset>
 
@@ -259,14 +225,19 @@ function GetPowerRecord() {
         var power = JSON.parse(re);
         power_idx = power.idx + 1;
         var html = "";
-        for (var i = 0; i <= power.idx; i++) {
+        for (var i = 0; i < power.powers.length; i++) {
             html += "<div class='power_pre' style='height:"+power.powers[i]+"px;left:"+position+"px;'></div>";
             position += 10;
         }
-        power_line.innerHTML += html;
+        if (power.powers.length != 0) {
+            power_line.innerHTML += html;
+            power_line.scrollTo(power_line.scrollWidth, 0);
+        }
         //滑动到最后
-    }, idx.toString());
+        window.setTimeout(GetPowerRecord, 3000);
+    }, power_idx.toString());
 }
+GetPowerRecord();
 
 function SetOK(i) {
     submit_bts[i].disabled = false;
