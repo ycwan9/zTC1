@@ -251,16 +251,21 @@ HttpGet("/status", function (re) {
     }
 });
 
+var first_load_power = true;
+var power_idx = 1;
+var position = 10;
 function GetPowerRecord() {
-    HttpGet("/power", function (re) {
-    var power = JSON.parse(re);
-    var html = "";
-    for (var i = 0; i < power.powers.length; i++) {
-        html += "<div class='power_pre' style='height:"+power.powers[i]+"px;left:"+((i+1)*10)+"px;'></div>";
-        power_line.innerHTML = html;
+    HttpPost("/power", function (re) {
+        var power = JSON.parse(re);
+        power_idx = power.idx + 1;
+        var html = "";
+        for (var i = 0; i <= power.idx; i++) {
+            html += "<div class='power_pre' style='height:"+power.powers[i]+"px;left:"+position+"px;'></div>";
+            position += 10;
+        }
+        power_line.innerHTML += html;
         //滑动到最后
-    }
-});
+    }, idx.toString());
 }
 
 function SetOK(i) {

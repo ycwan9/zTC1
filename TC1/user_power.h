@@ -10,7 +10,7 @@ typedef struct
 
 extern PowerRecord power_record;
 
-char* GetPowerRecord();
+char* GetPowerRecord(int idx);
 void PowerInit(void);
 void SetPowerRecord(PowerRecord* pr, uint32_t pw);
 

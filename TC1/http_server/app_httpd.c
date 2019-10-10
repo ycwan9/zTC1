@@ -46,7 +46,7 @@
 static bool is_http_init;
 static bool is_handlers_registered;
 struct httpd_wsgi_call g_app_handlers[];
-char power_info_json[1130] = { 0 };
+char power_info_json[1140] = { 0 };
 
 static int HttpGetIndexPage(httpd_request_t *req)
 {
@@ -99,9 +99,16 @@ exit:
 
 static int HttpGetPowerInfo(httpd_request_t *req)
 {
-    char* powers = GetPowerRecord();
-    sprintf(power_info_json, POWER_INFO_JSON, power_record.idx, powers);
     OSStatus err = kNoErr;
+    char buf[4];
+    err = httpd_get_data(req, buf, 4);
+    require_noerr(err, exit);
+
+    int idx = 0;
+    sscanf(buf, "%d", &idx);
+
+    char* powers = GetPowerRecord(idx);
+    sprintf(power_info_json, POWER_INFO_JSON, power_record.idx, PW_NUM, powers);
     send_http(power_info_json, strlen(power_info_json), exit, &err);
 exit:
     return err;
@@ -172,7 +179,7 @@ struct httpd_wsgi_call g_app_handlers[] = {
     {"/", HTTPD_HDR_DEFORT, 0, HttpGetIndexPage, NULL, NULL, NULL},
     {"/socket", HTTPD_HDR_DEFORT, 0, NULL, HttpSetSocketStatus, NULL, NULL},
     {"/status", HTTPD_HDR_DEFORT, 0, HttpGetTc1Status, NULL, NULL, NULL},
-    {"/power", HTTPD_HDR_DEFORT, 0, HttpGetPowerInfo, NULL, NULL, NULL},
+    {"/power", HTTPD_HDR_DEFORT, 0, NULL, HttpGetPowerInfo, NULL, NULL},
     {"/wifi/config", HTTPD_HDR_DEFORT, 0, HttpGetWifiConfig, HttpSetWifiConfig, NULL, NULL},
     {"/wifi/scan", HTTPD_HDR_DEFORT, 0, HttpGetWifiScan, HttpSetWifiScan, NULL, NULL},
 };
