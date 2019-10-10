@@ -109,7 +109,6 @@ static int HttpGetPowerInfo(httpd_request_t *req)
 
     char* powers = GetPowerRecord(idx);
     sprintf(power_info_json, POWER_INFO_JSON, power_record.idx, PW_NUM, powers);
-    power_record.idx++; //test
     send_http(power_info_json, strlen(power_info_json), exit, &err);
 exit:
     return err;
