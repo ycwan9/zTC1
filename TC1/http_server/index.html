@@ -19,9 +19,13 @@
     .connect div{padding:5px;}
     .right{text-align:right;}
     .line{height:9px;border-bottom:1px solid #dedede;}
+    .line_0{border:none;height:8px;}
+    .line_3{border-color:#00ff0a;}
+    .line_5{border-color:#ff9b00;}
+    .line_8{border-color:red;}
     #power_div{margin-top:10px;border-left:1px solid #000;border-bottom:1px solid #000;}
     #power_line{height:100px;position:relative;overflow:scroll;margin-top:-100px;}
-    .power_pre{position:absolute;bottom:0;float:left;height:76px;width:0;border-left:1px solid #000;border-right:1px solid #000;}
+    .power_pre{position:absolute;bottom:0;float:left;height:76px;width:0;border-left:1px solid #00ffff80;}
     .power_by{text-align:center;}
     .power_by a{text-decoration:none;}
     </style>
@@ -68,17 +72,17 @@
 <fieldset class="chart">
     <legend>Power Status</legend>
     <div id="power_div">
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
-        <div class="line"></div>
+        <div class="line line_10"></div>
+        <div class="line line_9"></div>
+        <div class="line line_8"></div>
+        <div class="line line_7"></div>
+        <div class="line line_6"></div>
+        <div class="line line_5"></div>
+        <div class="line line_4"></div>
+        <div class="line line_3"></div>
+        <div class="line line_2"></div>
+        <div class="line line_1"></div>
+        <div class="line line_0"></div>
     </div>
     <div id="power_line">
         <!-- <div class="power_pre" style="height:70px;left:20px;"></div> -->
@@ -227,7 +231,7 @@ function GetPowerRecord() {
         var html = "";
         for (var i = 0; i < power.powers.length; i++) {
             html += "<div class='power_pre' style='height:"+power.powers[i]+"px;left:"+position+"px;'></div>";
-            position += 3;
+            position += 1;
         }
         if (power.powers.length != 0) {
             power_line.innerHTML += html;
