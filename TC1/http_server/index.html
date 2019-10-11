@@ -219,7 +219,7 @@ HttpGet("/status", function (re) {
 
 var first_load_power = true;
 var power_idx = 1;
-var position = 10;
+var position = 0;
 function GetPowerRecord() {
     HttpPost("/power", function (re) {
         var power = JSON.parse(re);
@@ -227,7 +227,7 @@ function GetPowerRecord() {
         var html = "";
         for (var i = 0; i < power.powers.length; i++) {
             html += "<div class='power_pre' style='height:"+power.powers[i]+"px;left:"+position+"px;'></div>";
-            position += 10;
+            position += 3;
         }
         if (power.powers.length != 0) {
             power_line.innerHTML += html;

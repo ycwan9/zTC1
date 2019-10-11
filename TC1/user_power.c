@@ -38,7 +38,8 @@ char* GetPowerRecord(int idx)
 {
     if (idx > power_record.idx) return "";
 
-    int i = idx > 0 ? idx : (power_record.idx - PW_NUM - 1);
+    int i = idx > 0 ? idx : (power_record.idx - PW_NUM + 1);
+    i = i < 0 ? 0 : i;
     char* tmp = power_record_str;
     for (; i <= power_record.idx; i++)
     {
