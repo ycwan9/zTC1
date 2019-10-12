@@ -19,14 +19,14 @@
     .connect div{padding:5px;}
     .right{text-align:right;}
     .line{border-top:1px solid #dedede;}
-    .line_1{height:28px;}
-    .line_2{height:20px;}
-    .line_3{height:8px;}
-    .line_4{height:19px;}
-    .line_5{height:8px;}
-    .line_6{height:4px;}
-    .line_7{height:3px;}
-    .line_8{height:2px;}
+    .line_1{height:3px;}
+    .line_2{height:5px;}
+    .line_3{height:5px;}
+    .line_4{height:25px;}
+    .line_5{height:20px;}
+    .line_6{height:16px;}
+    .line_7{height:15px;}
+    .line_8{height:12px;}
     .line_9{height:10px;border:none;}
     #power_div{margin-top:10px;border-left:1px solid #000;border-bottom:1px solid #000;}
     #power_line{height:100px;position:relative;overflow:scroll;margin-top:-100px;}
@@ -232,11 +232,9 @@ function GetPowerRecord() {
         var power = JSON.parse(re);
         power_idx = power.idx + 1;
         var html = "";
-        //2500 对数底数 1.0813826568
-        var b = Math.log(1.0813826568);
         for (var i = 0; i < power.powers.length; i++) {
-            var a = Math.log(power.powers[i]);
-            html += "<div class='power_pre' style='height:"+(a/b)+"px;left:"+position+"px;'></div>";
+            var y = Math.pow(power.powers[i], 0.6);
+            html += "<div class='power_pre' style='height:"+y+"px;left:"+position+"px;'></div>";
             position += 1;
         }
         if (power.powers.length != 0) {
