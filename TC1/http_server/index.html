@@ -226,8 +226,8 @@ function GetPowerRecord() {
         var power = JSON.parse(re);
         power_idx = power.idx + 1;
         var html = "";
-        //2000000 对数底数 1.156139661484
-        var b = Math.log(1.156139661484);
+        //2500 对数底数 1.0813826568
+        var b = Math.log(1.0813826568);
         for (var i = 0; i < power.powers.length; i++) {
             var a = Math.log(power.powers[i]);
             html += "<div class='power_pre' style='height:"+(a/b)+"px;left:"+position+"px;'></div>";
