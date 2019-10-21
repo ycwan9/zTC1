@@ -29,7 +29,7 @@
     .line_8{height:12px;}
     .line_9{height:10px;border:none;}
     #power_div{margin-top:10px;border-left:1px solid #000;border-bottom:1px solid #000;}
-    #power_line{height:100px;position:relative;overflow:scroll;margin-top:-100px;}
+    #power_line{height:120px;position:relative;overflow:scroll;margin-top:-120px;}
     .power_pre{position:absolute;bottom:0;float:left;height:76px;width:0;border-left:1px solid #00ffff38;border-top:1px solid #000;}
     .power_by{text-align:center;}
     .power_by a{text-decoration:none;}
@@ -225,7 +225,7 @@ HttpGet("/status", function (re) {
 });
 
 var first_load_power = true;
-var power_idx = 1;
+var power_idx = 0;
 var position = 0;
 function GetPowerRecord() {
     HttpPost("/power", function (re) {
@@ -233,7 +233,7 @@ function GetPowerRecord() {
         power_idx = power.idx + 1;
         var html = "";
         for (var i = 0; i < power.powers.length; i++) {
-            var y = Math.pow(power.powers[i], 0.6);
+            var y = Math.pow(power.powers[i]/10, 0.6);
             html += "<div class='power_pre' style='height:"+y+"px;left:"+position+"px;'></div>";
             position += 1;
         }
