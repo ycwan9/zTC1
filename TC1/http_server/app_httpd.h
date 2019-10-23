@@ -51,9 +51,12 @@
     'station_pwd':'%s',\
     'ap_ssid':'%s',\
     'ap_pwd':'%s',\
+    'mqtt_addr':'%s',\
+    'mqtt_port':%d,\
     'ip':'%s',\
     'mask':'%s',\
-    'gateway':'%s'\
+    'gateway':'%s',\
+    'start_time':%d\
 }"
 
 #define POWER_INFO_JSON "{'idx':%d,'len':%d,'powers':[%s]}"
