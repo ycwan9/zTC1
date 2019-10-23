@@ -37,8 +37,8 @@
 
 #ifdef MQTT_CLIENT_SSL_ENABLE
 
-#define MQTT_SERVER             "test.mosquitto.org"
-#define MQTT_SERVER_PORT        8883
+#define MQTT_SERVER             "192.168.33.201"
+#define MQTT_SERVER_PORT        1883
 char* mqtt_server_ssl_cert_str =
 "-----BEGIN CERTIFICATE-----\r\n\
 MIIC8DCCAlmgAwIBAgIJAOD63PlXjJi8MA0GCSqGSIb3DQEBBQUAMIGQMQswCQYD\r\n\
@@ -61,8 +61,10 @@ REyPOFdGdhBY2P1FNRy0MDr6xr+D2ZOwxs63dG1nnAnWZg7qwoLgpZ4fESPD3PkA\r\n\
 
 #else  // ! MQTT_CLIENT_SSL_ENABLE
 
-#define MQTT_SERVER             user_config->mqtt_ip
-#define MQTT_SERVER_PORT        user_config->mqtt_port
+//#define MQTT_SERVER             user_config->mqtt_ip
+//#define MQTT_SERVER_PORT        user_config->mqtt_port
+#define MQTT_SERVER             "192.168.33.201"
+#define MQTT_SERVER_PORT        1883
 
 #endif // MQTT_CLIENT_SSL_ENABLE
 
