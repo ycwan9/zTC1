@@ -18,6 +18,8 @@
     .network div{padding:5px;}
     .connect div{padding:5px;}
     .right{text-align:right;}
+    .pw{width:100%}
+    .pw td{width:50%}
     .line{border-top:1px solid #dedede;}
     .line_1{height:3px;}
     .line_2{height:5px;}
@@ -76,6 +78,12 @@
 
 <fieldset class="chart">
     <legend>Power Status</legend>
+    <table class="pw">
+        <tr>
+            <td>P: <span id="p" class="success">0</span> W</td>
+            <td>W: <span id="w" class="error">0</span> kW·h</td>
+        </tr>
+    </table>
     <div id="power_div">
         <div class="line line_9"></div>
         <div class="line line_8"></div>
@@ -147,6 +155,10 @@
             <td class="right">Gateway:</td>
             <td class="info" id="gateway"></td>
         </tr>
+        <tr>
+            <td class="right">Uptime:</td>
+            <td class="info" id="uptime"></td>
+        </tr>
     </table>
 </fieldset>
 
@@ -187,6 +199,8 @@ var info_spans = document.getElementsByClassName("status_sp");
 var socket_tb = document.getElementById("socket_tb");
 var checkboxs = socket_tb.getElementsByTagName("input");
 
+var p = document.getElementById("p");
+var w = document.getElementById("w");
 var power_line = document.getElementById("power_line");
 
 var rescan_btn = document.getElementById("rescan");
@@ -199,6 +213,7 @@ var mode_rd2 = document.getElementById("mode2");
 var info_ip = document.getElementById("ip");
 var info_mask = document.getElementById("mask");
 var info_gateway = document.getElementById("gateway");
+var uptime = document.getElementById("uptime");
 
 var mode = -1;
 var ap_name = "";
@@ -206,7 +221,6 @@ var ap_pswd = "";
 var station_name = "";
 var station_pswd = "";
 HttpGet("/status", function (re) {
-    //re = "{'sockets':'%s','mode':%d,'station_ssid':'%s','station_pwd':'%s','ap_ssid':'%s','ap_pwd':'%s'}"
     var status = JSON.parse(re);
     var status_arr = status.sockets.split(",");
     for (var i = 0; i < status_arr.length; i++) {
@@ -218,13 +232,13 @@ HttpGet("/status", function (re) {
         //mode = status.mode;
         ChangeMode(status.mode);
 
-        info_ip.innerHTML = status.ip
-        info_mask.innerHTML = status.mask
-        info_gateway.innerHTML = status.gateway
+        info_ip.innerHTML = status.ip;
+        info_mask.innerHTML = status.mask;
+        info_gateway.innerHTML = status.gateway;
+        uptime.innerHTML = status.uptime;
     }
 });
 
-var first_load_power = true;
 var power_idx = 0;
 var position = 0;
 function GetPowerRecord() {
@@ -233,7 +247,9 @@ function GetPowerRecord() {
         power_idx = power.idx + 1;
         var html = "";
         for (var i = 0; i < power.powers.length; i++) {
-            var y = Math.pow(power.powers[i]/10, 0.6);
+            var curr_p = power.powers[i]/10;
+            p.innerHTML = curr_p;
+            var y = Math.pow(curr_p, 0.6);
             html += "<div class='power_pre' style='height:"+y+"px;left:"+position+"px;'></div>";
             position += 1;
         }
@@ -241,8 +257,8 @@ function GetPowerRecord() {
             power_line.innerHTML += html;
             power_line.scrollTo(power_line.scrollWidth, 0);
         }
-        //滑动到最后
-        window.setTimeout(GetPowerRecord, 3000);
+        window.setTimeout(GetPowerRecord, 3000); //滑动到最后
+        w.innerHTML = power.p_count; //累加功率
     }, power_idx.toString());
 }
 GetPowerRecord();
