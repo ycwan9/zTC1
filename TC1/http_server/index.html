@@ -101,7 +101,7 @@
 </fieldset>
 
 <fieldset class="network">
-    <legend>Network config</legend>
+    <legend>Network Config</legend>
     <table>
         <tr>
             <td class="right">SSID:</td>
@@ -136,6 +136,28 @@
     </table>
     <div class="submit">
         <button class="submit_bt" onclick="SubmitNetwork()">Submit</button>
+        <span class="status_sp success">OK</span>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>MQTT Config</legend>
+    <table>
+        <tr>
+            <td class="right">MQTT:</td>
+            <td>
+                <input id="mqtt_addr"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="right">PORT:</td>
+            <td>
+                <input id="mqtt_port"/>
+            </td>
+        </tr>
+    </table>
+    <div class="submit">
+        <button class="submit_bt" onclick="SubmitMqtt()">Submit</button>
         <span class="status_sp success">OK</span>
     </div>
 </fieldset>
