@@ -232,6 +232,9 @@ var pswd_ipt = document.getElementById("pswd");
 var mode_rd1 = document.getElementById("mode1");
 var mode_rd2 = document.getElementById("mode2");
 
+var mqtt_addr_ipt = document.getElementById("mqtt_addr");
+var mqtt_port_ipt = document.getElementById("mqtt_port");
+
 var info_ip = document.getElementById("ip");
 var info_mask = document.getElementById("mask");
 var info_gateway = document.getElementById("gateway");
@@ -254,10 +257,13 @@ HttpGet("/status", function (re) {
         //mode = status.mode;
         ChangeMode(status.mode);
 
+        mqtt_addr_ipt.value = status.mqtt_addr;
+        mqtt_port_ipt.value = status.mqtt_port;
+
         info_ip.innerHTML = status.ip;
         info_mask.innerHTML = status.mask;
         info_gateway.innerHTML = status.gateway;
-        uptime.innerHTML = status.uptime;
+        uptime.innerHTML = status.start_time;
     }
 });
 
