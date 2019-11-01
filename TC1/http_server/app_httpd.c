@@ -46,7 +46,8 @@
 static bool is_http_init;
 static bool is_handlers_registered;
 struct httpd_wsgi_call g_app_handlers[];
-char power_info_json[1140] = { 0 };
+char power_info_json[1536] = { 0 };
+char up_time[16] = "00:00:00";
 
 static int HttpGetIndexPage(httpd_request_t *req)
 {
@@ -68,7 +69,7 @@ static int HttpGetTc1Status(httpd_request_t *req)
     char* tc1_status = malloc(384);
     sprintf(tc1_status, TC1_STATUS_JSON, sockets, ip_status.mode,
         sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key,
-        ELAND_AP_SSID, ELAND_AP_KEY, "MQTT.ADDR", 1883, ip_status.ip, ip_status.mask, ip_status.gateway, time(NULL));
+        ELAND_AP_SSID, ELAND_AP_KEY, "MQTT.ADDR", 1883, ip_status.ip, ip_status.mask, ip_status.gateway, 0L);
 
     OSStatus err = kNoErr;
     send_http(tc1_status, strlen(tc1_status), exit, &err);
@@ -107,10 +108,19 @@ static int HttpGetPowerInfo(httpd_request_t *req)
     int idx = 0;
     sscanf(buf, "%d", &idx);
 
+    //计算系统运行时间
+    mico_time_t past_ms = 0;
+    mico_time_get_time(&past_ms);
+    int past = past_ms / 1000;
+    int h = past / 3600;
+    int m = past / 60 % 60;
+    int s = past % 60;
+    sprintf(up_time, "%d:%02d:%02d", h, m, s);
+
     char* powers = GetPowerRecord(idx);
     static int p_count = 0;
     p_count += 1;
-    sprintf(power_info_json, POWER_INFO_JSON, power_record.idx, PW_NUM, p_count, powers);
+    sprintf(power_info_json, POWER_INFO_JSON, power_record.idx, PW_NUM, p_count, powers, up_time);
     send_http(power_info_json, strlen(power_info_json), exit, &err);
 exit:
     return err;

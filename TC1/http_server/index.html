@@ -179,7 +179,7 @@
         </tr>
         <tr>
             <td class="right">Uptime:</td>
-            <td class="info" id="uptime"></td>
+            <td class="success" id="uptime"></td>
         </tr>
     </table>
 </fieldset>
@@ -283,10 +283,11 @@ function GetPowerRecord() {
         }
         if (power.powers.length != 0) {
             power_line.innerHTML += html;
-            power_line.scrollTo(power_line.scrollWidth, 0);
+            power_line.scrollTo(power_line.scrollWidth, 0); //滑动到最后
         }
-        window.setTimeout(GetPowerRecord, 3000); //滑动到最后
         w.innerHTML = power.p_count; //累加功率
+        uptime.innerHTML = power.up_time;
+        window.setTimeout(GetPowerRecord, 3000);
     }, power_idx.toString());
 }
 GetPowerRecord();
