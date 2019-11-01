@@ -118,8 +118,6 @@ static int HttpGetPowerInfo(httpd_request_t *req)
     sprintf(up_time, "%d:%02d:%02d", h, m, s);
 
     char* powers = GetPowerRecord(idx);
-    static int p_count = 0;
-    p_count += 1;
     sprintf(power_info_json, POWER_INFO_JSON, power_record.idx, PW_NUM, p_count, powers, up_time);
     send_http(power_info_json, strlen(power_info_json), exit, &err);
 exit:

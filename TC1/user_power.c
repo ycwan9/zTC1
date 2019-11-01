@@ -16,6 +16,7 @@ static uint32_t clock_count_last = 0;
 static uint32_t clock_count = 0;
 static uint32_t timer_count = 0;
 static uint32_t timer_irq_count = 0;
+uint32_t p_count = 0;
 
 char power_record_str[1101] = { 0 };
 
@@ -77,6 +78,7 @@ static void PowerIrqHandler(void* arg)
     clock_count = mico_nanosecond_clock_value();
     if (timer_irq_count == 0) clock_count_last = clock_count;
     timer_irq_count++;
+    p_count++;
 }
 
 void PowerInit(void)
