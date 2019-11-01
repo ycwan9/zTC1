@@ -65,7 +65,7 @@ exit:
 static int HttpGetTc1Status(httpd_request_t *req)
 {
     const unsigned char* sockets = GetSocketStatus();
-    char* tc1_status = malloc(256);
+    char* tc1_status = malloc(384);
     sprintf(tc1_status, TC1_STATUS_JSON, sockets, ip_status.mode,
         sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key,
         ELAND_AP_SSID, ELAND_AP_KEY, "MQTT.ADDR", 1883, ip_status.ip, ip_status.mask, ip_status.gateway, time(NULL));
@@ -108,7 +108,9 @@ static int HttpGetPowerInfo(httpd_request_t *req)
     sscanf(buf, "%d", &idx);
 
     char* powers = GetPowerRecord(idx);
-    sprintf(power_info_json, POWER_INFO_JSON, power_record.idx, PW_NUM, powers);
+    static int p_count = 0;
+    p_count += 1;
+    sprintf(power_info_json, POWER_INFO_JSON, power_record.idx, PW_NUM, p_count, powers);
     send_http(power_info_json, strlen(power_info_json), exit, &err);
 exit:
     return err;

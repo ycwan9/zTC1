@@ -56,10 +56,10 @@
     'ip':'%s',\
     'mask':'%s',\
     'gateway':'%s',\
-    'start_time':%d\
+    'start_time':%ld\
 }"
 
-#define POWER_INFO_JSON "{'idx':%d,'len':%d,'powers':[%s]}"
+#define POWER_INFO_JSON "{'idx':%d,'len':%d,'p_count':%d,'powers':[%s]}"
 
 int AppHttpdStart(void);
 int AppHttpdStop();
