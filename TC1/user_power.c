@@ -73,12 +73,46 @@ static void PowerTimerHandler(void* arg)
     }
 }
 
+float n_1s = 0;
+mico_time_t t_x = 0;
+mico_time_t past_ms = 0;
+mico_time_t rest_ms = 1000;
+mico_time_t rest_x_ms = 0;
+mico_time_t rest_y_ms = 0;
+
 static void PowerIrqHandler(void* arg)
 {
     clock_count = mico_nanosecond_clock_value();
     if (timer_irq_count == 0) clock_count_last = clock_count;
     timer_irq_count++;
     p_count++;
+
+    mico_time_get_time(&past_ms);
+    if (t_x == 0)
+    {
+        t_x = past_ms - 1;
+    }
+    rest_x_ms = past_ms - t_x;
+    if (rest_x_ms < 1000)
+    {
+        n_1s += 1;
+        rest_y_ms = t_x + 1000 - past_ms;
+    }
+    else if (rest_x_ms > 1000 && rest_x_ms < 2000)
+    {
+        n_1s += (float)rest_y_ms / (rest_x_ms - 1000 + rest_y_ms);
+        rest_y_ms = 2000 - t_x;
+        t_x = past_ms / 1000 * 1000;
+
+        float power2 = 17.1 * n_1s;
+        SetPowerRecord(&power_record, (int)power2);
+        n_1s = (float)(rest_x_ms - 1000) / (rest_x_ms - 1000 + rest_y_ms);
+    }
+    else
+    {
+        SetPowerRecord(&power_record, 123456);
+    }
+
 }
 
 void PowerInit(void)

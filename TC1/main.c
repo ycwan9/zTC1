@@ -155,20 +155,18 @@ int application_start(void)
     AppHttpdStart(); // start http server thread
     char* power_buf = malloc(128);
     if (!power_buf) goto exit;
+
+    uint32_t last_p_count = p_count;
     while (1)
     {
-        main_num++;
         //发送功率数据
-        if (power_last != power || main_num > 4)
-        {
-            SetPowerRecord(&power_record, power);
-            power_last = power;
-            main_num =0;
-            sprintf(power_buf, "{\"mac\":\"%s\",\"power\":\"%u.%u\",\"total_time\":%u}",
-                strMac, (unsigned int)(power / 10), (unsigned int)(power % 10), (unsigned int)total_time);
-            user_send(0, power_buf);
-            user_mqtt_hass_power();
-        }
+        uint32_t power2 = 171 * (p_count - last_p_count) / 10;
+        last_p_count = p_count;
+        //SetPowerRecord(&power_record, power2);
+        sprintf(power_buf, "{\"mac\":\"%s\",\"power\":\"%u.%u\",\"total_time\":%u}",
+            strMac, (unsigned int)(power2 / 10), (unsigned int)(power2 % 10), (unsigned int)total_time);
+        user_send(0, power_buf);
+        user_mqtt_hass_power();
         mico_thread_msleep(1000);
     }
 
