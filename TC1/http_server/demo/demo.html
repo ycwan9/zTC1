@@ -274,10 +274,14 @@ function GetPowerRecord() {
         var power = JSON.parse(re);
         power_idx = power.idx + 1;
 
+        /*
         power.powers = new Array();
-        for (var i = 0; i < 1000; i++) {
+        for (var i = 0; i < 400; i++) {
             power.powers[i] = Math.sin(i*0.1)*1500 + 5000;
+            power.powers[i] = power.powers[i].toFixed(0);
         }
+        console.log(power.powers);
+        */
 
         var html = "";
         for (var i = 0; i < power.powers.length; i++) {
