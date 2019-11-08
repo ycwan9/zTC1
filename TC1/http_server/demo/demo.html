@@ -273,6 +273,12 @@ function GetPowerRecord() {
     HttpPost("/power", function (re) {
         var power = JSON.parse(re);
         power_idx = power.idx + 1;
+
+        power.powers = new Array();
+        for (var i = 0; i < 1000; i++) {
+            power.powers[i] = Math.sin(i*0.1)*1500 + 5000;
+        }
+
         var html = "";
         for (var i = 0; i < power.powers.length; i++) {
             var curr_p = power.powers[i]/10;
@@ -288,7 +294,7 @@ function GetPowerRecord() {
         var w_v = (17.1 * power.p_count) / 1000 / 36000;
         w.innerHTML = w_v.toFixed(2); //累加功率
         uptime.innerHTML = power.up_time;
-        window.setTimeout(GetPowerRecord, 3000);
+        //window.setTimeout(GetPowerRecord, 3000);
     }, power_idx.toString());
 }
 GetPowerRecord();
