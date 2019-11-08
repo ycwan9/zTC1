@@ -5,23 +5,25 @@
 
 
 
-排插TC1因为服务器关闭,无法使用.
+排插TC1因为服务器关闭,无法使用. 故而为其开发一个不需要服务器也能满足基本智能控制使用的固件.
 
-故而开发一个不需要服务器也能满足基本智能控制使用的固件
-
->  注意:
->
->  ​	TC1排插硬件分a1 a2两个版本,本固件仅支持**a1版本.**
->
->  ​	a1 a2两个版本仅主控不同,除此之外其他无任何区别
->
->  ​	区分硬件版本见[区分硬件版本](#区分硬件版本)
+**注意:** TC1排插硬件分a1 a2两个版本,本固件仅支持**a1版本**. a1 a2两个版本仅主控不同, 除此之外其他无任何区别.
 
 
 
-如有问题, 可以联系本人 Telegram: [@zogodo](https://t.me/zogodo)
+## 区分硬件版本
 
-也可以发送邮件给我: zhogodo@gmail.com
+硬件版本在外包装底部,如图所示:
+
+![hardware_version](https://raw.githubusercontent.com/a2633063/zTC1/master/README/hardware_version.png)
+
+如果没有包装, 只能拆开分辨, 如图, 左侧为不支持的a2版本 右侧为支持的a1版本.
+
+![a1_a2](https://raw.githubusercontent.com/a2633063/zTC1/master/README/a1_a2.png)
+
+
+
+
 
 
 
@@ -47,15 +49,7 @@
 
 
 
-## 区分硬件版本
 
-硬件版本在外包装底部,如图所示:
-
-![hardware_version](https://raw.githubusercontent.com/a2633063/zTC1/master/README/hardware_version.png)
-
-如果没有包装,只能[拆开](#拆机接线及烧录固件相关)分辨,如图,左侧为不支持的a2版本,右侧为支持的a1版本
-
-![a1_a2](https://raw.githubusercontent.com/a2633063/zTC1/master/README/a1_a2.png)
 
 
 
@@ -113,4 +107,10 @@ TC1使用的主控为EMW3031,基于MiCO(MCU based Internet Connectivity Operatin
 见[通信协议](https://github.com/a2633063/zTC1/wiki/通信协议)
 
 
+
+# 联系
+
+如有其它问题, 可以联系本人 Telegram: [@zogodo](https://t.me/zogodo)
+
+或者发送邮件给我: zhogodo@gmail.com
 
