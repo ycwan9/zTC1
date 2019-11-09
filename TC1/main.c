@@ -70,7 +70,7 @@ int application_start(void)
     int i;
     os_log("Start %s",VERSION);
 
-    char main_num=0;
+    //char main_num=0;
     OSStatus err = kNoErr;
 
     // Create mico system context and read application's config data from flash
@@ -151,7 +151,7 @@ int application_start(void)
     require_noerr(err, exit);
     PowerInit();
 
-    uint32_t power_last = 0xffffffff;
+    //uint32_t power_last = 0xffffffff;
     AppHttpdStart(); // start http server thread
     char* power_buf = malloc(128);
     if (!power_buf) goto exit;

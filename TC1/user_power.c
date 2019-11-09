@@ -8,11 +8,8 @@
 #include "user_function.h"
 #include "user_power.h"
 
-mico_timer_t power_timer;
-
-PowerRecord power_record = { 1, { 0 } };
-
 /*
+mico_timer_t power_timer;
 static uint32_t clock_count_last = 0;
 static uint32_t clock_count = 0;     //纳秒数
 static uint32_t timer_count = 0;     //一秒定时器
@@ -49,8 +46,9 @@ static void PowerTimerHandler(void* arg)
     }
 }
 */
-uint32_t p_count = 0;
 
+uint32_t p_count = 0;
+PowerRecord power_record = { 1,{ 0 } };
 char power_record_str[1101] = { 0 };
 
 void SetPowerRecord(PowerRecord* pr, uint32_t pw)
@@ -78,7 +76,7 @@ float n_1s = 0;            //功率中断次数
 mico_time_t t_x = 0;       //当前秒*1000
 mico_time_t past_ms = 0;   //系统运行的毫秒数
 mico_time_t rest_x_ms = 0; //距离当前秒走过的毫秒数
-mico_time_t rest_y_ms = 0; //距离下一秒差的秒数
+mico_time_t rest_y_ms = 0; //距离下一秒差的毫秒数
 
 static void PowerIrqHandler(void* arg)
 {
@@ -111,7 +109,7 @@ static void PowerIrqHandler(void* arg)
     }
     else
     {
-        //一般不会出现这个情况, 所以不管了...哈哈哈~
+        //一般不会出现这种情况, 所以不管了...哈哈哈~
         SetPowerRecord(&power_record, 123456);
         SetPowerRecord(&power_record, past_ms);
         SetPowerRecord(&power_record, t_x);
@@ -125,7 +123,7 @@ void PowerInit(void)
 
     MicoGpioInitialize(POWER, INPUT_PULL_UP);
     //mico_rtos_init_timer(&power_timer, 1000, PowerTimerHandler, NULL);
-    mico_rtos_start_timer(&power_timer);
+    //mico_rtos_start_timer(&power_timer);
 
     MicoGpioEnableIRQ(POWER, IRQ_TRIGGER_FALLING_EDGE, PowerIrqHandler, NULL);
 }
