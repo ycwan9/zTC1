@@ -14,9 +14,9 @@ PowerRecord power_record = { 1, { 0 } };
 
 /*
 static uint32_t clock_count_last = 0;
-static uint32_t clock_count = 0;     //ÄÉÃëÊı
-static uint32_t timer_count = 0;     //Ò»Ãë¶¨Ê±Æ÷
-static uint32_t timer_irq_count = 0; //¹¦ÂÊÖĞ¶ÏÊı
+static uint32_t clock_count = 0;     //çº³ç§’æ•°
+static uint32_t timer_count = 0;     //ä¸€ç§’å®šæ—¶å™¨
+static uint32_t timer_irq_count = 0; //åŠŸç‡ä¸­æ–­æ•°
 */
 uint32_t p_count = 0;
 
@@ -77,11 +77,11 @@ static void PowerTimerHandler(void* arg)
 }
 */
 
-float n_1s = 0;            //¹¦ÂÊÖĞ¶Ï´ÎÊı
-mico_time_t t_x = 0;       //µ±Ç°Ãë*1000
-mico_time_t past_ms = 0;   //ÏµÍ³ÔËĞĞµÄºÁÃëÊı
-mico_time_t rest_x_ms = 0; //¾àÀëµ±Ç°Ãë×ß¹ıµÄºÁÃëÊı
-mico_time_t rest_y_ms = 0; //¾àÀëÏÂÒ»Ãë²îµÄÃëÊı
+float n_1s = 0;            //åŠŸç‡ä¸­æ–­æ¬¡æ•°
+mico_time_t t_x = 0;       //å½“å‰ç§’*1000
+mico_time_t past_ms = 0;   //ç³»ç»Ÿè¿è¡Œçš„æ¯«ç§’æ•°
+mico_time_t rest_x_ms = 0; //è·ç¦»å½“å‰ç§’èµ°è¿‡çš„æ¯«ç§’æ•°
+mico_time_t rest_y_ms = 0; //è·ç¦»ä¸‹ä¸€ç§’å·®çš„ç§’æ•°
 
 static void PowerIrqHandler(void* arg)
 {
@@ -114,7 +114,7 @@ static void PowerIrqHandler(void* arg)
     }
     else
     {
-        //Ò»°ã²»»á³öÏÖÕâ¸öÇé¿ö, ËùÒÔ²»¹ÜÁË...¹ş¹ş¹ş~
+        //ä¸€èˆ¬ä¸ä¼šå‡ºç°è¿™ä¸ªæƒ…å†µ, æ‰€ä»¥ä¸ç®¡äº†...å“ˆå“ˆå“ˆ~
         SetPowerRecord(&power_record, 123456);
         SetPowerRecord(&power_record, past_ms);
         SetPowerRecord(&power_record, t_x);
