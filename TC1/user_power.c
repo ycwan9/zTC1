@@ -17,33 +17,6 @@ static uint32_t clock_count_last = 0;
 static uint32_t clock_count = 0;     //纳秒数
 static uint32_t timer_count = 0;     //一秒定时器
 static uint32_t timer_irq_count = 0; //功率中断数
-*/
-uint32_t p_count = 0;
-
-char power_record_str[1101] = { 0 };
-
-void SetPowerRecord(PowerRecord* pr, uint32_t pw)
-{
-    pr->powers[(++pr->idx)% PW_NUM] = pw;
-}
-
-char* GetPowerRecord(int idx)
-{
-    if (idx > power_record.idx) return "";
-
-    int i = idx > 0 ? idx : (power_record.idx - PW_NUM + 1);
-    i = i < 0 ? 0 : i;
-    char* tmp = power_record_str;
-    for (; i <= power_record.idx; i++)
-    {
-        sprintf(tmp, "%u,", (unsigned int)power_record.powers[i%PW_NUM]);
-        tmp += strlen(tmp);
-    }
-    *(--tmp) = 0;
-    return power_record_str;
-}
-
-/*
 static void PowerTimerHandler(void* arg)
 {
     uint32_t timer = 0;
@@ -76,6 +49,30 @@ static void PowerTimerHandler(void* arg)
     }
 }
 */
+uint32_t p_count = 0;
+
+char power_record_str[1101] = { 0 };
+
+void SetPowerRecord(PowerRecord* pr, uint32_t pw)
+{
+    pr->powers[(++pr->idx)% PW_NUM] = pw;
+}
+
+char* GetPowerRecord(int idx)
+{
+    if (idx > power_record.idx) return "";
+
+    int i = idx > 0 ? idx : (power_record.idx - PW_NUM + 1);
+    i = i < 0 ? 0 : i;
+    char* tmp = power_record_str;
+    for (; i <= power_record.idx; i++)
+    {
+        sprintf(tmp, "%u,", (unsigned int)power_record.powers[i%PW_NUM]);
+        tmp += strlen(tmp);
+    }
+    *(--tmp) = 0;
+    return power_record_str;
+}
 
 float n_1s = 0;            //功率中断次数
 mico_time_t t_x = 0;       //当前秒*1000
