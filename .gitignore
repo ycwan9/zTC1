@@ -1,4 +1,6 @@
 .vs
 build
 zTC1.*
+*.bin
+*.rar
 TC1/http_server/index.c
