@@ -72,11 +72,11 @@ char* GetPowerRecord(int idx)
     return power_record_str;
 }
 
-float n_1s = 0;            //功率中断次数
-mico_time_t t_x = 0;       //当前秒*1000
-mico_time_t past_ms = 0;   //系统运行的毫秒数
-mico_time_t rest_x_ms = 0; //距离当前秒走过的毫秒数
-mico_time_t rest_y_ms = 0; //距离下一秒差的毫秒数
+float n_1s = 0;         //功率中断次数
+uint64_t t_x = 0;       //当前秒*1000,000
+uint64_t past_ns = 0;   //系统运行的纳秒数
+uint64_t rest_x_ns = 0; //距离当前秒走过的纳秒数
+uint64_t rest_y_ns = 0; //距离下一秒差的纳秒数
 
 static void PowerIrqHandler(void* arg)
 {
@@ -86,34 +86,35 @@ static void PowerIrqHandler(void* arg)
 
     p_count++;
 
-    mico_time_get_time(&past_ms);
+    //mico_time_get_time(&past_ns);
+    past_ns = mico_nanosecond_clock_value();
     if (t_x == 0)
     {
-        t_x = past_ms - 1;
+        t_x = past_ns - past_ns % 1000000;
     }
-    rest_x_ms = past_ms - t_x;
-    if (rest_x_ms <= 1000)
+    rest_x_ns = past_ns - t_x;
+    if (rest_x_ns <= 1000000)
     {
         n_1s += 1;
-        rest_y_ms = t_x + 1000 - past_ms;
+        rest_y_ns = t_x + 1000000 - past_ns;
     }
-    else if (rest_x_ms > 1000 && rest_x_ms < 2000)
+    else if (rest_x_ns > 1000000 && rest_x_ns < 2000000)
     {
-        n_1s += (float)rest_y_ms / (rest_x_ms - 1000 + rest_y_ms);
-        rest_y_ms = 2000 - rest_x_ms;
-        t_x = past_ms / 1000 * 1000;
+        n_1s += (float)rest_y_ns / (rest_x_ns - 1000000 + rest_y_ns);
+        rest_y_ns = 2000000 - rest_x_ns;
+        t_x = past_ns - past_ns % 1000000;
 
         float power2 = 17.1 * n_1s;
         SetPowerRecord(&power_record, (int)power2);
-        n_1s = (float)(rest_x_ms - 1000) / (rest_x_ms - 1000 + rest_y_ms);
+        n_1s = (float)(rest_x_ns - 1000000) / (rest_x_ns - 1000000 + rest_y_ns);
     }
     else
     {
         //一般不会出现这种情况, 所以不管了...哈哈哈~
         SetPowerRecord(&power_record, 123456);
-        SetPowerRecord(&power_record, past_ms);
+        SetPowerRecord(&power_record, past_ns);
         SetPowerRecord(&power_record, t_x);
-        SetPowerRecord(&power_record, rest_x_ms);
+        SetPowerRecord(&power_record, rest_x_ns);
     }
 }
 
