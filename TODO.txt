@@ -2,8 +2,6 @@
 测试纳秒是否正常
 文件分类
     time_server/user_sntp user_rtc
-    ota_server/user_ota
-    mqtt_server/cJSON->c_json user_mqtt_client user_function
 
 
 1. AP名拼Mac地址

@@ -5,7 +5,7 @@
 #include "main.h"
 #include "user_gpio.h"
 #include "cJSON/cJSON.h"
-#include "user_ota.h"
+#include "ota_server/user_ota.h"
 #include "user_mqtt_client.h"
 #include "user_udp.h"
 

@@ -33,7 +33,7 @@ $(NAME)_SOURCES := main.c\
 				   user_sntp.c\
 				   user_rtc.c\
 				   mqtt_server/user_mqtt_client.c\
-				   user_ota.c\
+				   ota_server/user_ota.c\
 				   user_power.c\
 				   mqtt_server/user_function.c\
 				   http_server/app_httpd.c
