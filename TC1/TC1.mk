@@ -32,10 +32,10 @@ $(NAME)_SOURCES := main.c\
 				   user_udp.c\
 				   user_sntp.c\
 				   user_rtc.c\
-				   user_mqtt_client.c\
+				   mqtt_server/user_mqtt_client.c\
 				   user_ota.c\
 				   user_power.c\
-				   user_function.c\
+				   mqtt_server/user_function.c\
 				   http_server/app_httpd.c
 				   
 $(NAME)_COMPONENTS := protocols/SNTP\

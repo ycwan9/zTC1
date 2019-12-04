@@ -5,8 +5,8 @@
 #include "sntp.h"
 #include "user_sntp.h"
 #include "cJSON/cJSON.h"
-#include "user_mqtt_client.h"
-#include "user_function.h"
+#include "mqtt_server/user_mqtt_client.h"
+#include "mqtt_server/user_function.h"
 
 void rtc_thread(mico_thread_arg_t arg);
 

@@ -4,7 +4,7 @@
 #include "mico_socket.h"
 #include "user_gpio.h"
 #include "user_sntp.h"
-#include "user_function.h"
+#include "mqtt_server/user_function.h"
 
 #define os_log(format, ...)  custom_log("WIFI", format, ##__VA_ARGS__)
 
