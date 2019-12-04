@@ -1,7 +1,6 @@
 
 测试纳秒是否正常
 文件分类
-    time_server/user_sntp user_rtc
 
 
 1. AP名拼Mac地址
