@@ -73,7 +73,7 @@ char* GetPowerRecord(int idx)
 }
 
 float n_1s = 0;         //功率中断次数
-uint64_t t_x = 0;       //当前秒*1000,000
+uint64_t t_x = 0;       //当前秒*1000,000,000
 uint64_t past_ns = 0;   //系统运行的纳秒数
 uint64_t rest_x_ns = 0; //距离当前秒走过的纳秒数
 uint64_t rest_y_ns = 0; //距离下一秒差的纳秒数
@@ -90,23 +90,23 @@ static void PowerIrqHandler(void* arg)
     past_ns = mico_nanosecond_clock_value();
     if (t_x == 0)
     {
-        t_x = past_ns - past_ns % 1000000;
+        t_x = past_ns - past_ns % 1000000000;
     }
     rest_x_ns = past_ns - t_x;
-    if (rest_x_ns <= 1000000)
+    if (rest_x_ns <= 1000000000)
     {
         n_1s += 1;
-        rest_y_ns = t_x + 1000000 - past_ns;
+        rest_y_ns = t_x + 1000000000 - past_ns;
     }
-    else if (rest_x_ns > 1000000 && rest_x_ns < 2000000)
+    else if (rest_x_ns > 1000000000 && rest_x_ns < 2000000000)
     {
-        n_1s += (float)rest_y_ns / (rest_x_ns - 1000000 + rest_y_ns);
-        rest_y_ns = 2000000 - rest_x_ns;
-        t_x = past_ns - past_ns % 1000000;
+        n_1s += (float)rest_y_ns / (rest_x_ns - 1000000000 + rest_y_ns);
+        rest_y_ns = 2000000000 - rest_x_ns;
+        t_x = past_ns - past_ns % 1000000000;
 
         float power2 = 17.1 * n_1s;
         SetPowerRecord(&power_record, (int)power2);
-        n_1s = (float)(rest_x_ns - 1000000) / (rest_x_ns - 1000000 + rest_y_ns);
+        n_1s = (float)(rest_x_ns - 1000000000) / (rest_x_ns - 1000000000 + rest_y_ns);
     }
     else
     {
