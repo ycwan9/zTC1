@@ -4,7 +4,7 @@
 #include "user_gpio.h"
 #include "sntp.h"
 #include "time_server/user_sntp.h"
-#include "cJSON/cJSON.h"
+#include "c_json/c_json.h"
 #include "mqtt_server/user_mqtt_client.h"
 #include "mqtt_server/user_function.h"
 
