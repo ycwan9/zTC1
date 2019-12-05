@@ -101,8 +101,8 @@ exit:
 static int HttpGetPowerInfo(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
-    char buf[4];
-    err = httpd_get_data(req, buf, 4);
+    char buf[16];
+    err = httpd_get_data(req, buf, 16);
     require_noerr(err, exit);
 
     int idx = 0;
