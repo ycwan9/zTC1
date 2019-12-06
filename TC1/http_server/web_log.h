@@ -10,9 +10,9 @@ typedef struct
 void SetLogRecord(LogRecord* lr, char* log);
 char* GetLogRecord(int idx);
 
-#define os_log(format, ...)                        \
-    char* log = malloc(sizeof(char)*LOG_LEN);      \
-    snprintf(log, LOG_LEN, format, ##__VA_ARGS__); \
-    SetLogRecord(log_record, log);                 \
-    custom_log("WIFI", format, ##__VA_ARGS__)      \
+#define os_log(format, ...)                          \
+    char* log = (char*)malloc(sizeof(char)*LOG_LEN); \
+    snprintf(log, LOG_LEN, format, ##__VA_ARGS__);   \
+    SetLogRecord(log_record, log);                   \
+    custom_log("WIFI", format, ##__VA_ARGS__)        \
 
