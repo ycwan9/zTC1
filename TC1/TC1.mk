@@ -36,6 +36,7 @@ $(NAME)_SOURCES := main.c\
 				   ota_server/user_ota.c\
 				   user_power.c\
 				   mqtt_server/user_function.c\
+				   http_server/web_log.c\
 				   http_server/app_httpd.c
 				   
 $(NAME)_COMPONENTS := protocols/SNTP\

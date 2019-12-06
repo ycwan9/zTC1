@@ -5,8 +5,7 @@
 #include "user_gpio.h"
 #include "time_server/user_sntp.h"
 #include "mqtt_server/user_function.h"
-
-#define os_log(format, ...)  custom_log("WIFI", format, ##__VA_ARGS__)
+#include "web_log.h"
 
 char wifi_status = WIFI_STATE_NOCONNECT;
 
