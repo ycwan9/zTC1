@@ -14,9 +14,8 @@ void SetLogRecord(LogRecord* lr, char* log);
 char* GetLogRecord(int idx);
 
 
-#define os_log(format, ...)                            \
+#define web_log(format, ...)                            \
     LOG_TMP = (char*)malloc(sizeof(char)*LOG_LEN);     \
     snprintf(LOG_TMP, LOG_LEN, format, ##__VA_ARGS__); \
     SetLogRecord(&log_record, LOG_TMP);                \
-    custom_log("WIFI", format, ##__VA_ARGS__)          \
 

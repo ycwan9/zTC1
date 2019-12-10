@@ -7,6 +7,8 @@
 #include "mqtt_server/user_function.h"
 #include "http_server/web_log.h"
 
+#define os_log(format, ...) custom_log("WIFI", format, ##__VA_ARGS__); web_log(format, ##__VA_ARGS__)
+
 char wifi_status = WIFI_STATE_NOCONNECT;
 
 mico_timer_t wifi_led_timer;
