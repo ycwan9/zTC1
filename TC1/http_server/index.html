@@ -5,7 +5,7 @@
     <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
     <title>Welcom TC1</title>
     <style type="text/css">
-    fieldset{margin-bottom:10px;border:#000 solid 1px;}
+    fieldset{margin-bottom:10px;border:#000 solid 1px;min-inline-size:auto;}
     input,select,button{padding:5px;background:white;border:#777 solid 1px;}
     button{background:none;border:1px #777 solid;}
     button:disabled,select:disabled,input:disabled{background:#bfbfbf;}
@@ -35,7 +35,7 @@
     .power_pre{position:absolute;bottom:0;float:left;height:76px;width:0;border-left:1px solid #00ffff38;border-top:1px solid #000;}
     .power_by{text-align:center;}
     .power_by a{text-decoration:none;}
-    .log_div{min-inline-size:auto;overflow:scroll;}
+    .log_div{height:300px;overflow:scroll;}
     </style>
 </head>
 <body>
@@ -185,9 +185,11 @@
     </table>
 </fieldset>
 
-<fieldset class="connect log_div">
+<fieldset class="connect">
     <legend>System Log</legend>
-    <pre id="sys_log"></pre>
+    <div class="log_div">
+        <pre id="sys_log"></pre>
+    </div>
     <button class="submit_bt" onclick="GetSysLog()">Refresh</button>
 </fieldset>
 
@@ -248,6 +250,7 @@ var info_gateway = document.getElementById("gateway");
 var uptime = document.getElementById("uptime");
 
 var sys_log = document.getElementById("sys_log");
+var log_div = document.getElementsByClassName("log_div")[0];
 
 var mode = -1;
 var ap_name = "";
@@ -430,8 +433,7 @@ function GetScanResult() {
 function GetSysLog() {
     HttpGet("/log", function (re) {
         sys_log.innerHTML = re;
-        //document.body.scrollTop = document.body.scrollHeight;
-        document.getElementById("end").scrollIntoView();
+        log_div.scrollTo(0, log_div.scrollHeight);
     });
 }
 
