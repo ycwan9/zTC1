@@ -35,6 +35,7 @@
     .power_pre{position:absolute;bottom:0;float:left;height:76px;width:0;border-left:1px solid #00ffff38;border-top:1px solid #000;}
     .power_by{text-align:center;}
     .power_by a{text-decoration:none;}
+    .log_div{min-inline-size:auto;overflow:hidden;}
     </style>
 </head>
 <body>
@@ -184,10 +185,10 @@
     </table>
 </fieldset>
 
-<fieldset class="connect">
+<fieldset class="connect log_div">
     <legend>System Log</legend>
-    <button class="submit_bt" onclick="GetSysLog()">Refresh</button>
     <pre id="sys_log"></pre>
+    <button class="submit_bt" onclick="GetSysLog()">Refresh</button>
 </fieldset>
 
 <p class="power_by">power by <a href="https://github.com/zogodo/zTC1" target="_blank">github/zTC1</a></p>
