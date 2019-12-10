@@ -184,6 +184,12 @@
     </table>
 </fieldset>
 
+<fieldset class="connect">
+    <legend>System Log</legend>
+    <button class="submit_bt" onclick="GetSysLog()">Refresh</button>
+    <pre id="sys_log"></pre>
+</fieldset>
+
 <p class="power_by">power by <a href="https://github.com/zogodo/zTC1" target="_blank">github/zTC1</a></p>
 
 <script type="text/javascript">
@@ -239,6 +245,8 @@ var info_ip = document.getElementById("ip");
 var info_mask = document.getElementById("mask");
 var info_gateway = document.getElementById("gateway");
 var uptime = document.getElementById("uptime");
+
+var sys_log = document.getElementById("sys_log");
 
 var mode = -1;
 var ap_name = "";
@@ -415,6 +423,12 @@ function GetScanResult() {
             return;
         }
         window.setTimeout(GetScanResult, 1000);
+    });
+}
+
+function GetSysLog() {
+    HttpGet("/log", function (re) {
+        sys_log.innerHTML = re;
     });
 }
 
