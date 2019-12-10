@@ -35,7 +35,7 @@
     .power_pre{position:absolute;bottom:0;float:left;height:76px;width:0;border-left:1px solid #00ffff38;border-top:1px solid #000;}
     .power_by{text-align:center;}
     .power_by a{text-decoration:none;}
-    .log_div{min-inline-size:auto;overflow:hidden;}
+    .log_div{min-inline-size:auto;overflow:scroll;}
     </style>
 </head>
 <body>
@@ -191,7 +191,7 @@
     <button class="submit_bt" onclick="GetSysLog()">Refresh</button>
 </fieldset>
 
-<p class="power_by">power by <a href="https://github.com/zogodo/zTC1" target="_blank">github/zTC1</a></p>
+<p class="power_by">power by <a id="end" href="https://github.com/zogodo/zTC1" target="_blank">github/zTC1</a></p>
 
 <script type="text/javascript">
 
@@ -430,6 +430,8 @@ function GetScanResult() {
 function GetSysLog() {
     HttpGet("/log", function (re) {
         sys_log.innerHTML = re;
+        //document.body.scrollTop = document.body.scrollHeight;
+        document.getElementById("end").scrollIntoView();
     });
 }
 
