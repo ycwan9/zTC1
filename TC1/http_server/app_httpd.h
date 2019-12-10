@@ -30,10 +30,11 @@
  *
  ******************************************************************************
  */
+#include "http_server/web_log.h"
 
 #define HTTP_CONTENT_HTML_ZIP "text/html\r\nContent-Encoding: gzip"
 
-#define app_httpd_log(M, ...) custom_log("apphttpd", M, ##__VA_ARGS__)
+#define app_httpd_log(M, ...) custom_log("apphttpd", M, ##__VA_ARGS__); web_log(M, ##__VA_ARGS__)
 
 #define HTTPD_HDR_DEFORT (HTTPD_HDR_ADD_SERVER|HTTPD_HDR_ADD_CONN_CLOSE|HTTPD_HDR_ADD_PRAGMA_NO_CACHE)
 

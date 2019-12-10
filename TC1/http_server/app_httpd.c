@@ -42,7 +42,6 @@
 #include "user_power.h"
 #include "main.h"
 #include "web_data.c"
-#include "http_server/web_log.h"
 
 static bool is_http_init;
 static bool is_handlers_registered;
