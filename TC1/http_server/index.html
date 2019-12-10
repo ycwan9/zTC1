@@ -289,7 +289,7 @@ function GetPowerRecord() {
             html += "<div class='power_pre' style='height:"+y+"px;left:"+position+"px;'></div>";
             position += 1;
         }
-        if (power.powers.length != 0) {
+        if (power.powers.length != 0 && power_line.scrollWidth - power_line.offsetWidth - power_line.scrollLeft < 10) {
             power_line.innerHTML += html;
             power_line.scrollTo(power_line.scrollWidth, 0); //滑动到最后
         }
