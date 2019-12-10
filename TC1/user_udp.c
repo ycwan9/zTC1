@@ -1,4 +1,5 @@
-#define os_log(format, ...)  custom_log("UDP", format, ##__VA_ARGS__)
+#include "http_server/web_log.h"
+#define os_log(format, ...)  custom_log("UDP", format, ##__VA_ARGS__); web_log(format, ##__VA_ARGS__)
 
 #include "main.h"
 #include "mqtt_server/user_function.h"

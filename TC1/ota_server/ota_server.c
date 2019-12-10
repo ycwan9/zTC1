@@ -34,9 +34,10 @@
 #include "SocketUtils.h"
 #include "ota_server.h"
 #include "url.h"
+#include "http_server/web_log.h"
 
 #if OTA_DEBUG
-#define ota_server_log(M, ...) custom_log("OTA", M, ##__VA_ARGS__)
+#define ota_server_log(M, ...) custom_log("OTA", M, ##__VA_ARGS__); web_log(M, ##__VA_ARGS__)
 #else
 #define ota_server_log(M, ...)
 #endif

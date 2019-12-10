@@ -18,8 +18,10 @@
  * <h2><center>&copy; COPYRIGHT 2014 MXCHIP Inc.</center></h2>
  ******************************************************************************
  */
-#define app_log(M, ...) custom_log("APP", M, ##__VA_ARGS__)
-#define mqtt_log(M, ...) custom_log("MQTT", M, ##__VA_ARGS__)
+#include "http_server/web_log.h"
+
+#define app_log(M, ...) custom_log("APP", M, ##__VA_ARGS__); web_log(M, ##__VA_ARGS__)
+#define mqtt_log(M, ...) custom_log("MQTT", M, ##__VA_ARGS__); web_log(M, ##__VA_ARGS__)
 
 #include "main.h"
 #include "mico.h"

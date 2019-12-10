@@ -1,4 +1,5 @@
-#define os_log(format, ...)  custom_log("FUNCTION", format, ##__VA_ARGS__)
+#include "http_server/web_log.h"
+#define os_log(format, ...) custom_log("FUNCTION", format, ##__VA_ARGS__); web_log(format, ##__VA_ARGS__)
 
 #include "TimeUtils.h"
 
