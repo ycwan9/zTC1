@@ -42,6 +42,7 @@
 #include "user_power.h"
 #include "main.h"
 #include "web_data.c"
+#include "http_server/web_log.h"
 
 static bool is_http_init;
 static bool is_handlers_registered;
@@ -185,13 +186,24 @@ exit:
     return err;
 }
 
+static int HttpGetLog(httpd_request_t *req)
+{
+    OSStatus err = kNoErr;
+    char* logs = GetLogRecord(0);
+    send_http(logs, strlen(logs), exit, &err);
+
+exit:
+    return err;
+}
+
 struct httpd_wsgi_call g_app_handlers[] = {
     {"/", HTTPD_HDR_DEFORT, 0, HttpGetIndexPage, NULL, NULL, NULL},
     {"/socket", HTTPD_HDR_DEFORT, 0, NULL, HttpSetSocketStatus, NULL, NULL},
     {"/status", HTTPD_HDR_DEFORT, 0, HttpGetTc1Status, NULL, NULL, NULL},
     {"/power", HTTPD_HDR_DEFORT, 0, NULL, HttpGetPowerInfo, NULL, NULL},
     {"/wifi/config", HTTPD_HDR_DEFORT, 0, HttpGetWifiConfig, HttpSetWifiConfig, NULL, NULL},
-    {"/wifi/scan", HTTPD_HDR_DEFORT, 0, HttpGetWifiScan, HttpSetWifiScan, NULL, NULL},
+    {"/wifi/scan", HTTPD_HDR_DEFORT, 0, HttpGetWifiScan, HttpSetWifiScan, NULL, NULL },
+    {"/log", HTTPD_HDR_DEFORT, 0, HttpGetLog, NULL, NULL, NULL},
 };
 
 static int g_app_handlers_no = sizeof(g_app_handlers)/sizeof(struct httpd_wsgi_call);
