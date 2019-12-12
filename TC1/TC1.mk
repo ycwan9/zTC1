@@ -38,7 +38,8 @@ $(NAME)_SOURCES := main.c\
 				   mqtt_server/user_function.c\
 				   http_server/web_log.c\
 				   http_server/app_httpd.c
-				   
+				   timed_task/timed_task.c\
+
 $(NAME)_COMPONENTS := protocols/SNTP\
 					protocols/mqtt\
 					utilities/url\
