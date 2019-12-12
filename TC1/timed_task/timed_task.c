@@ -1,5 +1,7 @@
-#include<string.h>
+#include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
+#include<stdbool.h>
 #include"timed_task/timed_task.h"
 
 pTimedTask task_top = NULL;
@@ -7,7 +9,7 @@ int task_count = 0;
 
 bool AddTask(pTimedTask task)
 {
-    task_count++
+    task_count++;
     if (task_top == NULL)
     {
         task->next = NULL;
@@ -25,7 +27,7 @@ bool AddTask(pTimedTask task)
     pTimedTask tmp = task_top;
     while (tmp)
     {
-        if (task->time > tmp->time && task->time <= tmp->next->time
+        if ((task->time > tmp->time && task->time <= tmp->next->time)
             || tmp->next == NULL)
         {
             task->next = tmp->next;
