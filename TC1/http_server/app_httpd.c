@@ -30,6 +30,7 @@
  ******************************************************************************
  */
 
+#include <time.h>
 #include <httpd.h>
 #include <http_parse.h>
 #include <http-strings.h>
@@ -42,6 +43,7 @@
 #include "user_power.h"
 #include "main.h"
 #include "web_data.c"
+#include"timed_task/timed_task.h"
 
 static bool is_http_init;
 static bool is_handlers_registered;
@@ -195,6 +197,22 @@ exit:
     return err;
 }
 
+static int HttpGetTasks(httpd_request_t *req)
+{
+    pTimedTask pt = (pTimedTask)malloc(sizeof(struct TimedTask));
+    pt->time = time(NULL);
+    pt->socket_idx = 5;
+    pt->on = 0;
+    AddTask(pt);
+
+    OSStatus err = kNoErr;
+    char* tasks_str = GetTaskStr();
+    send_http(tasks_str, strlen(tasks_str), exit, &err);
+
+exit:
+    return err;
+}
+
 struct httpd_wsgi_call g_app_handlers[] = {
     {"/", HTTPD_HDR_DEFORT, 0, HttpGetIndexPage, NULL, NULL, NULL},
     {"/socket", HTTPD_HDR_DEFORT, 0, NULL, HttpSetSocketStatus, NULL, NULL},
@@ -203,6 +221,7 @@ struct httpd_wsgi_call g_app_handlers[] = {
     {"/wifi/config", HTTPD_HDR_DEFORT, 0, HttpGetWifiConfig, HttpSetWifiConfig, NULL, NULL},
     {"/wifi/scan", HTTPD_HDR_DEFORT, 0, HttpGetWifiScan, HttpSetWifiScan, NULL, NULL },
     {"/log", HTTPD_HDR_DEFORT, 0, HttpGetLog, NULL, NULL, NULL},
+    {"/task", HTTPD_HDR_DEFORT, 0, HttpGetTasks, NULL, NULL, NULL },
 };
 
 static int g_app_handlers_no = sizeof(g_app_handlers)/sizeof(struct httpd_wsgi_call);
