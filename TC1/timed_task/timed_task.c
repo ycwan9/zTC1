@@ -59,6 +59,7 @@ char* GetTaskStr()
     pTimedTask tmp_tsk = task_top;
     char* tmp_str = str;
     tmp_str[0] = '[';
+    tmp_str++;
     while (tmp_tsk)
     {
         sprintf(tmp_str, "{time:%d,socket_index:%d,on:%d},",
