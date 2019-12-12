@@ -210,6 +210,7 @@ static int HttpGetTasks(httpd_request_t *req)
     send_http(tasks_str, strlen(tasks_str), exit, &err);
 
 exit:
+    if (tasks_str) free(tasks_str);
     return err;
 }
 
