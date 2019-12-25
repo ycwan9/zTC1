@@ -13,5 +13,6 @@ struct TimedTask
 extern pTimedTask task_top;
 
 bool AddTask(pTimedTask task);
-bool DelTask();
+bool DelTask(int time);
+bool DelFirstTask();
 char* GetTaskStr();
