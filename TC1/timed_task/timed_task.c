@@ -40,7 +40,7 @@ bool AddTask(pTimedTask task)
     return false;
 }
 
-bool DelTask()
+bool DelFirstTask()
 {
     if (task_top)
     {
@@ -49,6 +49,39 @@ bool DelTask()
         free(tmp);
         task_count--;
         return true;
+    }
+    return false;
+}
+
+bool DelTask(int time)
+{
+    if (task_top == NULL)
+    {
+        return false;
+    }
+
+    if (time == task_top->time)
+    {
+        pTimedTask tmp = task_top;
+        task_top = task_top->next;
+        free(task_top);
+        return true;
+    }
+    else if (task_top->next == NULL)
+    {
+        return false;
+    }
+
+    pTimedTask pre_tsk = task_top;
+    pTimedTask tmp_tsk = task_top->next;
+    while (tmp_tsk)
+    {
+        if (time == tmp_tsk->time)
+        {
+            pre_tsk->next = tmp_tsk->next;
+            free(tmp_tsk);
+        }
+        tmp_tsk = tmp_tsk->next;
     }
     return false;
 }

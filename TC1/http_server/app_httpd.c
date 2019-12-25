@@ -214,6 +214,36 @@ exit:
     return err;
 }
 
+static int HttpAddTask(httpd_request_t *req)
+{
+    //TODO 从url获取参数
+    char buf[16] = "5 1234567 0"; //假设已经获取到了.
+
+    TimedTask task;
+    sscanf(buf, "%d %d %d", &task.time, &task.socket_idx, &task.on);
+
+    char mess[] = AddTask(task) ? "OK" : "NO";
+
+    OSStatus err = kNoErr;
+    send_http(mess, strlen(mess), exit, &err);
+exit:
+}
+
+static int HttpDelTask(httpd_request_t *req)
+{
+    //TODO 从url获取参数
+    char buf[16] = "1234567"; //假设已经获取到了.
+
+    int time;
+    sscanf(buf, "%d", &time);
+
+    char mess[] = DelTask(time) ? "OK" : "NO";
+
+    OSStatus err = kNoErr;
+    send_http(mess, strlen(mess), exit, &err);
+exit:
+}
+
 struct httpd_wsgi_call g_app_handlers[] = {
     {"/", HTTPD_HDR_DEFORT, 0, HttpGetIndexPage, NULL, NULL, NULL},
     {"/socket", HTTPD_HDR_DEFORT, 0, NULL, HttpSetSocketStatus, NULL, NULL},
@@ -222,7 +252,7 @@ struct httpd_wsgi_call g_app_handlers[] = {
     {"/wifi/config", HTTPD_HDR_DEFORT, 0, HttpGetWifiConfig, HttpSetWifiConfig, NULL, NULL},
     {"/wifi/scan", HTTPD_HDR_DEFORT, 0, HttpGetWifiScan, HttpSetWifiScan, NULL, NULL },
     {"/log", HTTPD_HDR_DEFORT, 0, HttpGetLog, NULL, NULL, NULL},
-    {"/task", HTTPD_HDR_DEFORT, 0, HttpGetTasks, NULL, NULL, NULL },
+    {"/task", HTTPD_HDR_DEFORT, 0, HttpGetTasks, HttpAddTask, NULL, HttpDelTask },
 };
 
 static int g_app_handlers_no = sizeof(g_app_handlers)/sizeof(struct httpd_wsgi_call);
