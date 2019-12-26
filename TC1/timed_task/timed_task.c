@@ -93,16 +93,11 @@ bool DelTask(int time)
 
 char* GetTaskStr()
 {
-    if (task_top == NULL)
-    {
-        char* str = (char*)malloc(sizeof(char)*3);
-        sprintf(str, "%s", "[]");
-        return str;
-    }
-    char* str = (char*)malloc(sizeof(char)*task_count * 60);
+    char* str = (char*)malloc(sizeof(char)*(task_count*60+2));
     pTimedTask tmp_tsk = task_top;
     char* tmp_str = str;
     tmp_str[0] = '[';
+    tmp_str[2] = 0;
     tmp_str++;
     while (tmp_tsk)
     {
@@ -116,6 +111,7 @@ char* GetTaskStr()
         tmp_str += strlen(tmp_str);
         tmp_tsk = tmp_tsk->next;
     }
-    *(--tmp_str) = ']';
+    if (task_count > 0) --tmp_str;
+    *tmp_str = ']';
     return str;
 }
