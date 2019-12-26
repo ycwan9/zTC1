@@ -200,7 +200,7 @@ exit:
 static int HttpGetTasks(httpd_request_t *req)
 {
     pTimedTask pt = (pTimedTask)malloc(sizeof(struct TimedTask));
-    pt->time = time(NULL) + 5;
+    pt->prs_time = time(NULL) + 5;
     pt->socket_idx = 5;
     pt->on = 0;
     AddTask(pt);
@@ -220,7 +220,7 @@ static int HttpAddTask(httpd_request_t *req)
     char buf[16] = "5 1234567 0"; //假设已经获取到了.
 
     struct TimedTask task;
-    sscanf(buf, "%d %d %d", &task.time, &task.socket_idx, &task.on);
+    sscanf(buf, "%ld %d %d", &task.prs_time, &task.socket_idx, &task.on);
 
     char* mess = AddTask(&task) ? "OK" : "NO";
 

@@ -18,7 +18,7 @@ bool AddTask(pTimedTask task)
         return true;
     }
 
-    if (task->time <= task_top->time)
+    if (task->prs_time <= task_top->prs_time)
     {
         task->next = task_top;
         task_top = task;
@@ -28,7 +28,7 @@ bool AddTask(pTimedTask task)
     pTimedTask tmp = task_top;
     while (tmp)
     {
-        if ((task->time > tmp->time && task->time <= tmp->next->time)
+        if ((task->prs_time > tmp->prs_time && task->prs_time <= tmp->next->prs_time)
             || tmp->next == NULL)
         {
             task->next = tmp->next;
@@ -61,7 +61,7 @@ bool DelTask(int time)
         return false;
     }
 
-    if (time == task_top->time)
+    if (time == task_top->prs_time)
     {
         pTimedTask tmp = task_top;
         task_top = task_top->next;
@@ -78,7 +78,7 @@ bool DelTask(int time)
     pTimedTask tmp_tsk = task_top->next;
     while (tmp_tsk)
     {
-        if (time == tmp_tsk->time)
+        if (time == tmp_tsk->prs_time)
         {
             pre_tsk->next = tmp_tsk->next;
             free(tmp_tsk);
@@ -101,7 +101,7 @@ char* GetTaskStr()
     {
         char buffer[26];
         struct tm* tm_info;
-        tm_info = localtime(&tmp_tsk->time);
+        tm_info = localtime(&tmp_tsk->prs_time);
         strftime(buffer, 26, "%Y-%m-%d %H:%M:%S", tm_info);
 
         sprintf(tmp_str, "{time:'%s',socket_index:%d,on:%d},",

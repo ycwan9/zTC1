@@ -170,10 +170,10 @@ int application_start(void)
         user_mqtt_hass_power();
 
         time_t now = time(NULL);
-        if (task_top && now >= task_top->time)
+        if (task_top && now >= task_top->prs_time)
         {
-            os_log("process task time[%d] socket_idx[%d] on[%d]",
-                task_top->time, task_top->socket_idx, task_top->on);
+            os_log("process task time[%ld] socket_idx[%d] on[%d]",
+                task_top->prs_time, task_top->socket_idx, task_top->on);
             UserRelaySet(task_top->socket_idx, task_top->on);
             DelFirstTask();
         }
