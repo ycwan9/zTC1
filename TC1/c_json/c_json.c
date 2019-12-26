@@ -754,7 +754,7 @@ void cJSON_Minify(char *json)
 
 /****************************************************************/
 // isXXX Function
-// 判断item的类型用
+// 鍒ゆ柇item鐨勭被鍨嬬敤
 
 int cJSON_IsFalse(const cJSON * const item) {
     if (item == NULL) {

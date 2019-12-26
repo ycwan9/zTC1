@@ -110,7 +110,7 @@ static int HttpGetPowerInfo(httpd_request_t *req)
     int idx = 0;
     sscanf(buf, "%d", &idx);
 
-    //计算系统运行时间
+    //璁＄畻绯荤粺杩愯鏃堕棿
     mico_time_t past_ms = 0;
     mico_time_get_time(&past_ms);
     int past = past_ms / 1000;
@@ -237,8 +237,8 @@ exit:
 
 static int HttpDelTask(httpd_request_t *req)
 {
-    //TODO 从url获取参数
-    char buf[16] = "1234567"; //假设已经获取到了.
+    //TODO 浠巙rl鑾峰彇鍙傛暟
+    char buf[16] = "1234567"; //鍋囪宸茬粡鑾峰彇鍒颁簡.
 
     int time;
     sscanf(buf, "%d", &time);
