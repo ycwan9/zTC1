@@ -64,7 +64,7 @@ bool DelTask(int time)
     {
         pTimedTask tmp = task_top;
         task_top = task_top->next;
-        free(task_top);
+        free(tmp);
         return true;
     }
     else if (task_top->next == NULL)

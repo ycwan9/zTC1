@@ -8,7 +8,7 @@
 #include "mqtt_server/user_mqtt_client.h"
 #include "mqtt_server/user_function.h"
 #include "http_server/app_httpd.h"
-#include "time_task/time_task.h"
+#include "timed_task/timed_task.h"
 
 #define os_log(format, ...) custom_log("TC1", format, ##__VA_ARGS__); web_log(format, ##__VA_ARGS__)
 

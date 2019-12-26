@@ -43,7 +43,7 @@
 #include "user_power.h"
 #include "main.h"
 #include "web_data.c"
-#include"timed_task/timed_task.h"
+#include "timed_task/timed_task.h"
 
 static bool is_http_init;
 static bool is_handlers_registered;
@@ -219,14 +219,15 @@ static int HttpAddTask(httpd_request_t *req)
     //TODO 从url获取参数
     char buf[16] = "5 1234567 0"; //假设已经获取到了.
 
-    TimedTask task;
+    struct TimedTask task;
     sscanf(buf, "%d %d %d", &task.time, &task.socket_idx, &task.on);
 
-    char mess[] = AddTask(task) ? "OK" : "NO";
+    char* mess = AddTask(&task) ? "OK" : "NO";
 
     OSStatus err = kNoErr;
     send_http(mess, strlen(mess), exit, &err);
 exit:
+    return err;
 }
 
 static int HttpDelTask(httpd_request_t *req)
@@ -237,11 +238,12 @@ static int HttpDelTask(httpd_request_t *req)
     int time;
     sscanf(buf, "%d", &time);
 
-    char mess[] = DelTask(time) ? "OK" : "NO";
+    char* mess = DelTask(time) ? "OK" : "NO";
 
     OSStatus err = kNoErr;
     send_http(mess, strlen(mess), exit, &err);
 exit:
+    return err;
 }
 
 struct httpd_wsgi_call g_app_handlers[] = {
