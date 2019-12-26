@@ -79,24 +79,6 @@
     </div>
 </fieldset>
 
-<fieldset class="task">
-    <legend>Timed Task</legend>
-    <input type="number" id="task_time"/>
-    <button onclick="AddTimedTask()">Add</button>
-    <table id="timed_task_tb">
-        <tr>
-            <th>Index</th>
-            <th>Time</th>
-            <th>Socket</th>
-            <th>On</th>
-        </tr>
-        <tr>
-            <td colspan="4">Plese Sync</td>
-        </tr>
-    </table>
-    <button onclick="GetTimedTask()">Sync</button>
-</fieldset>
-
 <fieldset class="chart">
     <legend>Power Status</legend>
     <table class="pw">
@@ -205,7 +187,39 @@
     </table>
 </fieldset>
 
-<fieldset class="connect">
+<fieldset class="task">
+    <legend>Timed Task</legend>
+    <input type="datetime-local" step="01" id="task_time"/>
+    <br><br>
+    <select id="task_skt_idx">
+        <option value="0">Socket-1</option>
+        <option value="1">Socket-2</option>
+        <option value="2">Socket-3</option>
+        <option value="3">Socket-4</option>
+        <option value="4">Socket-5</option>
+        <option value="5">Socket-6</option>
+    </select>
+    <select id="task_on">
+        <option value="1">On</option>
+        <option value="0">Off</option>
+    </select>
+    <button class="submit_bt" onclick="AddTimedTask()">Add</button>
+    <span class="status_sp success">OK</span>
+    <table id="timed_task_tb">
+        <tr>
+            <th>Index</th>
+            <th>Time</th>
+            <th>Socket</th>
+            <th>On</th>
+        </tr>
+        <tr>
+            <td colspan="4">Plese Sync</td>
+        </tr>
+    </table>
+    <button onclick="GetTimedTask()">Sync</button>
+</fieldset>
+
+<fieldset class="sys_log">
     <legend>System Log</legend>
     <div class="log_div">
         <pre id="sys_log"></pre>
@@ -466,6 +480,7 @@ function GetTimedTask() {
             <th>Socket</th>\
             <th>On</th>\
         </tr>";
+        console.log(re);
         var tasks = JSON.parse(re);
         if (tasks.length == 0) {
             tb_html += "<tr><td colspan='4'>No Timed Task</td></tr>";
@@ -484,14 +499,21 @@ function GetTimedTask() {
 }
 
 function AddTimedTask() {
+    var tim = document.getElementById("task_time").value;
+    var idx = document.getElementById("task_skt_idx").value;
+    var  on = document.getElementById("task_on").value;
 
-    var prs_time = Math.round(new Date() / 1000);
-    var sec = document.getElementById("task_time").value;
-    prs_time = prs_time + parseInt(sec);
-    var cmd = prs_time + " 4 0"
+    var prs_time = Math.round(new Date(tim) / 1000);
+    //prs_time = prs_time + parseInt(sec);
+    var cmd = prs_time + " " + idx + " " + on;
+    if (cmd.length >= 16) {
+        alert("CMD ERROR!");
+    }
 
+    SetIng(3);
     HttpPost("/task", function (re) {
-        //alert(re);
+        SetOK(3);
+        GetTimedTask();
     }, cmd);
 }
 
