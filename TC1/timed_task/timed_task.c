@@ -28,8 +28,9 @@ bool AddTask(pTimedTask task)
     pTimedTask tmp = task_top;
     while (tmp)
     {
-        if ((task->prs_time > tmp->prs_time && task->prs_time <= tmp->next->prs_time)
-            || tmp->next == NULL)
+        if (tmp->next == NULL
+            || (task->prs_time >= tmp->prs_time
+             && task->prs_time < tmp->next->prs_time))
         {
             task->next = tmp->next;
             tmp->next = task;
