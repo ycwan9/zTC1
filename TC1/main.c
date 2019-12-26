@@ -179,7 +179,7 @@ int application_start(void)
         }
         else
         {
-            os_log("task_top[%u]");
+            os_log("timed task count[%u]", task_count);
         }
         mico_thread_msleep(1000);
     }

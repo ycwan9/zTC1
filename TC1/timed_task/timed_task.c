@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include<stdbool.h>
+#include<time.h>
 #include"timed_task/timed_task.h"
 
 pTimedTask task_top = NULL;
@@ -65,6 +66,7 @@ bool DelTask(int time)
         pTimedTask tmp = task_top;
         task_top = task_top->next;
         free(tmp);
+        task_count--;
         return true;
     }
     else if (task_top->next == NULL)
@@ -80,6 +82,8 @@ bool DelTask(int time)
         {
             pre_tsk->next = tmp_tsk->next;
             free(tmp_tsk);
+            task_count--;
+            return true;
         }
         tmp_tsk = tmp_tsk->next;
     }

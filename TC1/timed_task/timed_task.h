@@ -11,6 +11,7 @@ struct TimedTask
 };
 
 extern pTimedTask task_top;
+extern int task_count;
 
 bool AddTask(pTimedTask task);
 bool DelTask(int time);
