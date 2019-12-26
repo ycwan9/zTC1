@@ -199,11 +199,13 @@ exit:
 
 static int HttpGetTasks(httpd_request_t *req)
 {
+    /*
     pTimedTask pt = (pTimedTask)malloc(sizeof(struct TimedTask));
     pt->prs_time = time(NULL) + 5;
     pt->socket_idx = 5;
     pt->on = 0;
     AddTask(pt);
+    */
 
     OSStatus err = kNoErr;
     char* tasks_str = GetTaskStr();
@@ -216,15 +218,18 @@ exit:
 
 static int HttpAddTask(httpd_request_t *req)
 {
-    //TODO 从url获取参数
-    char buf[16] = "5 1234567 0"; //假设已经获取到了.
-
-    struct TimedTask task;
-    sscanf(buf, "%ld %d %d", &task.prs_time, &task.socket_idx, &task.on);
-
-    char* mess = AddTask(&task) ? "OK" : "NO";
-
     OSStatus err = kNoErr;
+
+    //157736962320 4 0
+    char buf[16] = { 0 };
+    err = httpd_get_data(req, buf, 16);
+    require_noerr(err, exit);
+
+    pTimedTask task = (pTimedTask)malloc(sizeof(struct TimedTask));
+    sscanf(buf, "%ld %d %d", &task->prs_time, &task->socket_idx, &task->on);
+
+    char* mess = AddTask(task) ? "OK" : "NO";
+
     send_http(mess, strlen(mess), exit, &err);
 exit:
     return err;

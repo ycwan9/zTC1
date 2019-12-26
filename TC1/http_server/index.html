@@ -451,10 +451,15 @@ function GetTimedTask() {
 }
 
 function AddTimedTask() {
+
+    var prs_time = Math.round(new Date() / 1000);
     var sec = document.getElementById("task_time").value;
+    prs_time = prs_time + parseInt(sec);
+    var cmd = prs_time + " 4 0"
+
     HttpPost("/task", function (re) {
         alert(re);
-    }, sec);
+    }, cmd);
 }
 
 </script>
