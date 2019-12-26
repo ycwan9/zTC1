@@ -177,6 +177,10 @@ int application_start(void)
             UserRelaySet(task_top->socket_idx, task_top->on);
             DelFirstTask();
         }
+        else
+        {
+            os_log("task_top[%u]");
+        }
         mico_thread_msleep(1000);
     }
 

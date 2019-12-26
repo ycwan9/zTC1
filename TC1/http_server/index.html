@@ -77,6 +77,11 @@
     </div>
 </fieldset>
 
+<fieldset class="task">
+    <legend>Timed Task</legend>
+    <button onclick="GetTimedTask()">Test</button>
+</fieldset>
+
 <fieldset class="chart">
     <legend>Power Status</legend>
     <table class="pw">
@@ -435,6 +440,19 @@ function GetSysLog() {
         sys_log.innerHTML = re;
         log_div.scrollTo(0, log_div.scrollHeight);
     });
+}
+
+function GetTimedTask() {
+    HttpGet("/task", function (re) {
+        alert(re);
+    });
+}
+
+function AddTimedTask() {
+    var sec = document.getElementById("task_time").value;
+    HttpPost("/task", function (re) {
+        alert(re);
+    }, sec);
 }
 
 </script>
