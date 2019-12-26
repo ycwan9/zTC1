@@ -9,7 +9,9 @@
     input,select,button{padding:5px;background:white;border:#777 solid 1px;}
     button{background:none;border:1px #777 solid;}
     button:disabled,select:disabled,input:disabled{background:#bfbfbf;}
-    td{padding:5px;}
+    td,th{padding:5px;}
+    .task table{width:100%;margin:10px 0;border-collapse:collapse;}
+    .task td,.task th{text-align:center;border:1px solid #000;}
     .socket input,.mode input{margin-right:-4px;}
     .submit{padding:5px;margin-top:5px;}
     .success{color:#58dc5c;}
@@ -81,7 +83,18 @@
     <legend>Timed Task</legend>
     <input type="number" id="task_time"/>
     <button onclick="AddTimedTask()">Add</button>
-    <button onclick="GetTimedTask()">Get</button>
+    <table id="timed_task_tb">
+        <tr>
+            <th>Index</th>
+            <th>Time</th>
+            <th>Socket</th>
+            <th>On</th>
+        </tr>
+        <tr>
+            <td colspan="4">Plese Sync</td>
+        </tr>
+    </table>
+    <button onclick="GetTimedTask()">Sync</button>
 </fieldset>
 
 <fieldset class="chart">
@@ -446,7 +459,27 @@ function GetSysLog() {
 
 function GetTimedTask() {
     HttpGet("/task", function (re) {
-        alert(re);
+        var tb_html = "\
+        <tr>\
+            <th>Index</th>\
+            <th>Time</th>\
+            <th>Socket</th>\
+            <th>On</th>\
+        </tr>";
+        var tasks = JSON.parse(re);
+        if (tasks.length == 0) {
+            tb_html += "<tr><td colspan='4'>No Timed Task</td></tr>";
+        }
+        for (var i = 0; i < tasks.length; i++) {
+            tb_html += "\
+            <tr>\
+                <td>" + (i+1) + "</td>\
+                <td>" + tasks[i].prs_time + "</td>\
+                <td>" + tasks[i].socket_idx + "</td>\
+                <td>" + tasks[i].on + "</td>\
+            </tr>";
+        }
+        document.getElementById("timed_task_tb").innerHTML = tb_html;
     });
 }
 
@@ -458,7 +491,7 @@ function AddTimedTask() {
     var cmd = prs_time + " 4 0"
 
     HttpPost("/task", function (re) {
-        alert(re);
+        //alert(re);
     }, cmd);
 }
 

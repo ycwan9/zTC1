@@ -93,7 +93,13 @@ bool DelTask(int time)
 
 char* GetTaskStr()
 {
-    char* str = (char*)malloc(sizeof(char)*task_count * 52);
+    if (task_top == NULL)
+    {
+        char* str = (char*)malloc(sizeof(char)*3);
+        sprintf(str, "%s", "[]");
+        return str;
+    }
+    char* str = (char*)malloc(sizeof(char)*task_count * 60);
     pTimedTask tmp_tsk = task_top;
     char* tmp_str = str;
     tmp_str[0] = '[';
@@ -105,7 +111,7 @@ char* GetTaskStr()
         tm_info = localtime(&tmp_tsk->prs_time);
         strftime(buffer, 26, "%Y-%m-%d %H:%M:%S", tm_info);
 
-        sprintf(tmp_str, "{time:'%s',socket_index:%d,on:%d},",
+        sprintf(tmp_str, "{'prs_time':'%s','socket_idx':%d,'on':%d},",
             buffer, tmp_tsk->socket_idx, tmp_tsk->on);
         tmp_str += strlen(tmp_str);
         tmp_tsk = tmp_tsk->next;
