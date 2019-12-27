@@ -199,14 +199,6 @@ exit:
 
 static int HttpGetTasks(httpd_request_t *req)
 {
-    /*
-    pTimedTask pt = (pTimedTask)malloc(sizeof(struct TimedTask));
-    pt->prs_time = time(NULL) + 5;
-    pt->socket_idx = 5;
-    pt->on = 0;
-    AddTask(pt);
-    */
-
     OSStatus err = kNoErr;
     char* tasks_str = GetTaskStr();
     send_http(tasks_str, strlen(tasks_str), exit, &err);
@@ -220,15 +212,15 @@ static int HttpAddTask(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
 
-    //157736962320 4 0
+    //1577369623 4 0
     char buf[16] = { 0 };
     err = httpd_get_data(req, buf, 16);
     require_noerr(err, exit);
 
     pTimedTask task = (pTimedTask)malloc(sizeof(struct TimedTask));
-    sscanf(buf, "%ld %d %d", &task->prs_time, &task->socket_idx, &task->on);
+    int re = sscanf(buf, "%ld %d %d", &task->prs_time, &task->socket_idx, &task->on);
 
-    char* mess = AddTask(task) ? "OK" : "NO";
+    char* mess = re == 3 && AddTask(task) ? "OK" : "NO";
 
     send_http(mess, strlen(mess), exit, &err);
 exit:
@@ -252,14 +244,14 @@ exit:
 }
 
 struct httpd_wsgi_call g_app_handlers[] = {
-    {"/", HTTPD_HDR_DEFORT, 0, HttpGetIndexPage, NULL, NULL, NULL},
-    {"/socket", HTTPD_HDR_DEFORT, 0, NULL, HttpSetSocketStatus, NULL, NULL},
-    {"/status", HTTPD_HDR_DEFORT, 0, HttpGetTc1Status, NULL, NULL, NULL},
-    {"/power", HTTPD_HDR_DEFORT, 0, NULL, HttpGetPowerInfo, NULL, NULL},
-    {"/wifi/config", HTTPD_HDR_DEFORT, 0, HttpGetWifiConfig, HttpSetWifiConfig, NULL, NULL},
-    {"/wifi/scan", HTTPD_HDR_DEFORT, 0, HttpGetWifiScan, HttpSetWifiScan, NULL, NULL },
-    {"/log", HTTPD_HDR_DEFORT, 0, HttpGetLog, NULL, NULL, NULL},
-    {"/task", HTTPD_HDR_DEFORT, 0, HttpGetTasks, HttpAddTask, NULL, HttpDelTask },
+    { "/", HTTPD_HDR_DEFORT, 0, HttpGetIndexPage, NULL, NULL, NULL },
+    { "/socket", HTTPD_HDR_DEFORT, 0, NULL, HttpSetSocketStatus, NULL, NULL },
+    { "/status", HTTPD_HDR_DEFORT, 0, HttpGetTc1Status, NULL, NULL, NULL },
+    { "/power", HTTPD_HDR_DEFORT, 0, NULL, HttpGetPowerInfo, NULL, NULL },
+    { "/wifi/config", HTTPD_HDR_DEFORT, 0, HttpGetWifiConfig, HttpSetWifiConfig, NULL, NULL },
+    { "/wifi/scan", HTTPD_HDR_DEFORT, 0, HttpGetWifiScan, HttpSetWifiScan, NULL, NULL },
+    { "/log", HTTPD_HDR_DEFORT, 0, HttpGetLog, NULL, NULL, NULL },
+    { "/task", HTTPD_HDR_DEFORT, 0, HttpGetTasks, HttpAddTask, NULL, HttpDelTask },
 };
 
 static int g_app_handlers_no = sizeof(g_app_handlers)/sizeof(struct httpd_wsgi_call);
