@@ -503,6 +503,10 @@ function AddTimedTask() {
     var idx = document.getElementById("task_skt_idx").value;
     var  on = document.getElementById("task_on").value;
 
+    if (tim == null || tim == "" || tim.length != 10) {
+        alert("task time invalid!");
+        return;
+    }
     var prs_time = Math.round(new Date(tim) / 1000);
     //prs_time = prs_time + parseInt(sec);
     var cmd = prs_time + " " + idx + " " + on;
