@@ -51,6 +51,41 @@ struct httpd_wsgi_call g_app_handlers[];
 char power_info_json[1536] = { 0 };
 char up_time[16] = "00:00:00";
 
+/*
+void GetPraFromUrl(char* url, char* pra, char* val)
+{
+    char* sub = strstr(url, pra);
+    if (sub == NULL)
+    {
+        val[0] = 0;
+        return;
+    }
+    sub = strstr(sub, "=");
+    if (sub == NULL)
+    {
+        val[0] = 0;
+        return;
+    }
+    int len = strlen(sub);
+    int n = 0;
+    for (int i = 0; i < len; i++)
+    {
+        if (sub[i] == '&' || i == len - 1)
+        {
+            n = len;
+            break;
+        }
+    }
+    if (n > 0)
+    {
+        strncpy(val, sub + 1, n - 1);
+        val[n - 1] = 0;
+        return;
+    }
+    val[0] = 0;
+}
+*/
+
 static int HttpGetIndexPage(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
@@ -238,11 +273,12 @@ exit:
 
 static int HttpDelTask(httpd_request_t *req)
 {
-    //TODO 从url获取参数
-    char buf[16] = "1234567"; //假设已经获取到了.
+    //TODO 从url获取时间
+    char* time_str = strstr(req->filename, "?time=");
+    app_httpd_log("HttpDelTask url[%s] time_str[%s][%s]", req->filename, time_str, time_str + 6);
 
     int time;
-    sscanf(buf, "%d", &time);
+    sscanf(time_str + 6, "%d", &time);
 
     char* mess = DelTask(time) ? "OK" : "NO";
 

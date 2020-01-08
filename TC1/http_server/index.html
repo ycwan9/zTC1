@@ -190,7 +190,7 @@
 <fieldset class="task">
     <legend>Timed Task</legend>
     <input type="datetime-local" step="01" id="task_time"/>
-    <br><br>
+    <br>
     <select id="task_skt_idx">
         <option value="0">Socket-1</option>
         <option value="1">Socket-2</option>
@@ -205,6 +205,7 @@
     </select>
     <button class="submit_bt" onclick="AddTimedTask()">Add</button>
     <span class="status_sp success">OK</span>
+    <button class="submit_bt" onclick="DelTimedTask()">TestDelete</button>
     <table id="timed_task_tb">
         <tr>
             <th>Index</th>
@@ -256,6 +257,9 @@ function HttpGet(url, onsuccess) {
 }
 function HttpPost(url, onsuccess, data) {
     Ajax(url, onsuccess, "POST", data);
+}
+function HttpDel(url, onsuccess, data) {
+    Ajax(url, onsuccess, "DELET", data);
 }
 
 var submit_bts = document.getElementsByClassName("submit_bt");
@@ -519,6 +523,14 @@ function AddTimedTask() {
         SetOK(3);
         GetTimedTask();
     }, cmd);
+}
+
+function DelTimedTask() {
+    var time = "123456";
+    HttpPost("/task?time="+time, function (re) {
+        SetOK(3);
+        GetTimedTask();
+    }, time);
 }
 
 </script>
