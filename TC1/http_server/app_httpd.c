@@ -44,6 +44,7 @@
 #include "main.h"
 #include "web_data.c"
 #include "timed_task/timed_task.h"
+#include "ota_server/user_ota.h"
 
 static bool is_http_init;
 static bool is_handlers_registered;
@@ -296,7 +297,7 @@ static int OtaStart(httpd_request_t *req)
     require_noerr(err, exit);
 
     app_httpd_log("OtaStart ota_url[%s]", buf);
-    //user_ota_start(buf, NULL);
+    user_ota_start(buf, NULL);
 
     send_http("OK", 2, exit, &err);
 exit:
