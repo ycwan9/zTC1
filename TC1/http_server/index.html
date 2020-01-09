@@ -507,7 +507,7 @@ function AddTimedTask() {
     var idx = document.getElementById("task_skt_idx").value;
     var  on = document.getElementById("task_on").value;
 
-    if (tim == null || tim == "" || tim.length != 10) {
+    if (tim == null || tim == "" || tim.length < 10) {
         alert("task time invalid!");
         return;
     }
