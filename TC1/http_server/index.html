@@ -38,6 +38,7 @@
     .power_by{text-align:center;}
     .power_by a{text-decoration:none;}
     .log_div{height:300px;overflow:scroll;}
+    .ota input{width:100%;}
     </style>
 </head>
 <body>
@@ -226,6 +227,15 @@
         <pre id="sys_log"></pre>
     </div>
     <button class="submit_bt" onclick="GetSysLog()">Refresh</button>
+</fieldset>
+
+<fieldset class="ota">
+    <legend>OTA Update</legend>
+    <input type="text" id="ato_url" value="http://119.23.191.79/tc1/TC1@MK3031@moc.ota.bin">
+    <br>
+    <br>
+    <button class="submit_bt" onclick="OtaStart()">Update</button>
+    <span class="status_sp success">OK</span>
 </fieldset>
 
 <p class="power_by">power by <a id="end" href="https://github.com/zogodo/zTC1" target="_blank">github/zTC1</a></p>
@@ -531,6 +541,14 @@ function DelTimedTask() {
         SetOK(3);
         GetTimedTask();
     }, time);
+}
+
+function OtaStart() {
+    ato_url = document.getElementById("ato_url").value;
+    SetIng(4);
+    HttpPost("/ota", function (re) {
+        SetOK(4);
+    }, ato_url);
 }
 
 </script>
