@@ -163,8 +163,8 @@ void rtc_thread(mico_thread_arg_t arg)
 
         // MicoRtcSetTime(&rtc_time);      //MicoRtc不自动走时!
 
-        if (rtc_time.sec == 0)
-        os_log("time1:20%02d/%02d/%02d %d %02d:%02d:%02d",rtc_time.year,rtc_time.month,rtc_time.date,rtc_time.weekday,rtc_time.hr,rtc_time.min,rtc_time.sec);
+        //if (rtc_time.sec == 0)
+        //os_log("time1:20%02d/%02d/%02d %d %02d:%02d:%02d",rtc_time.year,rtc_time.month,rtc_time.date,rtc_time.weekday,rtc_time.hr,rtc_time.min,rtc_time.sec);
 
         char update_user_config_flag = 0;
         for (i = 0; i < SOCKET_NUM; i++)

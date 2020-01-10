@@ -7,6 +7,8 @@
 LogRecord log_record = { 1,{ 0 } };
 char log_record_str[LOG_NUM*LOG_LEN] = { 0 };
 char* LOG_TMP;
+time_t now;
+char time_buf[TIM_LEN];
 
 void SetLogRecord(LogRecord* lr, char* log)
 {

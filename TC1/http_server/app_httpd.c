@@ -43,6 +43,7 @@
 #include "user_power.h"
 #include "main.h"
 #include "web_data.c"
+#include "web_log.h"
 #include "timed_task/timed_task.h"
 #include "ota_server/user_ota.h"
 
