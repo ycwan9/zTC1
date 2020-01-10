@@ -33,7 +33,7 @@ static void sntp_time_call_back(void)
 
 
     MicoRtcGetTime(&rtc_time);
-    os_log("SNTP time:20%d/%d/%d %d %d:%d:%d",rtc_time.year,rtc_time.month,rtc_time.date,rtc_time.weekday,rtc_time.hr,rtc_time.min,rtc_time.sec);
+    os_log("SNTP time2:20%d/%d/%d %d %d:%d:%d",rtc_time.year,rtc_time.month,rtc_time.date,rtc_time.weekday,rtc_time.hr,rtc_time.min,rtc_time.sec);
 
 }
 
@@ -47,6 +47,6 @@ void sntp_init(void)
 
     mico_rtc_time_t rtc_time;
     MicoRtcGetTime(&rtc_time);
-    os_log("time:20%d/%d/%d %d %d:%d:%d",rtc_time.year,rtc_time.month,rtc_time.date,rtc_time.weekday,rtc_time.hr,rtc_time.min,rtc_time.sec);
+    os_log("time3:20%d/%d/%d %d %d:%d:%d",rtc_time.year,rtc_time.month,rtc_time.date,rtc_time.weekday,rtc_time.hr,rtc_time.min,rtc_time.sec);
 
 }
