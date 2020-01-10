@@ -92,7 +92,7 @@ void udp_thread(void *arg)
             if(len<1024) buf[len]=0;
             os_log("udp recv from %s:%d, len:%d ", ip_address,addr.sin_port, len);
             user_function_cmd_received(1,buf);
-//        sendto(udp_fd, buf, len, 0, (struct sockaddr *) &addr, sizeof(struct sockaddr_in));
+            // sendto(udp_fd, buf, len, 0, (struct sockaddr *) &addr, sizeof(struct sockaddr_in));
         }
 
         /* recv msg from user worker thread to be sent to server */
@@ -106,9 +106,9 @@ void udp_thread(void *arg)
 
                 // send message to server
                 err = udp_msg_send(udp_fd, (const unsigned char*)p_send_msg->data, p_send_msg->datalen);
-//            require_noerr_string(err, MQTT_reconnect, "ERROR: udp publish data err");
+                // require_noerr_string(err, MQTT_reconnect, "ERROR: udp publish data err");
 
-                os_log("udp send data success! msg=[%ld].\r\n", p_send_msg->datalen);
+                //os_log("udp send data success! msg=[%ld].\r\n", p_send_msg->datalen);
                 free(p_send_msg);
                 p_send_msg = NULL;
             }
@@ -149,7 +149,7 @@ OSStatus user_udp_send(char *arg)
     OSStatus err = kUnknownErr;
     p_udp_send_msg_t p_send_msg = NULL;
 
-//  app_log("======App prepare to send ![%d]======", MicoGetMemoryInfo()->free_memory);
+    // app_log("======App prepare to send ![%d]======", MicoGetMemoryInfo()->free_memory);
 
     /* Send queue is full, pop the oldest */
     if (mico_rtos_is_queue_full(&udp_msg_send_queue) == true)

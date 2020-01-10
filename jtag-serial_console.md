@@ -11,6 +11,7 @@ set auto-load safe-path /
 
 ```shell
 mico make TC1@MK3031@moc debug
+(gdb) target remote localhost:3333
 (gdb) b SetLogRecord
 (gdb) commands 1
 > silent
@@ -24,3 +25,23 @@ mico make TC1@MK3031@moc debug
 ```
 
 参考: <https://www.tablix.org/~avian/blog/archives/2012/08/monitoring_serial_console_through_jtag/>
+
+
+
+```shell
+mico make TC1@MK3031@moc debug
+target remote localhost:3333
+b SetLogRecord
+commands 1
+silent
+p log
+p \n
+c
+end
+set height 0
+c
+
+```
+
+
+

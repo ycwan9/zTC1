@@ -71,6 +71,10 @@ int application_start(void)
     int i;
     os_log("Start %s",VERSION);
 
+    uint8_t mac[32];
+    mico_wlan_get_mac_address(mac);
+    os_log("mac[%s]", mac);
+
     //char main_num=0;
     OSStatus err = kNoErr;
 
