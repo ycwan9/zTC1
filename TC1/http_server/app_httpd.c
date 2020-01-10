@@ -279,10 +279,10 @@ static int HttpDelTask(httpd_request_t *req)
     char* time_str = strstr(req->filename, "?time=");
     app_httpd_log("HttpDelTask url[%s] time_str[%s][%s]", req->filename, time_str, time_str + 6);
 
-    int time;
-    sscanf(time_str + 6, "%d", &time);
+    int time1;
+    sscanf(time_str + 6, "%d", &time1);
 
-    char* mess = DelTask(time) ? "OK" : "NO";
+    char* mess = DelTask(time1) ? "OK" : "NO";
 
     OSStatus err = kNoErr;
     send_http(mess, strlen(mess), exit, &err);

@@ -1,7 +1,4 @@
 #include <time.h>
-#include "mico.h"
-#include "micokit_ext.h"
-#include "sys/time.h"
 
 #ifndef WEB_LOG_H
 #define WEB_LOG_H
@@ -26,7 +23,7 @@ char* GetLogRecord(int idx);
 
 #define web_log(format, ...)                           \
     LOG_TMP = (char*)malloc(sizeof(char)*LOG_LEN);     \
-    now = 1234567; \
+    now = time(NULL); \
     strftime(time_buf, TIM_LEN, "[%Y-%m-%d %H:%M:%S]", localtime(&now)); \
     snprintf(LOG_TMP, LOG_LEN, "%s"format, time_buf, ##__VA_ARGS__); \
     SetLogRecord(&log_record, LOG_TMP);                \
