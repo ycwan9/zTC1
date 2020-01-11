@@ -164,19 +164,18 @@ void WifiInit(void)
     //sntp_init();
     //启动定时器开始进行wifi连接
     if (!mico_rtos_is_timer_running(&wifi_led_timer)) mico_rtos_start_timer(&wifi_led_timer);
-
-    IPStatusTypedef para;
-    micoWlanGetIPStatus(&para, Station);
-    strcpy(strMac, para.mac);
-
 }
 
 void ApInit()
 {
+    char ap_name[16];
+    sprintf(ap_name, ELAND_AP_SSID"-%s", str_mac+6);
+    os_log("ap_name[%s]", ap_name);
+
     os_log("Soft_ap_Server");
     network_InitTypeDef_st wNetConfig;
     memset(&wNetConfig, 0x0, sizeof(network_InitTypeDef_st));
-    strcpy((char *)wNetConfig.wifi_ssid, ELAND_AP_SSID);
+    strcpy((char *)wNetConfig.wifi_ssid, ap_name);
     strcpy((char *)wNetConfig.wifi_key, ELAND_AP_KEY);
     wNetConfig.wifi_mode = Soft_AP;
     wNetConfig.dhcpMode = DHCP_Server;

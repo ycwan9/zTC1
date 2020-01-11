@@ -15,6 +15,7 @@
 char rtc_init = 0; //sntp校时成功标志位
 uint32_t total_time = 0;
 char strMac[16] = { 0 };
+char str_mac[16] = { 0 };
 uint32_t power = 0;
 
 system_config_t* sys_config;
@@ -71,10 +72,6 @@ int application_start(void)
     int i;
     os_log("Start %s",VERSION);
 
-    uint8_t mac[32];
-    mico_wlan_get_mac_address(mac);
-    os_log("mac[%s]", mac);
-
     //char main_num=0;
     OSStatus err = kNoErr;
 
@@ -85,6 +82,12 @@ int application_start(void)
 
     err = mico_system_init(sys_config);
     require_noerr(err, exit);
+
+    uint8_t mac[8];
+    mico_wlan_get_mac_address(mac);
+    sprintf(str_mac, "%02X%02X%02X%02X%02X%02X",
+        mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    os_log("mico_system_init str_mac[%s]", str_mac);
 
     bool open_ap = false;
     MicoGpioInitialize((mico_gpio_t)Button, INPUT_PULL_UP);
