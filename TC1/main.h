@@ -9,7 +9,7 @@
 #define TYPE 1
 #define TYPE_NAME "zTC1"
 
-#define ZTC1_NAME "zTC1_%02X%02X"
+#define ZTC1_NAME "zTC1-%s"
 
 #define USER_CONFIG_VERSION 2
 #define SETTING_MQTT_STRING_LENGTH_MAX 32 //必须4字节对齐。

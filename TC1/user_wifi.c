@@ -169,7 +169,7 @@ void WifiInit(void)
 void ApInit()
 {
     char ap_name[16];
-    sprintf(ap_name, ELAND_AP_SSID"-%s", str_mac+6);
+    sprintf(ap_name, ELAND_AP_SSID, str_mac+6);
     os_log("ApInit ap_name[%s]", ap_name);
 
     network_InitTypeDef_st wNetConfig;

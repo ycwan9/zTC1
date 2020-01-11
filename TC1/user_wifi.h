@@ -13,7 +13,7 @@ enum
    WIFI_STATE_CONNECTED,
 };
 
-#define ELAND_AP_SSID       "TC1-AP"
+#define ELAND_AP_SSID       "TC1-AP-%s"
 #define ELAND_AP_KEY        "12345678"
 #define ELAND_AP_LOCAL_IP   "192.168.0.1"
 #define ELAND_AP_DNS_SERVER "192.168.0.1"

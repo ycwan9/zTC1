@@ -117,17 +117,8 @@ int application_start(void)
 
     if (sys_config->micoSystemConfig.name[0] == 1)
     {
-        IPStatusTypedef para;
-        os_log("micoWlanGetIPStatus:%d", micoWlanGetIPStatus(&para, Station));
-        strcpy(strMac, para.mac); //mac读出来全部是0??!!!
-        os_log("result:%s",strMac);
-        os_log("result:%s",para.mac);
-
-        unsigned char mac1, mac2;
-        mac1 = strtohex(strMac[8], strMac[9]);
-        mac2 = strtohex(strMac[10], strMac[11]);
-        os_log("strtohex:0x%02x%02x",mac1,mac2);
-        sprintf(sys_config->micoSystemConfig.name, ZTC1_NAME, mac1, mac2);
+        strcpy(strMac, str_mac);
+        sprintf(sys_config->micoSystemConfig.name, ZTC1_NAME, str_mac+8);
     }
 
     os_log("user:%s",user_config->user);
