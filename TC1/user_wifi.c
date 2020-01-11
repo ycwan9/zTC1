@@ -153,11 +153,11 @@ void WifiConnect(char* wifi_ssid, char* wifi_key)
 void WifiInit(void)
 {
     //wifi状态下led闪烁定时器初始化
-    mico_rtos_init_timer(&wifi_led_timer, 100, (void *) WifiLedTimerCallback, NULL);
+    mico_rtos_init_timer(&wifi_led_timer, 100, (void*)WifiLedTimerCallback, NULL);
     //wifi已连接获取到IP地址 回调
-    mico_system_notify_register(mico_notify_DHCP_COMPLETED, (void *)WifiGetIpCallback, NULL);
+    mico_system_notify_register(mico_notify_DHCP_COMPLETED, (void*)WifiGetIpCallback, NULL);
     //wifi连接状态改变回调
-    mico_system_notify_register(mico_notify_WIFI_STATUS_CHANGED, (void*) WifiStatusCallback, NULL);
+    mico_system_notify_register(mico_notify_WIFI_STATUS_CHANGED, (void*)WifiStatusCallback, NULL);
     //wifi扫描结果回调
     mico_system_notify_register(mico_notify_WIFI_SCAN_ADV_COMPLETED, (void*)WifiScanCallback, NULL);
 
@@ -170,9 +170,8 @@ void ApInit()
 {
     char ap_name[16];
     sprintf(ap_name, ELAND_AP_SSID"-%s", str_mac+6);
-    os_log("ap_name[%s]", ap_name);
+    os_log("ApInit ap_name[%s]", ap_name);
 
-    os_log("Soft_ap_Server");
     network_InitTypeDef_st wNetConfig;
     memset(&wNetConfig, 0x0, sizeof(network_InitTypeDef_st));
     strcpy((char *)wNetConfig.wifi_ssid, ap_name);
@@ -183,7 +182,8 @@ void ApInit()
     strcpy((char *)wNetConfig.local_ip_addr, ELAND_AP_LOCAL_IP);
     strcpy((char *)wNetConfig.net_mask, ELAND_AP_NET_MASK);
     strcpy((char *)wNetConfig.dnsServer_ip_addr, ELAND_AP_DNS_SERVER);
-    os_log("ssid:%s  key:%s", wNetConfig.wifi_ssid, wNetConfig.wifi_key);
     micoWlanStart(&wNetConfig);
+
+    os_log("ApInit ssid[%s] key[%s]", wNetConfig.wifi_ssid, wNetConfig.wifi_key);
 }
 
