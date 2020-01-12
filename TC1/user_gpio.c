@@ -168,8 +168,8 @@ static void KeyTimeoutHandler(void* arg)
                 key_time = 101;
             }
         }
-
-    } else
+    }
+    else
     {
         //button released
         if (key_time < BUTTON_LONG_PRESS_TIME)
@@ -177,7 +177,8 @@ static void KeyTimeoutHandler(void* arg)
             key_time = 0;
             os_log("button short pressed:%d",key_time);
             KeyShortPress();
-        } else if (key_time > 100)
+        }
+        else if (key_time > 100)
         {
             MicoSystemReboot();
         }
@@ -189,6 +190,7 @@ static void KeyFallingIrqHandler(void* arg)
 {
     mico_rtos_start_timer(&user_key_timer);
 }
+
 void KeyInit(void)
 {
     MicoGpioInitialize(Button, INPUT_PULL_UP);

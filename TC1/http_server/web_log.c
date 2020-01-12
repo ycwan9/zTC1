@@ -24,11 +24,9 @@ void SetLogRecord(LogRecord* lr, char* log)
     *p_log = log;
 }
 
-char* GetLogRecord(int idx)
+char* GetLogRecord()
 {
-    if (idx > log_record.idx) return "";
-
-    int i = idx > 0 ? idx : (log_record.idx - LOG_NUM + 1);
+    int i = log_record.idx - LOG_NUM + 1;
     i = i < 0 ? 0 : i;
     char* tmp = log_record_str;
     for (; i <= log_record.idx; i++)
@@ -37,6 +35,7 @@ char* GetLogRecord(int idx)
         sprintf(tmp, "%s\n", log_record.logs[i%LOG_NUM]);
         tmp += strlen(tmp);
     }
+    sprintf(tmp, "%d", log_record.idx);
     return log_record_str;
 }
 

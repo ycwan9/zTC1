@@ -227,7 +227,7 @@ exit:
 static int HttpGetLog(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
-    char* logs = GetLogRecord(0);
+    char* logs = GetLogRecord();
     send_http(logs, strlen(logs), exit, &err);
 
 exit:

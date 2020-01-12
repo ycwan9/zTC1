@@ -19,7 +19,7 @@ extern time_t now;
 extern char time_buf[];
 
 void SetLogRecord(LogRecord* lr, char* log);
-char* GetLogRecord(int idx);
+char* GetLogRecord();
 
 #define web_log(format, ...)                           \
     LOG_TMP = (char*)malloc(sizeof(char)*LOG_LEN);     \
