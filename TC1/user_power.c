@@ -60,6 +60,7 @@ void SetPowerRecord(PowerRecord* pr, uint32_t pw)
 char* GetPowerRecord(int idx)
 {
     if (idx > power_record.idx) return "";
+    idx = idx <= power_record.idx - PW_NUM ? 0 : idx;
 
     int i = idx > 0 ? idx : (power_record.idx - PW_NUM + 1);
     i = i < 0 ? 0 : i;
