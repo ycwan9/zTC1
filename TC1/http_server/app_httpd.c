@@ -105,10 +105,10 @@ exit:
 static int HttpGetTc1Status(httpd_request_t *req)
 {
     const unsigned char* sockets = GetSocketStatus();
-    char* tc1_status = malloc(384);
+    char* tc1_status = malloc(391);
     sprintf(tc1_status, TC1_STATUS_JSON, sockets, ip_status.mode,
         sys_config->micoSystemConfig.ssid, sys_config->micoSystemConfig.user_key,
-        ELAND_AP_SSID, ELAND_AP_KEY, "MQTT.ADDR", 1883, ip_status.ip, ip_status.mask, ip_status.gateway, 0L);
+        ap_name, ELAND_AP_KEY, "MQTT.ADDR", 1883, ip_status.ip, ip_status.mask, ip_status.gateway, 0L);
 
     OSStatus err = kNoErr;
     send_http(tc1_status, strlen(tc1_status), exit, &err);

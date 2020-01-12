@@ -13,6 +13,7 @@ char wifi_status = WIFI_STATE_NOCONNECT;
 
 mico_timer_t wifi_led_timer;
 IpStatus ip_status = { 0, ELAND_AP_LOCAL_IP, ELAND_AP_LOCAL_IP, ELAND_AP_NET_MASK };
+char ap_name[16];
 
 //wifi已连接获取到IP地址回调
 static void WifiGetIpCallback(IPStatusTypedef *pnet, void * arg)
@@ -168,7 +169,6 @@ void WifiInit(void)
 
 void ApInit()
 {
-    char ap_name[16];
     sprintf(ap_name, ELAND_AP_SSID, str_mac+6);
     os_log("ApInit ap_name[%s]", ap_name);
 
