@@ -70,7 +70,7 @@ void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
 int application_start(void)
 {
     int i;
-    os_log("Start %s",VERSION);
+    os_log("start version[%s]", VERSION);
 
     //char main_num=0;
     OSStatus err = kNoErr;
@@ -87,7 +87,7 @@ int application_start(void)
     mico_wlan_get_mac_address(mac);
     sprintf(str_mac, "%02X%02X%02X%02X%02X%02X",
         mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-    os_log("mico_system_init str_mac[%s]", str_mac);
+    os_log("str_mac[%s]", str_mac);
 
     bool open_ap = false;
     MicoGpioInitialize((mico_gpio_t)Button, INPUT_PULL_UP);
