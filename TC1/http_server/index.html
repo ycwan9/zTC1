@@ -148,15 +148,21 @@
     <legend>MQTT Config</legend>
     <table>
         <tr>
-            <td class="right">MQTT:</td>
+            <td class="right">Server:</td>
             <td>
                 <input id="mqtt_addr"/>
             </td>
         </tr>
         <tr>
-            <td class="right">PORT:</td>
+            <td class="right">Username:</td>
             <td>
-                <input id="mqtt_port"/>
+                <input id="mqtt_user"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="right">Password:</td>
+            <td>
+                <input id="mqtt_pass"/>
             </td>
         </tr>
     </table>
@@ -290,7 +296,8 @@ var mode_rd1 = document.getElementById("mode1");
 var mode_rd2 = document.getElementById("mode2");
 
 var mqtt_addr_ipt = document.getElementById("mqtt_addr");
-var mqtt_port_ipt = document.getElementById("mqtt_port");
+var mqtt_user_ipt = document.getElementById("mqtt_user");
+var mqtt_pass_ipt = document.getElementById("mqtt_pass");
 
 var info_ip = document.getElementById("ip");
 var info_mask = document.getElementById("mask");
@@ -317,8 +324,7 @@ HttpGet("/status", function (re) {
         //mode = status.mode;
         ChangeMode(status.mode);
 
-        mqtt_addr_ipt.value = status.mqtt_addr;
-        mqtt_port_ipt.value = status.mqtt_port;
+        mqtt_addr_ipt.value = status.mqtt_addr + ":" + status.mqtt_port;
 
         info_ip.innerHTML = status.ip;
         info_mask.innerHTML = status.mask;
@@ -446,6 +452,20 @@ function SubmitNetwork() {
             alert(re);
         }, params);
     }
+}
+
+function SubmitMqtt() {
+    var port = "1883";
+    var addr = mqtt_addr_ipt.value;
+    pos = addr.lastIndexOf(":")
+    if (pos != -1) {
+        port = addr.substring(pos+1);
+        addr = addr.substring(0, pos);
+    }
+    var params = addr+" "+port+" "+mqtt_user_ipt.value+" "+mqtt_pass_ipt.value;
+    HttpPost("/mqtt/config", function (re) {
+        alert(re);
+    }, params);
 }
 
 function Rescan() {

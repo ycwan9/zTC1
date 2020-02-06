@@ -200,6 +200,38 @@ exit:
     return err;
 }
 
+static int HttpSetMqttConfig(httpd_request_t *req)
+{
+    OSStatus err = kNoErr;
+
+    const int buf_size = SETTING_MQTT_STRING_LENGTH_MAX*4;
+    char *buf = malloc(buf_size);
+    char *mqtt_addr = malloc(SETTING_MQTT_STRING_LENGTH_MAX);
+    char *mqtt_user = malloc(SETTING_MQTT_STRING_LENGTH_MAX);
+    char *mqtt_password = malloc(SETTING_MQTT_STRING_LENGTH_MAX);
+    int mqtt_port;
+
+    err = httpd_get_data(req, buf, buf_size);
+    require_noerr(err, exit);
+
+    sscanf(buf, "%s %d %s %s", mqtt_addr, &mqtt_port, mqtt_user, mqtt_password);
+
+    strncpy(user_config->mqtt_ip, mqtt_addr, SETTING_MQTT_STRING_LENGTH_MAX);
+    strncpy(user_config->mqtt_user, mqtt_user, SETTING_MQTT_STRING_LENGTH_MAX);
+    strncpy(user_config->mqtt_password, mqtt_password, SETTING_MQTT_STRING_LENGTH_MAX);
+    user_config->mqtt_port = mqtt_port;
+    mico_system_context_update(sys_config);
+
+    send_http("OK", 2, exit, &err);
+
+exit:
+    if (buf) free(buf);
+    if (mqtt_addr) free(mqtt_addr);
+    if (mqtt_user) free(mqtt_user);
+    if (mqtt_password) free(mqtt_password);
+    return err;
+}
+
 static int HttpGetWifiScan(httpd_request_t *req)
 {
     OSStatus err = kNoErr;
@@ -318,6 +350,7 @@ struct httpd_wsgi_call g_app_handlers[] = {
     { "/log", HTTPD_HDR_DEFORT, 0, HttpGetLog, NULL, NULL, NULL },
     { "/task", HTTPD_HDR_DEFORT, 0, HttpGetTasks, HttpAddTask, NULL, HttpDelTask },
     { "/ota", HTTPD_HDR_DEFORT, 0, NULL, OtaStart, NULL, NULL },
+    { "/mqtt/config", HTTPD_HDR_DEFORT, 0, NULL, HttpSetMqttConfig, NULL, NULL },
 };
 
 static int g_app_handlers_no = sizeof(g_app_handlers)/sizeof(struct httpd_wsgi_call);

@@ -39,8 +39,6 @@
 
 #ifdef MQTT_CLIENT_SSL_ENABLE
 
-#define MQTT_SERVER             "192.168.33.201"
-#define MQTT_SERVER_PORT        1883
 char* mqtt_server_ssl_cert_str =
 "-----BEGIN CERTIFICATE-----\r\n\
 MIIC8DCCAlmgAwIBAgIJAOD63PlXjJi8MA0GCSqGSIb3DQEBBQUAMIGQMQswCQYD\r\n\
@@ -61,14 +59,10 @@ REyPOFdGdhBY2P1FNRy0MDr6xr+D2ZOwxs63dG1nnAnWZg7qwoLgpZ4fESPD3PkA\r\n\
 1ZgKJc2zbSQ9fCPxt2W3mdVav66c6fsb7els2W2Iz7gERJSX\r\n\
 -----END CERTIFICATE-----";
 
-#else  // ! MQTT_CLIENT_SSL_ENABLE
+#endif  // ! MQTT_CLIENT_SSL_ENABLE
 
-//#define MQTT_SERVER             user_config->mqtt_ip
-//#define MQTT_SERVER_PORT        user_config->mqtt_port
-#define MQTT_SERVER             "192.168.33.201"
-#define MQTT_SERVER_PORT        1883
-
-#endif // MQTT_CLIENT_SSL_ENABLE
+#define MQTT_SERVER             user_config->mqtt_ip
+#define MQTT_SERVER_PORT        user_config->mqtt_port
 
 typedef struct
 {
