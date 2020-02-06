@@ -33,7 +33,6 @@ void appRestoreDefault_callback(void * const user_config_data, uint32_t size)
     mico_system_context_get()->micoSystemConfig.name[1] = 0;
 
     user_config_t* userConfigDefault = user_config_data;
-    userConfigDefault->user[0] = 0;
     userConfigDefault->mqtt_ip[0] = 0;
     userConfigDefault->mqtt_port = 0;
     userConfigDefault->mqtt_user[0] = 0;
@@ -120,7 +119,6 @@ int application_start(void)
         sprintf(sys_config->micoSystemConfig.name, ZTC1_NAME, str_mac+8);
     }
 
-    os_log("user:%s",user_config->user);
     os_log("device name:%s",sys_config->micoSystemConfig.name);
     os_log("mqtt_ip:%s",user_config->mqtt_ip);
     os_log("mqtt_port:%d",user_config->mqtt_port);

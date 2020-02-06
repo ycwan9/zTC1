@@ -59,8 +59,6 @@ typedef struct
 //  char mqtt_device_id[SETTING_MQTT_STRING_LENGTH_MAX]; //mqtt service user device name
     char version;
     user_socket_config_t socket[SOCKET_NUM];
-    char user[maxNameLen];
-    WiFiEvent last_wifi_status;
 } user_config_t;
 
 extern char rtc_init;
