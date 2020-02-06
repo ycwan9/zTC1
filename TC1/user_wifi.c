@@ -15,6 +15,20 @@ mico_timer_t wifi_led_timer;
 IpStatus ip_status = { 0, ELAND_AP_LOCAL_IP, ELAND_AP_LOCAL_IP, ELAND_AP_NET_MASK };
 char ap_name[16];
 
+static void WifiConnectSysConfig(void)
+{
+    os_log("connect ssid:%s key:%s",sys_config->micoSystemConfig.ssid,sys_config->micoSystemConfig.user_key);
+    network_InitTypeDef_st wNetConfig;
+    memset(&wNetConfig, 0, sizeof(network_InitTypeDef_st));
+    strcpy(wNetConfig.wifi_ssid, sys_config->micoSystemConfig.ssid);
+    strcpy(wNetConfig.wifi_key, sys_config->micoSystemConfig.user_key);
+    wNetConfig.wifi_mode = Station;
+    wNetConfig.dhcpMode = DHCP_Client;
+    wNetConfig.wifi_retry_interval = 6000;
+    micoWlanStart(&wNetConfig);
+    wifi_status = WIFI_STATE_CONNECTING;
+}
+
 //wifi已连接获取到IP地址回调
 static void WifiGetIpCallback(IPStatusTypedef *pnet, void * arg)
 {
@@ -32,32 +46,13 @@ static void WifiStatusCallback(WiFiEvent status, void* arg)
 {
     if (status == NOTIFY_STATION_UP) //wifi连接成功
     {
-        //user_config->last_wifi_status = status;
-        sys_config->micoSystemConfig.reserved = status;
-        mico_system_context_update(sys_config);
-
-        OSStatus status = micoWlanSuspendSoftAP(); //关闭AP
-        if (status != kNoErr)
-        {
-            os_log("close ap error[%d]", status);
-        }
-
+        wifi_status = WIFI_STATE_CONNECTED;
         ip_status.mode = 1;
-        //wifi_status = WIFI_STATE_CONNECTED;
     }
     else if (status == NOTIFY_STATION_DOWN) //wifi断开
     {
-        //user_config->last_wifi_status = status;
-        sys_config->micoSystemConfig.reserved = status;
-        mico_system_context_update(sys_config);
-
-        ApInit(); //打开AP
-
         wifi_status = WIFI_STATE_NOCONNECT;
-        if (!mico_rtos_is_timer_running(&wifi_led_timer))
-        {
-            mico_rtos_start_timer(&wifi_led_timer);
-        }
+        if (!mico_rtos_is_timer_running(&wifi_led_timer)) mico_rtos_start_timer(&wifi_led_timer);
     }
     else if (status == NOTIFY_AP_UP)
     {
@@ -113,7 +108,7 @@ static void WifiLedTimerCallback(void* arg)
             mico_rtos_stop_timer(&wifi_led_timer);
             break;
         case WIFI_STATE_NOCONNECT:
-            //wifi_connect_sys_config();
+            WifiConnectSysConfig();
             break;
         case WIFI_STATE_CONNECTING:
             num = 0;
@@ -128,27 +123,6 @@ static void WifiLedTimerCallback(void* arg)
                 UserLedSet(0);
             break;
     }
-}
-
-void WifiConnect(char* wifi_ssid, char* wifi_key)
-{
-    //wifi配置初始化
-    network_InitTypeDef_st wNetConfig;
-
-    memset(&wNetConfig, 0, sizeof(network_InitTypeDef_st));
-    wNetConfig.wifi_mode = Station;
-    snprintf(wNetConfig.wifi_ssid, 32, wifi_ssid);
-    strcpy((char*)wNetConfig.wifi_key, wifi_key);
-    wNetConfig.dhcpMode = DHCP_Client;
-    wNetConfig.wifi_retry_interval = 6000;
-    micoWlanStart(&wNetConfig);
-
-    //保存wifi及密码到Flash
-    strcpy(sys_config->micoSystemConfig.ssid, wifi_ssid);
-    strcpy(sys_config->micoSystemConfig.user_key, wifi_key);
-    sys_config->micoSystemConfig.user_keyLength = strlen(wifi_key);
-    mico_system_context_update(sys_config);
-    wifi_status = WIFI_STATE_NOCONNECT;
 }
 
 void WifiInit(void)
@@ -183,6 +157,12 @@ void ApInit()
     strcpy((char *)wNetConfig.net_mask, ELAND_AP_NET_MASK);
     strcpy((char *)wNetConfig.dnsServer_ip_addr, ELAND_AP_DNS_SERVER);
     micoWlanStart(&wNetConfig);
+
+    // register callbacks
+    //wifi连接状态改变回调
+    mico_system_notify_register(mico_notify_WIFI_STATUS_CHANGED, (void*)WifiStatusCallback, NULL);
+    //wifi扫描结果回调
+    mico_system_notify_register(mico_notify_WIFI_SCAN_ADV_COMPLETED, (void*)WifiScanCallback, NULL);
 
     os_log("ApInit ssid[%s] key[%s]", wNetConfig.wifi_ssid, wNetConfig.wifi_key);
 }

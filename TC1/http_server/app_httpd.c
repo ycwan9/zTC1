@@ -186,7 +186,10 @@ static int HttpSetWifiConfig(httpd_request_t *req)
 
     sscanf(buf, "%s %s", wifi_ssid, wifi_key);
 
-    WifiConnect(wifi_ssid, wifi_key);
+    strncpy(sys_config->micoSystemConfig.ssid, wifi_ssid, maxSsidLen);
+    strncpy(sys_config->micoSystemConfig.key, wifi_key, maxKeyLen);
+    strncpy(sys_config->micoSystemConfig.user_key, wifi_key, maxKeyLen);
+    mico_system_context_update(sys_config);
 
     send_http("OK", 2, exit, &err);
 

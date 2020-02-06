@@ -94,7 +94,6 @@ int application_start(void)
     if (!MicoGpioInputGet(Button))
     {   //开机时按钮状态
         os_log("press ap_init");
-        ApInit();
         open_ap = true;
     }
 
@@ -129,18 +128,13 @@ int application_start(void)
     os_log("mqtt_password:%s",user_config->mqtt_password);
     os_log("version:%d",user_config->version);
 
-    WifiInit();
-    if (!open_ap)
+    if (open_ap || strlen(sys_config->micoSystemConfig.ssid) <= 0)
     {
-        if (sys_config->micoSystemConfig.reserved != NOTIFY_STATION_UP)
-        {
-            ApInit();
-        }
-        else
-        {
-            WifiConnect(sys_config->micoSystemConfig.ssid,
-                sys_config->micoSystemConfig.user_key);
-        }
+        ApInit();
+    }
+    else
+    {
+        WifiInit();
     }
     user_udp_init();
     KeyInit();
